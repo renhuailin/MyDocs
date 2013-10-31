@@ -7,27 +7,18 @@ git是分布式的scm，分布式体现在哪儿呢？
 先说说这个local repository吧。 git的local repository是 full function的，跟svn和cvs不一样的是，local repository通常是跟工作目录在一起的。
 也就是工作目录就是一个repository!
 
-
-dsfdsfsd fds
-fdsfds fds
-fdsf dsfds
-fdsfdsfdsf
-fdsfdsfdsfsd
-fddsfdsfds
-fdsfdsfdsfdsfds
-
-
-
+```
 $ git remote    
 origin   #这里的origin是一个短名，shortname
 $ git remote add pb git://github.com/paulboone/ticgit.git
 $ git remote -v
 origin git://github.com/schacon/ticgit.git
 pb git://github.com/paulboone/ticgit.git
-
-如果你想查看remote更详细的信息。   
+```
+如果你想查看remote更详细的信息。 
+```
 $ git remote show origin  
-\* remote origin   
+*remote origin   
   URL: git://github.com/schacon/ticgit.git  
   Remote branch merged with 'git pull' while on branch master   
     master   
@@ -35,10 +26,10 @@ $ git remote show origin
     master   
     ticgit  
     
+```
 
 
-
-
+```
 $git clone
 --local, -l
            When the repository to clone from is on a local machine, this flag bypasses the normal "git aware" transport mechanism and clones
@@ -56,11 +47,5 @@ $git clone
 
 所以整条语句看起来是这样的：
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
-
-
-啥情况，不行不能
-fdsfdsf  fds
-fds  fds dfs
-
-
+```
 
