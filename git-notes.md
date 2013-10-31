@@ -49,3 +49,33 @@ $git clone
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 ```
 
+##分支branch
+跟svn的分支不一样，git的分支是指向一个commit的指针。可以说是相当轻量级啊。   
+
+创建一个分支：
+```
+$git branch <branch>
+```
+这样就创建了一个branch，（是在本地还是在远程？应该是在本地）,这时查看branch,你会发现你工作的branch并没有改变。    
+```
+$ git branch
+  message-delivery
+* master
+```
+要切到这个分支上开发，你需要checkout
+```
+$ git checkout message-delivery
+$ git branch
+* message-delivery
+  master
+```
+你可以一令命令完成创建分支并切换到它。
+```
+git checkout -b <new-branch>
+```
+
+
+
+
+
+
