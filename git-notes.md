@@ -1,4 +1,4 @@
-#git备忘
+# git备忘
 
 Git never allows you to push changes to the remote if there have been remote changes.
 
@@ -8,12 +8,35 @@ git是分布式的scm，分布式体现在哪儿呢？
 也就是工作目录就是一个repository!
 
 
-$ git remote
-origin   #这里的origin是一个短名，shortname 
+dsfdsfsd fds
+fdsfds fds
+fdsf dsfds
+fdsfdsfdsf
+fdsfdsfdsfsd
+fddsfdsfds
+fdsfdsfdsfdsfds
+
+
+
+$ git remote    
+origin   #这里的origin是一个短名，shortname
 $ git remote add pb git://github.com/paulboone/ticgit.git
 $ git remote -v
 origin git://github.com/schacon/ticgit.git
 pb git://github.com/paulboone/ticgit.git
+
+如果你想查看remote更详细的信息。   
+$ git remote show origin  
+\* remote origin   
+  URL: git://github.com/schacon/ticgit.git  
+  Remote branch merged with 'git pull' while on branch master   
+    master   
+  Tracked remote branches   
+    master   
+    ticgit  
+    
+
+
 
 
 $git clone
@@ -33,3 +56,11 @@ $git clone
 
 所以整条语句看起来是这样的：
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
+
+
+啥情况，不行不能
+fdsfdsf  fds
+fds  fds dfs
+
+
+
