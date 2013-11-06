@@ -77,7 +77,7 @@ git checkout -b <new-branch>
 
 ###参考文献    
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/
-
+Useful Git Tips for Beginners http://sixrevisions.com/web-development/git-tips/
 
 
 
