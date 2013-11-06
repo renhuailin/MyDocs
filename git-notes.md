@@ -74,6 +74,15 @@ $ git branch
 git checkout -b <new-branch>
 ```
 
+Archive The Repository
+First, let’s export our repository into a ZIP archive. Run the following command in your local copy of my-git-repo.
+
+git archive master --format=zip --output=../website-12-10-2012.zip
+Or, for Unix users that would prefer a tarball:
+
+git archive master --format=tar --output=../website-12-10-2012.tar
+This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
+
 
 ###参考文献    
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
