@@ -6,3 +6,10 @@ https://github.com/realint/monkey
 
 提升基于英特尔®架构的 Android* 模拟器的速度
 http://software.intel.com/zh-cn/speeding-up-the-android-emulator-on-intel-architecture/?utm_campaign=CSDN&utm_source=intel.csdn.net&utm_medium=Link&utm_content=%20intelandroid%20-jiasuqi
+
+
+
+facebook的大数据查询引擎
+
+https://github.com/facebook/presto
+
