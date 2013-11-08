@@ -1,6 +1,11 @@
 MyDocs
 ======
 
+imessage enabler    
+http://www.souldevteam.net/blog/2012/11/28/enable-imessage-on-hackintosh/
+
+
+
 
  Useful Git Tips for Beginners
 http://sixrevisions.com/web-development/git-tips/ 
