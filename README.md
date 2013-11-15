@@ -11,12 +11,6 @@ http://www.souldevteam.net/blog/2012/11/28/enable-imessage-on-hackintosh/
 http://sixrevisions.com/web-development/git-tips/ 
 
 
-
-gitosis   gitlab
-
-#centos 5.8 install gitlab.
-
-
 https://github.com/gitlabhq/gitlabhq/blob/6-2-stable/doc/install/installation.md
 
 在gitlab的安装过程中学习到了不少东西，包括用unicorn来部署rails的应用。里面的脚本也写相当好，值得好好学习一下。
