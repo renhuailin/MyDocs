@@ -89,6 +89,22 @@ This takes the current master branch and places all of its files into a ZIP arch
 use "git rm --cached <file>..." to unstage
 
 
+## git push 出错
+
+* git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly
+
+出现这个错误是因为git命令发起的http请求的包是大小限制的，你push的文件超过了这个限制。解决这个错误很简单，加大这个值就行了。 
+```
+git config http.postBuffer 524288000
+```
+
+* error: RPC failed; result=22, HTTP code = 413 fatal: The remote end hung up unexpectedly
+
+这就是因为你的git web server做了上传文件大小的限制了。我目前用的是gitlab所以修改一下nginx的配置就行了：
+```
+client_max_body_size 50m;
+```
+
 
 ###参考文献    
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
