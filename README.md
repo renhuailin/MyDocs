@@ -21,5 +21,13 @@ https://github.com/gitlabhq/gitlabhq/blob/6-2-stable/doc/install/installation.md
 https://github.com/Hack56/Rails-Template/wiki/Running-Multiple-Rails-Apps-on-Nginx
 
 
+### Ceph的一些资料
 
+https://github.com/ceph/ceph/blob/master/doc/architecture.rst
+
+http://www.alidata.org/archives/1589   
+
+IOzone 是做io测试工具。很专业的。
+
+我们用的是：MooseFS 
 
