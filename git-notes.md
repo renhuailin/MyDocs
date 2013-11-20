@@ -84,6 +84,38 @@ git archive master --format=tar --output=../website-12-10-2012.tar
 This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
 
 
+#### Tracking 分支
+3.5.2 Tracking Branches
+Checking out a local branch from a remote branch automatically creates what is called a tracking branch. 
+检出（checkout）一个远程的分支到本地会自动创建一个叫tracking分支的本地分支。
+
+Tracking branches are local branches that have a direct relationship to a remote branch. If you're on a tracking branch and type git push, Git automatically knows which server and branch to push to. Also, running git pull while on one of these branches fetches all the remote references and then automatically merges in the corresponding remote branch.  
+
+tracking分支是远程分支有着直接关系的本地分支。如果你在一个tracking分支上执行`git push`,git会自动知道把内容push到哪个服务器哪个分支上。如果你在tracking分支上执行`git pull`,git会自动把远程分支上的内容取到本地并自动合并。
+
+
+When you clone a repository, it generally automatically creates a master branch that tracks origin/master. 
+That's why git push and git pull work out of the box with no other arguments. However, you can set up other tracking branches if you wish — ones that don't track branches on origin and don't track the master branch. The simple case is the example you just saw, running git checkout -b [branch] [remotename]/[branch]. If you have Git version 1.6.2 or later, you can also use the --track shorthand:
+$ git checkout --track origin/serverfix
+Branch serverfix set up to track remote branch refs/remotes/origin/ serverfix.
+Switched to a new branch "serverfix"
+
+当你clone了一个仓库，它会自动创建一个主分支(master branch)跟踪origin/master。这也是为什么`git push` and `git pull`可以不加参数的正常运行。
+
+
+
+
+To set up a local branch with a different name than the remote branch, you can easily use the first version with a different local branch name:
+$ git checkout -b sf origin/serverfix
+Branch sf set up to track remote branch refs/remotes/origin/serverfix.
+Switched to a new branch "sf"
+Now, your local branch sf will automatically push to and pull from origin/serverfix.
+
+
+
+
+
+
 ##理解Stage
 从stage中删除文件    
 use "git rm --cached <file>..." to unstage
