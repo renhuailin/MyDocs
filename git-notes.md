@@ -1,4 +1,18 @@
 # git备忘
+
+##待解决的问题
+git reset是做什么的？
+
+how to merge binary file ?
+
+
+##git config 
+```
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+$ git config --global core.editor emacs
+```
+
 ##git的特点
 Conceptually, most other systems store information as a list of file-based changes.
 其它的vcs都是保存的是基于文件的变更(file-based changes) ,而git保存的是快照(snapshot)
