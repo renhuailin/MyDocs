@@ -21,6 +21,9 @@ https://github.com/gitlabhq/gitlabhq/blob/6-2-stable/doc/install/installation.md
 https://github.com/Hack56/Rails-Template/wiki/Running-Multiple-Rails-Apps-on-Nginx
 
 
+github-flavored-markdown  
+https://help.github.com/articles/github-flavored-markdown
+
 ### Ceph的一些资料
 
 https://github.com/ceph/ceph/blob/master/doc/architecture.rst
