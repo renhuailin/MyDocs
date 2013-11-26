@@ -1,4 +1,12 @@
 # git备忘
+##git的特点
+Conceptually, most other systems store information as a list of file-based changes.
+其它的vcs都是保存的是基于文件的变更(file-based changes) ,而git保存的是快照(snapshot)
+
+Every time you commit, or save the state of your project in Git, it basically takes a picture of what all your files look like at that moment and stores a reference to that snapshot. To be efficient, if files have not changed, Git doesn't store the file again—just a link to the previous identical file it has already stored. 
+
+每次你提交或是在git里保存你的项目的状态，它会创建一个当前项目所有文件的快照，同时保存一个指向这个快照的引用。为了使这个过程更快，如果一个文件没有发生变化（本次提交没有修改），那git不会再保存一份这个文件，而是保存一个指向上一个变化了版本链接。
+
 
 Git never allows you to push changes to the remote if there have been remote changes.
 
