@@ -7,7 +7,7 @@ http://www.souldevteam.net/blog/2012/11/28/enable-imessage-on-hackintosh/
 
 
 
- Useful Git Tips for Beginners
+Useful Git Tips for Beginners
 http://sixrevisions.com/web-development/git-tips/ 
 
 
@@ -23,6 +23,9 @@ https://github.com/Hack56/Rails-Template/wiki/Running-Multiple-Rails-Apps-on-Ngi
 
 github-flavored-markdown  
 https://help.github.com/articles/github-flavored-markdown
+
+https://github.com/blog/1289-emoji-autocomplete   :smile:
+
 
 ### Ceph的一些资料
 
