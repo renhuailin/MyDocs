@@ -92,6 +92,24 @@ git archive master --format=tar --output=../website-12-10-2012.tar
 This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
 
 
+#### merge
+
+#### Fast Forward
+什么是fast forward呢，如果你从master创建了一个分支develop,并在develop分支上开发。
+![创建develop分支](images/img_1329193173_1.png "创建develop分支")
+
+然后呢，你checkout master,     
+`$ git merge develop`  
+git发现master分支在创建develop分支到merge点这段时间都没有任何commit，实际上你创建的develop分支没有任何意义，你相当于在master上开发，所以git直接到master指向develop最后提交点。合并后的history图如下：    
+![直接合并后的效果](images/img_1329193176_2.png "直接合并后的效果")   
+你会发现，你根本看不到曾经有过develop这个分支。也许有人会说，这不是我想要的，我要在merge后保留develop分支。OK，git提供了`--no-ff`这个选项，官方文档的说明是：Create a merge commit even when the merge resolves as a fast-forward.什么意思呢?
+意思是，git会创建一个merge commit，即使它发现本次merge经分析后是一个fast-forward merge.
+如果我们刚才执行的是
+`$ git merge --no-ff develop`   
+合并后的history图如下：  
+![--no-ff合并后的效果](images/img_1329193179_3.png "--no-ff合并后的效果")      
+怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，：）   
+
 #### Tracking 分支
 3.5.2 Tracking Branches
 Checking out a local branch from a remote branch automatically creates what is called a tracking branch. 
