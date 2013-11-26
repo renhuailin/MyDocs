@@ -108,7 +108,7 @@ git发现master分支在创建develop分支到merge点这段时间都没有任�
 `$ git merge --no-ff develop`   
 合并后的history图如下：  
 ![--no-ff合并后的效果](images/img_1329193179_3.png "--no-ff合并后的效果")      
-怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，：）   
+怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，:smile:     
 
 #### Tracking 分支
 3.5.2 Tracking Branches
