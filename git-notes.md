@@ -165,6 +165,11 @@ Now, your local branch sf will automatically push to and pull from origin/server
 从stage中删除文件    
 use "git rm --cached <file>..." to unstage
 
+###交互式的staging
+```
+$ git add -i
+```
+详细操作请参考[progit](https://github.com/progit/progit "progit")
 
 ## git push 出错
 
