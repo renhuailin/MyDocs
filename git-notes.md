@@ -204,7 +204,7 @@ $ git help -a | grep credential-
   credential-osxkeychain    remote-ext
   credential-store          remote-fd
 ```
-这是我的电脑上支持的helps,我既支持密码缓存(cache)又支持密码保存(store). 我想了解credential-cache到底怎么用，
+这是我的电脑上支持的helpers,既支持密码缓存(cache)又支持密码保存(store). 我想了解credential-cache到底怎么用，
 ```
 $ git help credential-cache
 ```
