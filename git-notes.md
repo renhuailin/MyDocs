@@ -112,6 +112,10 @@ This takes the current master branch and places all of its files into a ZIP arch
 
 
 #### merge
+这篇文章里讲的merge和回滚还是挺参考价值的
+http://guibin.iteye.com/blog/1014369
+
+
 
 #### Fast Forward
 什么是fast forward呢，如果你从master创建了一个分支develop,并在develop分支上开发。
