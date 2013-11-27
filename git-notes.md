@@ -1,5 +1,10 @@
 # git备忘
 
+
+##git中的术语
+
+
+
 ##待解决的问题
 git reset是做什么的？
 
@@ -176,6 +181,56 @@ git config http.postBuffer 524288000
 ```
 client_max_body_size 50m;
 ```
+
+
+## Windows下cygwin中的git如果保存密码？
+
+[参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "") 
+###git 1.7.9或更新版本
+从git 1.7.9开始，git提供一种简洁便利的方法来保存http和https的密码，这种机制叫*credential helpers*。   
+```
+$ git config --global credential.helper cache
+```
+运行了上面的命令后，就可以保存你的密码15分钟。15分钟是默认值，你可以通过下面的命令来调成你喜欢的时长。
+```
+$ git config --global credential.helper "cache --timeout=3600"
+```
+更多关于保存密码的方法，请查看gitcredentials的manpage
+```
+man gitcredentials
+```
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+Update:
+
+I found my answer here: Is there a way to skip password typing when using https:// github
+
+Summarized:
+
+Remember passwords for 15 minutes (default):
+
+git config --global credential.helper cache
+Remember passwords for 10 hours:
+
+git config --global credential.helper 'cache --timeout=36000'
+Store passwords (didn't try this):
+
+git config --global credential.helper store
+Reset:
+
+git config --unset --global credential.helper
+Cim
 
 
 ###参考文献    
