@@ -188,49 +188,40 @@ client_max_body_size 50m;
 [参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "") 
 ###git 1.7.9或更新版本
 从git 1.7.9开始，git提供一种简洁便利的方法来保存http和https的密码，这种机制叫*credential helpers*。   
+
+
+即使你没有安全的方法来保存密码，至少可以做到保存用户名。在你的配置里加入下面两行：
+[credential "https://example.com"]
+	username = me
+这样，当你访问https://example.com时，git会自动使用`me`这个用户名。
+
+下面我们来解决保存密码的问题。   
+首先我们要看一下，git所支持的credential helpers.
+```
+$ git help -a | grep credential-
+  credential-cache          relink
+  credential-cache--daemon  remote
+  credential-osxkeychain    remote-ext
+  credential-store          remote-fd
+```
+这是我的电脑上支持的helps,我既支持密码缓存(cache)又支持密码保存(store). 我想了解credential-cache到底怎么用，
+```
+$ git help credential-cache
+```
+OK，看了manpage后，我知道怎么用了，现在开始配置密码缓存！
+
 ```
 $ git config --global credential.helper cache
 ```
 运行了上面的命令后，就可以保存你的密码15分钟。15分钟是默认值，你可以通过下面的命令来调成你喜欢的时长。
 ```
 $ git config --global credential.helper "cache --timeout=3600"
-```
+```	
+
 更多关于保存密码的方法，请查看gitcredentials的manpage
 ```
-man gitcredentials
+$ man gitcredentials
 ```
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-Update:
-
-I found my answer here: Is there a way to skip password typing when using https:// github
-
-Summarized:
-
-Remember passwords for 15 minutes (default):
-
-git config --global credential.helper cache
-Remember passwords for 10 hours:
-
-git config --global credential.helper 'cache --timeout=36000'
-Store passwords (didn't try this):
-
-git config --global credential.helper store
-Reset:
-
-git config --unset --global credential.helper
-Cim
 
 
 ###参考文献    
