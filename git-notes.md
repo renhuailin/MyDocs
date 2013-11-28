@@ -200,8 +200,10 @@ client_max_body_size 50m;
 
 
 即使你没有安全的方法来保存密码，至少可以做到保存用户名。在你的配置里加入下面两行：
+```
 [credential "https://example.com"]
 	username = me
+```
 这样，当你访问https://example.com时，git会自动使用`me`这个用户名。
 
 下面我们来解决保存密码的问题。   
