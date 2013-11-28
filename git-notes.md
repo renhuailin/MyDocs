@@ -204,7 +204,7 @@ client_max_body_size 50m;
 [credential "https://example.com"]
 	username = me
 ```
-这样，当你访问https://example.com时，git会自动使用`me`这个用户名。
+这样，当你访问https://example.com    时，git会自动使用`me`这个用户名。
 
 下面我们来解决保存密码的问题。   
 首先我们要看一下，git所支持的credential helpers.
