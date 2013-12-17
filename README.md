@@ -37,3 +37,11 @@ IOzone 是做io测试工具。很专业的。
 
 我们用的是：MooseFS 
 
+
+###【我收藏的编程字体】
+century schoolbook monospace , verily serif mono 这两个字体在mac下的显示效果相当好，不过在linux就会有些问题，在linux下就不等宽的了，可能是linux font render的问题。真可惜。
+
+
+
+
+
