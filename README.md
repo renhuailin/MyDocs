@@ -41,7 +41,7 @@ IOzone 是做io测试工具。很专业的。
 ###【我收藏的编程字体】
 century schoolbook monospace , verily serif mono 这两个字体在mac下的显示效果相当好，不过在linux就会有些问题，在linux下就不等宽的了，可能是linux font render的问题。真可惜。
 
-
-
+###【Console2与ConEmu】
+windows下的默认的命令行实在是太难用了，几年前我在网上找到了Console2,感觉不错，跟命令行和cygwin结合得都挺好的。可是最近在windows 7下测试发现有点问题，无法用了。于是我在网上找它的替代品，没想到找到了更好的东西 ConEmu，这个东西比console2强大太多了，而且作者更新的频繁，不像console2，N年不更新了。真心感谢这帮人，另外鄙视一下microsoft,这么难使的终端，你们这么多年都没有人修改一下，可见你们对用户体验有多么不重视，你们真的是太官僚化了。
 
 
