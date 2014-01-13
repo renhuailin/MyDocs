@@ -14,9 +14,7 @@ facebook的大数据查询引擎
 https://github.com/facebook/presto
 
 
-# docker
-
-  https://github.com/dotcloud/docker
+* docker  https://github.com/dotcloud/docker
 
 
-# HTML5 canvas rich UI  Library : http://www.zebkit.com/
+* HTML5 canvas rich UI  Library : http://www.zebkit.com/
