@@ -188,14 +188,15 @@ $ git branch
 git checkout -b <new-branch>
 ```
 
-Archive The Repository
-First, let’s export our repository into a ZIP archive. Run the following command in your local copy of my-git-repo.
+删除一个本地分支 `git branch -d [分支名]`
+```
+$ git branch -d hotfix
+```
 
-git archive master --format=zip --output=../website-12-10-2012.zip
-Or, for Unix users that would prefer a tarball:
-
-git archive master --format=tar --output=../website-12-10-2012.tar
-This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
+查看远程分支
+```
+$ git branch -r
+```
 
 
 #### merge
@@ -240,13 +241,24 @@ Switched to a new branch "serverfix"
 
 
 
-
 To set up a local branch with a different name than the remote branch, you can easily use the first version with a different local branch name:
 $ git checkout -b sf origin/serverfix
 Branch sf set up to track remote branch refs/remotes/origin/serverfix.
 Switched to a new branch "sf"
 Now, your local branch sf will automatically push to and pull from origin/serverfix.
 
+
+## Archive 归档
+Archive The Repository
+First, let’s export our repository into a ZIP archive. Run the following command in your local copy of my-git-repo.
+```
+git archive master --format=zip --output=../website-12-10-2012.zip
+```
+Or, for Unix users that would prefer a tarball:
+```
+git archive master --format=tar --output=../website-12-10-2012.tar
+``
+This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
 
 
 ##理解Stage
