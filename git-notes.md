@@ -76,7 +76,94 @@ $git clone
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 ```
 
-##分支branch
+## Tag
+tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.
+
+### 查看tag
+```shell
+$ git tag
+$ git tag -l 'v1.4.2.*'   # 按条件搜索tag.
+```
+
+### 创建tag
+git中有两种tag：lightweight（轻量级tag）, annotated(注解型) tag. lightweight（轻量级tag）跟分支很像，它就是指向某次提交的指针。annotated(注解型) tag，则在git数据库中保存了完整的信息，They are checksummed ,包含tag名称，日期，邮件，可以有tagging message(也就是备注)。能够被签名，能被verify。git 推荐使用annotated(注解型) tag。     
+
+
+### Annotated(注解型) tag
+```shell
+$ git tag -a v1.4 -m 'my version 1.4'
+```
+-m这个选项指定了tag的备注。    
+查看刚建的这个tag的信息
+```shell
+$ git show v1.4
+tag v1.4
+Tagger: Scott Chacon <schacon@gee-mail.com>
+Date:   Mon Feb 9 14:45:11 2009 -0800
+my version 1.4
+commit 15027957951b64cf874c3557a0f3547bd83b3ff6
+Merge: 4a447f7... a6b4c97...
+Author: Scott Chacon <schacon@gee-mail.com>
+Date:   Sun Feb 8 19:02:46 2009 -0800
+    Merge branch 'experiment'
+```
+
+### lightweight（轻量级tag）
+lightweight（轻量级tag）,基本上就是一个保存在文件中的一个commit checksum,没有其他别的信息被保存。** 它没有用到git 的数据库 **  创建一个轻量级tag很简单，在创建tag时别指定-a, -s, 或 -m 选项就行了。
+```
+$ git tag v1.4-lw
+$ git tag
+v0.1
+v1.3
+v1.4
+v1.4-lw
+v1.5
+
+$ git show v1.4-lw
+commit 15027957951b64cf874c3557a0f3547bd83b3ff6
+Merge: 4a447f7... a6b4c97...
+Author: Scott Chacon <schacon@gee-mail.com>
+Date:   Sun Feb 8 19:02:46 2009 -0800
+    Merge branch 'experiment'
+```
+
+###  分享tag (Sharing Tags)
+默认情况下，git push是不会把本地的tag推到服务器上的，你要手动把它们推送到server上。这个跟把分支分享到server上是很相似。你执行命令`git push origin [tagname]`   
+```
+$ git push origin v1.5
+Counting objects: 50, done.
+Compressing objects: 100% (38/38), done.
+Writing objects: 100% (44/44), 4.56 KiB, done.
+Total 44 (delta 18), reused 8 (delta 1)
+To git@github.com:schacon/simplegit.git
+* [new tag]         v1.5 -> v1.5
+```
+如果你有很多tag要推送到server上，你可以使用-tags这个选项。
+```
+$ git push origin --tags
+Counting objects: 50, done.
+Compressing objects: 100% (38/38), done.
+Writing objects: 100% (44/44), 4.56 KiB, done.
+Total 44 (delta 18), reused 8 (delta 1)
+To git@github.com:schacon/simplegit.git
+* [new tag]
+* [new tag]
+* [new tag]
+* [new tag]
+* [new tag]
+v0.1 -> v0.1
+v1.2 -> v1.2
+v1.4 -> v1.4
+v1.4-lw -> v1.4-lw
+v1.5 -> v1.5
+```
+你把tag分享到server上后，如果有人clone或pull这个repository,他们就会得到你分享的这些tags。
+
+###  删除tag 
+```
+git tag -d v1.4-lw
+```
+## 分支(branch)
 跟svn的分支不一样，git的分支是指向一个commit的指针。可以说是相当轻量级啊。   
 
 创建一个分支：
@@ -159,9 +246,6 @@ $ git checkout -b sf origin/serverfix
 Branch sf set up to track remote branch refs/remotes/origin/serverfix.
 Switched to a new branch "sf"
 Now, your local branch sf will automatically push to and pull from origin/serverfix.
-
-
-
 
 
 
