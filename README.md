@@ -4,8 +4,8 @@ MyDocs
 imessage enabler    
 http://www.souldevteam.net/blog/2012/11/28/enable-imessage-on-hackintosh/
 
-
-
+[Install eucalyptus 3.2.2]
+http://alinush.org/2013/02/19/how-to-compile-and-install-eucalyptus-3-2-0-on-ubuntu-12-0412-10-from-github-sources-cloud-in-a-box/
 
 Useful Git Tips for Beginners
 http://sixrevisions.com/web-development/git-tips/ 
