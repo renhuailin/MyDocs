@@ -11,6 +11,8 @@ Useful Git Tips for Beginners
 http://sixrevisions.com/web-development/git-tips/ 
 
 
+OpenStack用的是noVNC   https://github.com/kanaka/noVNC 
+
 https://github.com/gitlabhq/gitlabhq/blob/6-2-stable/doc/install/installation.md
 
 在gitlab的安装过程中学习到了不少东西，包括用unicorn来部署rails的应用。里面的脚本也写相当好，值得好好学习一下。
