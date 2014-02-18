@@ -257,7 +257,7 @@ git archive master --format=zip --output=../website-12-10-2012.zip
 Or, for Unix users that would prefer a tarball:
 ```
 git archive master --format=tar --output=../website-12-10-2012.tar
-``
+```
 This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
 
 
@@ -345,5 +345,5 @@ An example is `git config http.postBuffer 524288000` for 500MB.
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
 Useful Git Tips for Beginners http://sixrevisions.com/web-development/git-tips/     
 [Progit](https://github.com/progit/progit "progit")
-
+http://stackoverflow.com/questions/12651749/git-push-fails-rpc-failed-result-22-http-code-411
 
