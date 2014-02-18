@@ -330,6 +330,16 @@ $ git config --global credential.helper "cache --timeout=3600"
 $ man gitcredentials
 ```
 
+## 一些问题的解决方法
+1  git push fails: RPC failed; result=22, HTTP code = 411 
+
+This is caused by a Git configuration default which limits certain HTTP operations to 1 megabyte.To change this limit run within your local repository
+	git config http.postBuffer *bytes*
+where bytes is the maximum number of bytes permitted.
+
+An example is `git config http.postBuffer 524288000` for 500MB. 
+
+
 
 ###参考文献    
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
