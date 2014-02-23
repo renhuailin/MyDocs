@@ -4,7 +4,8 @@ empty!
 http://blog.csdn.net/weiwangchao_/article/category/897039
 
 
-http://www.raywenderlich.com/tutorials
+一个英文的游戏教程   http://www.raywenderlich.com/tutorials
+
 
 如何制作一个塔防游戏 Cocos2d-x 3.0alpha0  http://blog.csdn.net/qqmcy/article/details/17029471    这个作者的其它文章也不错。
 
