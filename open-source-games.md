@@ -15,6 +15,7 @@ http://blog.csdn.net/weiwangchao_/article/category/897039
 杜甲同学的专栏，有介绍如何写一个横版的格斗游戏 http://blog.csdn.net/akof1314/article/category/1175224
 
 
+
 ### 源代码
 
 
@@ -22,3 +23,5 @@ http://blog.csdn.net/weiwangchao_/article/category/897039
 
 
 8款开源经典iPhone游戏源代码 http://blog.okbase.net/iphone/archive/48.html
+
+13个经典JavaScript游戏 附源代码下载 http://developer.51cto.com/art/201104/257003.htm
