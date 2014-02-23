@@ -26,3 +26,6 @@ http://blog.csdn.net/weiwangchao_/article/category/897039
 
 13个经典JavaScript游戏 附源代码下载，包含PvZ,星际，打飞机等经典游戏，应该很有参考价值。
 http://developer.51cto.com/art/201104/257003.htm
+
+
+HTML5街头霸王游戏(开放源码)  http://www.alloyteam.com/2012/05/html5-streetfighter-demo/
