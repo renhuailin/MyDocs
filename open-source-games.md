@@ -35,3 +35,7 @@ http://docs.huihoo.com/game/resource1.html
 
 
 
+法网游《The Saga of Ryzom》开放游戏源代码 : 今日Ryzom传奇的官方网站发出了公告：开放Ryzom传奇的源代码。
+The MMORPG game Ryzom goes open source.
+http://game.guhantai.com/2010/0507/23524.shtml 
+
