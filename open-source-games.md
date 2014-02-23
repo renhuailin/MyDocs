@@ -29,3 +29,9 @@ http://developer.51cto.com/art/201104/257003.htm
 
 
 HTML5街头霸王游戏(开放源码)  http://www.alloyteam.com/2012/05/html5-streetfighter-demo/
+
+开放源代码游戏集锦(一) :灰狐网收集的，包括经典的 Tank 坦克大战、飞机大战、潜艇大战、一个仿Diablo的游戏、吃豆人（Pacman）和超级玛丽。
+http://docs.huihoo.com/game/resource1.html
+
+
+
