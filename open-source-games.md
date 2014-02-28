@@ -1,5 +1,4 @@
 
-
 ### 教程
 http://blog.csdn.net/weiwangchao_/article/category/897039
 
@@ -15,6 +14,8 @@ http://blog.csdn.net/weiwangchao_/article/category/897039
 杜甲同学的专栏，有介绍如何写一个横版的格斗游戏 http://blog.csdn.net/akof1314/article/category/1175224
 
 无幻,杜甲同学有几篇文章引用了它的，不过没有注明呢。 http://blog.csdn.net/akof1314/article/category/1175224
+
+阿修罗道--疾风似月光，里面有好多cocos2d-x 3.0的文章，相当不错。  http://blog.csdn.net/fansongy/article/category/1394384
 
 ### 源代码
 
