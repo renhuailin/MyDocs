@@ -18,3 +18,5 @@ https://github.com/facebook/presto
 
 
 * HTML5 canvas rich UI  Library : http://www.zebkit.com/
+
+* github自己的开源editor atom   https://github.com/atom
