@@ -1,21 +1,25 @@
-
 ### 教程
-http://blog.csdn.net/weiwangchao_/article/category/897039
+
+* http://blog.csdn.net/weiwangchao_/article/category/897039
 
 
-一个英文的游戏教程   http://www.raywenderlich.com/tutorials
+* 一个英文的游戏教程   http://www.raywenderlich.com/tutorials
 
 
-如何制作一个塔防游戏 Cocos2d-x 3.0alpha0  http://blog.csdn.net/qqmcy/article/details/17029471    这个作者的其它文章也不错。
+* 如何制作一个塔防游戏 Cocos2d-x 3.0alpha0  http://blog.csdn.net/qqmcy/article/details/17029471    这个作者的其它文章也不错。
 
-蜗牛 独立游戏开发者   http://www.cnblogs.com/sban/category/543667.html
+* 蜗牛 独立游戏开发者   http://www.cnblogs.com/sban/category/543667.html
 
 
-杜甲同学的专栏，有介绍如何写一个横版的格斗游戏 http://blog.csdn.net/akof1314/article/category/1175224
+* 杜甲同学的专栏，有介绍如何写一个横版的格斗游戏 http://blog.csdn.net/akof1314/article/category/1175224
 
-无幻,杜甲同学有几篇文章引用了它的，不过没有注明呢。 http://blog.csdn.net/akof1314/article/category/1175224
+* 无幻,杜甲同学有几篇文章引用了它的，不过没有注明呢。 http://blog.csdn.net/akof1314/article/category/1175224
 
-阿修罗道--疾风似月光，里面有好多cocos2d-x 3.0的文章，相当不错。  http://blog.csdn.net/fansongy/article/category/1394384
+* 阿修罗道--疾风似月光，里面有好多cocos2d-x 3.0的文章，相当不错。  http://blog.csdn.net/fansongy/article/category/1394384
+* Yorhom's Game Box
+用自己的双手绘画自己的游戏天地，用自己的智慧换取成功的喜悦。  http://blog.csdn.net/yorhomwang/article/category/1192215
+
+
 
 ### 源代码
 
