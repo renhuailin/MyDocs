@@ -9,7 +9,12 @@ Setting : User behaviors
                (:lt.objs.style/font-settings "Source Code Pro" 11 1.3)  ;这一句是修改字体
               (:lt.objs.style/set-theme "default")]
 
+#### Show line numbers
 
+:editor [:lt.objs.editor/no-wrap
+         :lt.objs.editor/line-numbers
+               (:lt.objs.style/font-settings "Source Code Pro" 11 1.3)  ;这一句是修改字体
+              (:lt.objs.style/set-theme "default")]
 
 
 imessage enabler    
