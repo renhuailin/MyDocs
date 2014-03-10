@@ -2,7 +2,13 @@ MyDocs
 ======
 
 ### LightTable 
-#### 
+#### 设置字体
+Setting : User behaviors
+
+:editor [:lt.objs.editor/no-wrap
+               (:lt.objs.style/font-settings "Source Code Pro" 11 1.3)  ;这一句是修改字体
+              (:lt.objs.style/set-theme "default")]
+
 
 
 
