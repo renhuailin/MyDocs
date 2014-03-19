@@ -331,7 +331,7 @@ $ man gitcredentials
 ```
 
 ## 一些问题的解决方法
-1  git push fails: RPC failed; result=22, HTTP code = 411 
+1.  git push fails: RPC failed; result=22, HTTP code = 411 
 
 This is caused by a Git configuration default which limits certain HTTP operations to 1 megabyte.To change this limit run within your local repository
 	git config http.postBuffer *bytes*
@@ -339,13 +339,14 @@ where bytes is the maximum number of bytes permitted.
 
 An example is `git config http.postBuffer 524288000` for 500MB. 
 
-2 error: RPC failed; result=22, HTTP code = 502
+2. error: RPC failed; result=22, HTTP code = 502
 fatal: The remote end hung up unexpectedly
 fatal: The remote end hung up unexpectedly
 Everything up-to-date     
+我用push到gitlab上时，出现了这个问题，从网上找到了解决方法，把/home/git/gitlab/config/gitlab.yml中的max_size和timeout值调得大些就行了。
 
 ```
-max_size: 55242880 # 5.megabytes
+max_size: 55242880 # 55.megabytes
 # Git timeout to read a commit, in seconds
 timeout: 60
 ```
