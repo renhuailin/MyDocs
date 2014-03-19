@@ -339,7 +339,16 @@ where bytes is the maximum number of bytes permitted.
 
 An example is `git config http.postBuffer 524288000` for 500MB. 
 
+2 error: RPC failed; result=22, HTTP code = 502
+fatal: The remote end hung up unexpectedly
+fatal: The remote end hung up unexpectedly
+Everything up-to-date     
 
+```
+max_size: 55242880 # 5.megabytes
+# Git timeout to read a commit, in seconds
+timeout: 60
+```
 
 ###参考文献    
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
