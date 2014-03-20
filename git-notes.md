@@ -1,24 +1,15 @@
-# git备忘
+git备忘
+----------
 
 
-##git中的术语
-
-
-
-##待解决的问题
-git reset是做什么的？
-
-how to merge binary file ?
-
-
-##git config 
+# 1 git config 
 ```
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
 $ git config --global core.editor emacs
 ```
 
-##git的特点
+# 2 git的特点
 Conceptually, most other systems store information as a list of file-based changes.
 其它的vcs都是保存的是基于文件的变更(file-based changes) ,而git保存的是快照(snapshot)
 
@@ -76,20 +67,20 @@ $git clone
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 ```
 
-## Tag
+# 3 Tag
 tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.
 
-### 查看tag
+## 3.1 查看tag
 ```shell
 $ git tag
 $ git tag -l 'v1.4.2.*'   # 按条件搜索tag.
 ```
 
-### 创建tag
+## 3.2 创建tag
 git中有两种tag：lightweight（轻量级tag）, annotated(注解型) tag. lightweight（轻量级tag）跟分支很像，它就是指向某次提交的指针。annotated(注解型) tag，则在git数据库中保存了完整的信息，They are checksummed ,包含tag名称，日期，邮件，可以有tagging message(也就是备注)。能够被签名，能被verify。git 推荐使用annotated(注解型) tag。     
 
 
-### Annotated(注解型) tag
+## 3.3 Annotated(注解型) tag
 ```shell
 $ git tag -a v1.4 -m 'my version 1.4'
 ```
@@ -108,7 +99,7 @@ Date:   Sun Feb 8 19:02:46 2009 -0800
     Merge branch 'experiment'
 ```
 
-### lightweight（轻量级tag）
+## 3.4 lightweight（轻量级tag）
 lightweight（轻量级tag）,基本上就是一个保存在文件中的一个commit checksum,没有其他别的信息被保存。** 它没有用到git 的数据库 **  创建一个轻量级tag很简单，在创建tag时别指定-a, -s, 或 -m 选项就行了。
 ```
 $ git tag v1.4-lw
@@ -127,7 +118,7 @@ Date:   Sun Feb 8 19:02:46 2009 -0800
     Merge branch 'experiment'
 ```
 
-###  分享tag (Sharing Tags)
+## 3.5 分享tag (Sharing Tags)
 默认情况下，git push是不会把本地的tag推到服务器上的，你要手动把它们推送到server上。这个跟把分支分享到server上是很相似。你执行命令`git push origin [tagname]`   
 ```
 $ git push origin v1.5
@@ -159,11 +150,11 @@ v1.5 -> v1.5
 ```
 你把tag分享到server上后，如果有人clone或pull这个repository,他们就会得到你分享的这些tags。
 
-###  删除tag 
+## 3.6  删除tag 
 ```
 git tag -d v1.4-lw
 ```
-## 分支(branch)
+# 4 分支(branch)
 跟svn的分支不一样，git的分支是指向一个commit的指针。可以说是相当轻量级啊。   
 
 创建一个分支：
@@ -227,13 +218,11 @@ $ git branch -r
 ```
 
 
-#### merge
+## 4.2 merge
 这篇文章里讲的merge和回滚还是挺参考价值的
 http://guibin.iteye.com/blog/1014369
 
-
-
-#### Fast Forward
+### 4.2.1 Fast Forward
 什么是fast forward呢，如果你从master创建了一个分支develop,并在develop分支上开发。
 ![创建develop分支](images/img_1329193173_1.png "创建develop分支")
 
@@ -249,8 +238,7 @@ git发现master分支在创建develop分支到merge点这段时间都没有任�
 ![--no-ff合并后的效果](images/img_1329193179_3.png "--no-ff合并后的效果")      
 怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，:smile:     
 
-#### Tracking 分支
-3.5.2 Tracking Branches
+## 4.3 Tracking 分支(Tracking Branches)
 Checking out a local branch from a remote branch automatically creates what is called a tracking branch. 
 检出（checkout）一个远程的分支到本地会自动创建一个叫tracking分支的本地分支。
 
@@ -276,7 +264,7 @@ Switched to a new branch "sf"
 Now, your local branch sf will automatically push to and pull from origin/serverfix.
 
 
-## Archive 归档
+# 5 Archive 归档
 Archive The Repository
 First, let’s export our repository into a ZIP archive. Run the following command in your local copy of my-git-repo.
 ```
@@ -289,34 +277,20 @@ git archive master --format=tar --output=../website-12-10-2012.tar
 This takes the current master branch and places all of its files into a ZIP archive (or a tarball), omitting the .git directory. Removing the .git directory removes all version control information, and you’re left with a single snapshot of your project.
 
 
-##理解Stage
-从stage中删除文件    
+# 6 Stage
+## 6.1 从stage中删除文件    
 use "git rm --cached <file>..." to unstage
 
-###交互式的staging
+## 6.2 交互式的staging
 ```
 $ git add -i
 ```
 详细操作请参考[progit](https://github.com/progit/progit "progit")
 
-## git push 出错
-
-* git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly
-
-出现这个错误是因为git命令发起的http请求的包是大小限制的，你push的文件超过了这个限制。解决这个错误很简单，加大这个值就行了。 
-```
-git config http.postBuffer 524288000
-```
-
-* error: RPC failed; result=22, HTTP code = 413 fatal: The remote end hung up unexpectedly
-
-这就是因为你的git web server做了上传文件大小的限制了。我目前用的是gitlab所以修改一下nginx的配置就行了：
-```
-client_max_body_size 50m;
-```
 
 
-## Windows下cygwin中的git如果保存密码？
+
+# 7 Windows下cygwin中的git如何保存密码？
 
 [参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "") 
 ###git 1.7.9或更新版本
@@ -358,16 +332,23 @@ $ git config --global credential.helper "cache --timeout=3600"
 $ man gitcredentials
 ```
 
-## 一些问题的解决方法
-1.  git push fails: RPC failed; result=22, HTTP code = 411 
+# 8 一些问题的解决方法
 
-This is caused by a Git configuration default which limits certain HTTP operations to 1 megabyte.To change this limit run within your local repository
-	git config http.postBuffer *bytes*
-where bytes is the maximum number of bytes permitted.
+* git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly
 
-An example is `git config http.postBuffer 524288000` for 500MB. 
+出现这个错误是因为git命令发起的http请求的包是大小限制的，你push的文件超过了这个限制。解决这个错误很简单，加大这个值就行了。 
+```
+git config http.postBuffer 524288000
+```
 
-2. error: RPC failed; result=22, HTTP code = 502
+* error: RPC failed; result=22, HTTP code = 413 fatal: The remote end hung up unexpectedly
+
+这就是因为你的git web server做了上传文件大小的限制了。我目前用的是gitlab所以修改一下nginx的配置就行了：
+```
+client_max_body_size 50m;
+```
+
+*. error: RPC failed; result=22, HTTP code = 502
 fatal: The remote end hung up unexpectedly
 fatal: The remote end hung up unexpectedly
 Everything up-to-date     
@@ -378,6 +359,12 @@ max_size: 55242880 # 55.megabytes
 # Git timeout to read a commit, in seconds
 timeout: 60
 ```
+
+##待解决的问题
+git reset是做什么的？
+
+how to merge binary file ?
+
 
 ###参考文献    
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
