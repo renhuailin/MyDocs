@@ -248,17 +248,18 @@ tracking分支是远程分支有着直接关系的本地分支。如果你在一
 
 
 When you clone a repository, it generally automatically creates a master branch that tracks origin/master. 
-That's why git push and git pull work out of the box with no other arguments. However, you can set up other tracking branches if you wish — ones that don't track branches on origin and don't track the master branch. The simple case is the example you just saw, running git checkout -b [branch] [remotename]/[branch]. If you have Git version 1.6.2 or later, you can also use the --track shorthand:
+That's why git push and git pull work out of the box with no other arguments. However, you can set up other tracking branches if you wish — ones that don't track branches on origin and don't track the master branch. The simple case is the example you just saw, running `git checkout -b [branch] [remotename]/[branch]`. If you have Git version 1.6.2 or later, you can also use the --track shorthand:
+```
 $ git checkout --track origin/serverfix
+```
 Branch serverfix set up to track remote branch refs/remotes/origin/ serverfix.
 Switched to a new branch "serverfix"
 
-当你clone了一个仓库，它会自动创建一个主分支(master branch)跟踪origin/master。这也是为什么`git push` and `git pull`可以不加参数的正常运行。
-
-
-
+当你clone了一个仓库，它会自动创建一个主分支(master branch)跟踪origin/master。这也是为什么`git push` and `git pull`可以不加参数的正常运行。     
 To set up a local branch with a different name than the remote branch, you can easily use the first version with a different local branch name:
+```
 $ git checkout -b sf origin/serverfix
+```
 Branch sf set up to track remote branch refs/remotes/origin/serverfix.
 Switched to a new branch "sf"
 Now, your local branch sf will automatically push to and pull from origin/serverfix.
