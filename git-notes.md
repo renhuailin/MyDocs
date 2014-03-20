@@ -176,6 +176,7 @@ $ git branch
   message-delivery
 * master
 ```
+
 要切到这个分支上开发，你需要checkout
 ```
 $ git checkout message-delivery
@@ -183,10 +184,37 @@ $ git branch
 * message-delivery
   master
 ```
+
 你可以一令命令完成创建分支并切换到它。
+
 ```
 git checkout -b <new-branch>
 ```
+
+如果你想和其他开发者分享你的分支，以便他们也能在这个分支上开发，那你就需要把分支push到远端服务器上。git默认是不同步你本地的分支的，所以当你要分享分支时，你要手工做这件事儿。
+
+假设你本地有个分支叫serverfix,你要分享这个分支，
+
+```
+$ git push origin serverfix
+Counting objects: 20, done.
+Compressing objects: 100% (14/14), done.
+Writing objects: 100% (15/15), 1.74 KiB, done.
+Total 15 (delta 5), reused 0 (delta 0)
+To git@github.com:schacon/simplegit.git
+ * [new branch]      serverfix -> serverfix
+```
+
+其实这条命令是个简化版本的，git会自动把serverfix展开成refs/heads/serverfix:refs/heads/serverfix,意思是说：“把我本地的分支serverfix,推(push)到远端的serverfix分支上”。 你还可以这样做：
+```
+$ git push origin serverfix:serverfix
+```
+意思是：把我本地的分支serverfix变成远端的分支serverfix。如果你不想远端的分支也叫serverfix,你可以指定一个其他的名字。
+```
+$ git push origin serverfix:awesomebranch
+```
+这样你就把本地的serverfix分支，分享为远端的awesomebranch分支了。下次有人fetch这个库时，就会看到你的分支。
+
 
 删除一个本地分支 `git branch -d [分支名]`
 ```
