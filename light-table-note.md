@@ -1,4 +1,3 @@
-
 ### 设置字体
 Setting : User behaviors
 ``` clojure
@@ -30,5 +29,5 @@ light table 默认是关闭了自动换行的，Ctrl + Space 然后 输入 line 
 (:lt.objs.style/set-theme "default")
 ```
 
-把上面的default删除，然后按tab，就会列出可用的color theme。推荐两个“ambiance“和”twilight”。
+把上面的default删除，然后按tab，就会列出可用的color theme。推荐几个“ambiance“、“lesser-dark”和”twilight”。
 
