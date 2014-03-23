@@ -1,22 +1,6 @@
 MyDocs
 ======
 
-### LightTable 
-#### 设置字体
-Setting : User behaviors
-``` clojure
-:editor [:lt.objs.editor/no-wrap
-               (:lt.objs.style/font-settings "Source Code Pro" 11 1.3)  ;这一句是修改字体
-              (:lt.objs.style/set-theme "default")]
-```
-#### Show line numbers
-``` clojure
-:editor [:lt.objs.editor/no-wrap
-         :lt.objs.editor/line-numbers  ;; Add this line to show line numbers.
-               (:lt.objs.style/font-settings "Source Code Pro" 11 1.3)  ;这一句是修改字体
-              (:lt.objs.style/set-theme "default")]
-
-```
 imessage enabler    
 http://www.souldevteam.net/blog/2012/11/28/enable-imessage-on-hackintosh/
 
