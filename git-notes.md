@@ -78,7 +78,7 @@ $ git rm -r --cached  logs/
 
 如果是文件：
 ```
-$ git rm -r --cached  logs/
+$ git rm  --cached  logs/seo.log
 ```
 
 
