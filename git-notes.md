@@ -67,6 +67,22 @@ $git clone
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 ```
 
+从库里删除文件，比如我在初始导入时，把一些logs文件也添加了进去，后来我把它们加到了.gitignore中，我想把它们从git repo中删除。
+
+
+如果是目录
+
+```
+$ git rm -r --cached  logs/
+```
+
+如果是文件：
+```
+$ git rm -r --cached  logs/
+```
+
+
+
 # 3 Tag
 tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.
 
