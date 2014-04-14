@@ -233,6 +233,13 @@ $ git branch -d hotfix
 $ git branch -r
 ```
 
+切换到远程分支上
+
+```
+$ git checkout -b remoteb origin/remoteb
+```
+
+
 
 ## 4.2 merge
 这篇文章里讲的merge和回滚还是挺参考价值的
