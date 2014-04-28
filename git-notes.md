@@ -81,6 +81,12 @@ $ git rm -r --cached  logs/
 $ git rm  --cached  logs/seo.log
 ```
 
+## 2.2 从版本库里删除文件
+我们从本地删除了文件后，需要把这个操作提交到库里，需要执行一下git rm。
+
+```
+$ git rm file1.txt
+```
 
 
 # 3 Tag
