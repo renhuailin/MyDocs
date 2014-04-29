@@ -390,6 +390,15 @@ max_size: 55242880 # 55.megabytes
 timeout: 60
 ```
 
+## git pull和git fetch的区别
+$ git help pull
+```
+In its default mode, git pull is shorthand for git fetch followed by git merge FETCH_HEAD.
+
+More precisely, git pull runs git fetch with the given parameters and calls git merge to merge the retrieved branch heads into the current branch. With --rebase, it runs git rebase instead of git merge.
+```
+
+
 ##待解决的问题
 git reset是做什么的？
 
