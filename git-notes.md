@@ -113,8 +113,17 @@ stash@{1}: WIP on master: c264051... Revert "added file_size"
 stash@{2}: WIP on master: 21d80a5... added number to log
 ```
 
+如果你想把最后一次stash的内容,apply回来,直接用
+```
+$ git stash apply
+```
+就可以了。
 
+如果你想apply更早stash的内容，需要添加一个参数，内容是`git stash list`列出来的序号。比如要恢复`stash@{2}`,命令是
 
+```
+$ git stash apply stash@{2}
+```
 
 
 
