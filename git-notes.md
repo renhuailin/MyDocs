@@ -125,7 +125,11 @@ $ git stash apply
 $ git stash apply stash@{2}
 ```
 
+清空Git栈。
 
+```
+$ git stash clear
+```
 
 # 3 Tag
 tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.
