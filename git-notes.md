@@ -88,6 +88,35 @@ $ git rm  --cached  logs/seo.log
 $ git rm file1.txt
 ```
 
+## 2.3 git stash
+
+使用git的时候，我们往往使用branch解决任务切换问题，例如，我们往往会建一个自己的分支去修改和调试代码, 如果别人或者自己发现原有的分支上有个不得不修改的bug，我们往往会把完成一半的代码 commit提交到本地仓库，然后切换分支去修改bug，改好之后再切换回来。
+
+这样的话往往log上会有大量不必要的记录。其实如果我们不想提交完成一半或者不完善的代码，但是却不得不去修改一个紧急Bug，那么使用'git stash'就可以将你当前未提交到本地（和服务器）的代码推入到Git的栈中，这时候你的工作区间和上一次提交的内容是完全一样的，所以你可以放心的修 Bug，等到修完Bug，提交到服务器上后，再使用'git stash apply'将以前一半的工作应用回来。
+
+也许有的人会说，那我可不可以多次将未提交的代码压入到栈中？答案是可以的。当你多次使用'git stash'命令后，你的栈里将充满了未提交的代码，这时候你会对将哪个版本应用回来有些困惑，'git stash list'命令可以将当前的Git栈信息打印出来，你只需要将找到对应的版本号，例如使用'git stash apply stash@{1}'就可以将你指定版本号为stash@{1}的工作取出来，当你将所有的栈都应用回来的时候，可以使用'git stash clear'来将栈清空。
+
+git stash aplly 会覆盖当前工作目录里的版本？还是merge？
+
+
+把当前工件目录的内容放到stash栈里。
+```
+$ git stash
+```
+
+查看stash栈里的内容，如果stash多次，就会有多个记录。
+```
+$ git stash list
+
+stash@{0}: WIP on master: 049d078 added the index file
+stash@{1}: WIP on master: c264051... Revert "added file_size"
+stash@{2}: WIP on master: 21d80a5... added number to log
+```
+
+
+
+
+
 
 # 3 Tag
 tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.
