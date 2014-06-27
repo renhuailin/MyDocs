@@ -52,3 +52,9 @@ windows下的默认的命令行实在是太难用了，几年前我在网上找�
 [Java 8 Features – The ULTIMATE Guide](http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html)
 
 [What's New in JDK 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html)
+
+
+
+eclipse 换行插件
+
+http://dev.cdhq.de/eclipse/word-wrap/
