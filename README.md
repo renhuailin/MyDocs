@@ -58,3 +58,6 @@ windows下的默认的命令行实在是太难用了，几年前我在网上找�
 eclipse 换行插件
 
 http://dev.cdhq.de/eclipse/word-wrap/
+
+###【GoGoTester】
+https://code.google.com/p/gogo-tester/
