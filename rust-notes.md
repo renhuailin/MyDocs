@@ -27,3 +27,4 @@ let mut x = 5;
 ## 一些参考资料 
 [Rust for Rubyists](http://www.rustforrubyists.com/book/book.html)
 [Pointers in Rust: a guide](http://words.steveklabnik.com/pointers-in-rust-a-guide)
+[Managed & Owned Boxes in the Rust Programming Language](http://tomlee.co/2012/12/managed-and-owned-boxes-in-the-rust-programming-language/)
