@@ -26,3 +26,4 @@ let mut x = 5;
 
 ## 一些参考资料 
 [Rust for Rubyists](http://www.rustforrubyists.com/book/book.html)
+[Pointers in Rust: a guide](http://words.steveklabnik.com/pointers-in-rust-a-guide)
