@@ -24,6 +24,17 @@ let mut x = 5;
 ```
 
 
+
+## 15 Closures 闭包
+
+
+有一种是stack closure,是在栈上的closure。
+
+
+
+
+
+
 ## 一些参考资料 
 [Rust for Rubyists](http://www.rustforrubyists.com/book/book.html)
 [Pointers in Rust: a guide](http://words.steveklabnik.com/pointers-in-rust-a-guide)
