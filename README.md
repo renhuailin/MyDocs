@@ -65,3 +65,40 @@ http://dev.cdhq.de/eclipse/word-wrap/
 
 ###【GoGoTester】
 https://code.google.com/p/gogo-tester/
+
+### Available decompilers
+
+Procyon - https://bitbucket.org/mstrobel/procyon/wiki/Java%20Decompiler
+
+2014. JDK 5, partly 6. Written in Java. Worth trying.
+
+ 
+
+CFR - http://www.benf.org/other/cfr/
+
+2014. JDK 6, 7, 8 support. Written in Java 6.
+
+“CFR by Lee Benfield is well on its way to becoming the premier Java Decompiler. Lee and I actually work for the same company and share regression tests. We're engaged in a friendly competition to see who can deliver a better decompiler. Based on his progress thus far, there's a very good chance he will win--at least on decompiling obfuscated code :)”
+
+Candle - https://github.com/bradsdavis/candle-decompiler
+
+2013. Written in Java. By Brad Davis @ RH. “only decompiles a subset of the JVM operations”.
+
+Krakatau - https://github.com/Storyyeller/Krakatau
+
+2014.  JDK 7 support? Written in Python.
+
+“Includes a robust verifier. Focuses on translating arbitrary bytecode into valid Java code, as opposed to reconstructing the original code.”
+
+JBVD - https://sourceforge.net/projects/jbdec/?source=directory
+
+2013. Academic Free License (AFL). Javassist approach. Unknown quality.
+
+EDJC - https://sourceforge.net/projects/ejdc/
+
+2011. Written in Java.
+
+JD - http://jd.benow.ca/
+
+JD-Core and JD-GUI are written in C++.
+
