@@ -103,3 +103,9 @@ JD - http://jd.benow.ca/
 JD-Core and JD-GUI are written in C++.
 
 OpenWrt  [OpenWrt，下一个时代的Android](http://www.csdn.net/article/2014-09-11/2821630-jinjiang-interview-WRTnode)
+
+# jQuery File Upload
+
+ajax file upload widget.
+
+https://github.com/blueimp/jQuery-File-Upload/
