@@ -109,3 +109,5 @@ OpenWrt  [OpenWrt，下一个时代的Android](http://www.csdn.net/article/2014-
 ajax file upload widget.
 
 https://github.com/blueimp/jQuery-File-Upload/
+
+With Sprint MVC: http://hmkcode.com/spring-mvc-jquery-file-upload-multiple-dragdrop-progress/
