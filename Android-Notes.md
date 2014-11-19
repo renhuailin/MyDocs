@@ -16,6 +16,8 @@ http://developer.android.com/guide/components/intents-filters.html
 
 # android twitter intergration.
 
+http://hintdesk.com/how-to-tweet-in-twitter-within-android-client/
+
 ```xml
 <activity android:name=".MainActivity" android:label="@string/title_activity_main" >
     <intent-filter>
