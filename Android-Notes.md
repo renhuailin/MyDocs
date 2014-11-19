@@ -14,7 +14,7 @@ http://developer.android.com/reference/android/content/Intent.html
 
 http://developer.android.com/guide/components/intents-filters.html
 
-
+# android twitter intergration.
 
 ```xml
 <activity android:name=".MainActivity" android:label="@string/title_activity_main" >
