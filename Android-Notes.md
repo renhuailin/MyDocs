@@ -13,8 +13,10 @@ Android List View tutorials : http://www.vogella.com/tutorials/AndroidListView/a
 Intent content = new Intent(mContext, EmptyActivity.class);
 ```
 
-`隐式intent`: 不明确地指定要启动的Activity或Service的fully-qualified类名，由系统来决定启动哪个Activity或Service。比如我们要分享一个视频，我们要使用action为 ACTION_SEND的intent，你的系统里可能有多个应用能影响这个intent。下面的代码显示一个选择对话框给用户，让用户决定分享方式。
-![选择应用](images/intent-chooser.png "选择应用")
+`隐式intent`: 不明确地指定要启动的Activity或Service的fully-qualified类名，由系统来决定启动哪个Activity或Service。比如我们要分享一个视频，我们要使用action为 ACTION_SEND的intent，你的系统里可能有多个应用能影响这个intent。       
+![选择应用](images/intent-chooser.png "选择应用")    
+
+下面的代码显示一个选择对话框给用户，让用户决定用哪个app来分享视频。
 
 ```java
 Intent sendIntent = new Intent(Intent.ACTION_SEND);
@@ -45,7 +47,7 @@ intent的「动作」名，指明intent想要执行的动作，比如分享信�
 ### category
 官方的文档上说是为将要执行的activity提供一些额外的信息。举两个例子来说明一下：    
 * CATEGORY_LAUNCHER(android.intent.category.LAUNCHER)     
-这是一个最常用的category，activity会显示在启用启动器（the system's application launcher）的列表里。  
+这是一个最常用的category，activity会显示在应用启动器（the system's application launcher）的列表里。  
 ```xml
 <activity android:name=".MainActivity" android:label="@string/title_activity_main" >
     <intent-filter>
@@ -74,10 +76,6 @@ activity将可以通过web浏览器来启动，比如你写的是个email的客�
 
 * CATEGORY_DEFAULT("android.intent.category.DEFAULT")
 如果你的activity要接收隐式intent，你就必须在intent-filter里包含这个category.这是系统把隐式intent传递到你的activity的必要条件。
-
-
-*
-
 ```xml
 <activity android:name="ShareActivity">
     <intent-filter>
@@ -87,6 +85,7 @@ activity将可以通过web浏览器来启动，比如你写的是个email的客�
     </intent-filter>
 </activity>
 ```
+
 请参考：   
 
 http://developer.android.com/reference/android/content/Intent.html
