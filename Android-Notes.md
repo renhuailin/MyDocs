@@ -86,6 +86,9 @@ activity将可以通过web浏览器来启动，比如你写的是个email的客�
 </activity>
 ```
 
+Todo:再分析一下category的其它属性。
+
+
 请参考：   
 
 http://developer.android.com/reference/android/content/Intent.html
