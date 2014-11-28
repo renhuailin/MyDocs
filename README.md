@@ -111,3 +111,9 @@ ajax file upload widget.
 https://github.com/blueimp/jQuery-File-Upload/
 
 With Sprint MVC: http://hmkcode.com/spring-mvc-jquery-file-upload-multiple-dragdrop-progress/
+
+### pandoc
+pandoc是一個轉換器，可以通過markdown來生成pdf,epub等電子書，很不錯，而且它提供了一個擴展版的markdown，相當不錯。
+
+
+
