@@ -45,13 +45,14 @@ let y: int = if x == 5i { 10i; } else { 15i; };
 error: mismatched types: expected `int` but found `()` (expected int but found ())
 ```
 
+我们想要一个Int，却发现一个`()`,`()`读做`unit`，是Rust的一种特殊类型。因为是不同的类型，所以上面的代码会报错。
+还记得我们是怎么说的吗？Statement不能返回值？`unit`就是用来处理这种情况的。分号`;`把Expression的求值的结果抛弃掉，返回`unit类型，这样就实现了把任何的Expression转成了Statement。
 
 
 
 
 
-
-
+# box unbox
 
 rust 里的 box是从heap分配的内存的指针。
 
