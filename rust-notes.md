@@ -4,9 +4,31 @@
 
 那 Expressions和Statements有什么区别？ Expressions有返回值而Statements没有。
 
-在大多数的语言里`if`是Statement，没有返回值。因此 let x = if ...这样的语句没有意义。但是在Rust里，if是Expression,可以有返回值，可以用它来初始化变量。
+在大多数的语言里`if`是Statement，没有返回值。因此 let x = if ...这样的语句没有意义。但是在Rust里，`if`是Expression,可以有返回值，可以用它来初始化变量。
 
-赋值语句（Rust术语叫bindings）是Rust的两种Statement里的一种，也就是赋值语句是没有返回值的。
+赋值语句（Rust术语叫bindings）是Rust的两种Statement里的一种，准确地说是`声明语句`。目前为止，let是我们见到的唯一的`声明语句`，那我们就再多说点。
+
+在大多数的语言里，变量赋值是可以写成Expressions的，如：
+```
+x = y = 5;
+```
+
+在Rust语言里，用let赋值的语句是Statement，下面的代码会产生一个编译错误：
+```rust
+let x = (let y = 5i); // expected identifier, found keyword `let`
+```
+
+编译器告诉我们，它需要一个Expression，但发现了一个let开头的Statement.
+
+注意：给已经初始化过的变量赋值（如：y = 5i），仍然是Expression，尽管它的返回值不是那么常用。不像C语言，在C语言里赋值语句返回的是被赋的值，y = 5i，返回值是5i。在Rust里，它的返回值是unit type()，这个我们接下来会详细解释。
+
+
+
+
+
+
+
+
 
 
 rust 里的 box是从heap分配的内存的指针。
