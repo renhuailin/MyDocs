@@ -1,4 +1,13 @@
 
+# 5.1 Expressions vs. Statements
+从根本上来说，rust是基于expression的一门语言。它只有两种类型的statement，其它的全是expression。
+
+那 Expressions和Statements有什么区别？ Expressions有返回值而Statements没有。
+
+在大多数的语言里`if`是Statement，没有返回值。因此 let x = if ...这样的语句没有意义。但是在Rust里，if是Expression,可以有返回值，可以用它来初始化变量。
+
+赋值语句（Rust术语叫bindings）是Rust的两种Statement里的一种，也就是赋值语句是没有返回值的。
+
 
 rust 里的 box是从heap分配的内存的指针。
 
