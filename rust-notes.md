@@ -22,6 +22,28 @@ let x = (let y = 5i); // expected identifier, found keyword `let`
 
 注意：给已经初始化过的变量赋值（如：y = 5i），仍然是Expression，尽管它的返回值不是那么常用。不像C语言，在C语言里赋值语句返回的是被赋的值，y = 5i，返回值是5i。在Rust里，它的返回值是unit type()，这个我们接下来会详细解释。
 
+Rust里的另外一种的Statement叫`expression statement`(真头大;))。它的作用是把任何的expression转成statement。实际上，Rust的语法是一个接一个的statement的。这意味着你要用分号`;`来分隔一个个的Expression。这也意味着你要像写其它语言的代码一样，在每行的后面跟一个分号`;`，在接下来的你看到Rust代码里，几乎每一行都以分号`;`结尾。
+
+为什么我们要说*几乎每一行*？
+
+```rust
+let x = 5i;
+
+let y: int = if x == 5i { 10i } else { 15i };
+```
+我声明y为int类型，我期望它会被赋个int。
+
+这样写结果就不一样了，无法编译了：
+```rust
+let x = 5i;
+
+let y: int = if x == 5i { 10i; } else { 15i; };
+```
+请注意，我们在10和15后面加了一个分号`;`，Rust会给我们报下面的错误：
+
+```
+error: mismatched types: expected `int` but found `()` (expected int but found ())
+```
 
 
 
