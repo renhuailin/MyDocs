@@ -112,8 +112,12 @@ https://github.com/blueimp/jQuery-File-Upload/
 
 With Sprint MVC: http://hmkcode.com/spring-mvc-jquery-file-upload-multiple-dragdrop-progress/
 
+##【制作电子书】
 ### pandoc
 pandoc是一個轉換器，可以通過markdown來生成pdf,epub等電子書，很不錯，而且它提供了一個擴展版的markdown，相當不錯。
 
-
 calibre 也是一款不错的ebook maker.
+### 一些有用的links
+[用Markdown来写自由书籍-开源技术的方案](http://www.ituring.com.cn/article/828)
+
+[用 Github、Markdown 和 GitBook 写开源书](http://www.waylau.com/using-github-markdown-gitbook-write-open-source-books/)
