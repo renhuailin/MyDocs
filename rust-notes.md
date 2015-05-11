@@ -85,7 +85,14 @@ let mut x = 5;
 有一种是stack closure,是在栈上的closure。
 
 
+## move还是copy
+When a local variable is used as an rvalue the variable will either be moved or copied, depending on its type. All values whose type implements Copy are copied, all others are moved.
+当一个局部变量用做右值时，它可能会被move或copy，取决于它的类型，如果它实现了`Copy`这个trait，那它就会被copied，否则就会被moved.
 
+
+
+
+http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types
 
 
 
