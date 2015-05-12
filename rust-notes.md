@@ -101,3 +101,9 @@ http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types
 [Rust for Rubyists](http://www.rustforrubyists.com/book/book.html)
 [Pointers in Rust: a guide](http://words.steveklabnik.com/pointers-in-rust-a-guide)
 [Managed & Owned Boxes in the Rust Programming Language](http://tomlee.co/2012/12/managed-and-owned-boxes-in-the-rust-programming-language/)
+
+
+[Rust Borrow and Lifetimes](http://arthurtw.github.io/2014/11/30/rust-borrow-lifetimes.html)
+
+
+
