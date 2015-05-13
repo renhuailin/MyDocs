@@ -37,6 +37,9 @@ IO性能不是很好是因为AUFS,网络模式最好是host．
 可以通过Volume来挂载的方式来绕过AUFS.
 
 
+# Mesos VS Kubernates
+根据sof这篇文章　http://stackoverflow.com/a/28725899　来看mesos更成熟．
+
 
 
 
