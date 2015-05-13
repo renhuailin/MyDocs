@@ -32,3 +32,11 @@ docker version > 1.3，我们还可以使用
 [Docker基础技术：Linux Namespace（下）](http://coolshell.cn/articles/17029.html)
 
 
+# Docker性能问题
+IO性能不是很好是因为AUFS,网络模式最好是host．
+可以通过Volume来挂载的方式来绕过AUFS.
+
+
+
+
+
