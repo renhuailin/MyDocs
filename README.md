@@ -116,6 +116,8 @@ With Sprint MVC: http://hmkcode.com/spring-mvc-jquery-file-upload-multiple-dragd
 ### pandoc
 pandoc是一個轉換器，可以通過markdown來生成pdf,epub等電子書，很不錯，而且它提供了一個擴展版的markdown，相當不錯。
 
+请参考：http://yijiebuyi.com/blog/17e31502e8a6229a18971a2499f0e72b.html
+
 calibre 也是一款不错的ebook maker.
 ### 一些有用的links
 [用Markdown来写自由书籍-开源技术的方案](http://www.ituring.com.cn/article/828)
@@ -123,6 +125,9 @@ calibre 也是一款不错的ebook maker.
 [用 Github、Markdown 和 GitBook 写开源书](http://www.waylau.com/using-github-markdown-gitbook-write-open-source-books/)
 
 http://www.zamzar.com/ 这个网站是做格式转换的，我试了一下chm to mobi,转完的效果相当不错，还支持Pdf to mobi，没下次试试效果。
+
+
+
 
 # 【RFC】
 一个RFC文件阅读的网站 [rfcreader](http://www.rfcreader.com/)
