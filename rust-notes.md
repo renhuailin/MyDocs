@@ -117,6 +117,83 @@ println!("v is: {}", v);
 http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types
 
 
+试想一下，如果我们写了一个函数，以vector为参数，为了能让函数调用后原来的变量能正常使用，我们必须手动归还这个ownership。
+
+``` rust
+fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
+    // do stuff with v1 and v2
+
+    // hand back ownership, and the result of our function
+    (v1, v2, 42)
+}
+
+let v1 = vec![1, 2, 3];
+let v2 = vec![1, 2, 3];
+
+let (v1, v2, answer) = foo(v1, v2);
+```
+这简直太变态，无法接受啊！所以rust引入了`borrowing` 来解决这个问题。
+
+## 5.9 References and Borrowing
+
+在Ownership一节，我们给出了一个手动hand back Ownership例子
+``` rust
+fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
+    // do stuff with v1 and v2
+
+    // hand back ownership, and the result of our function
+    (v1, v2, 42)
+}
+
+let v1 = vec![1, 2, 3];
+let v2 = vec![1, 2, 3];
+
+let (v1, v2, answer) = foo(v1, v2);
+```
+
+Rust使用`reference` 来解决这个问题。这是reference版本的。
+``` rust
+fn foo(v1: &Vec<i32>, v2: &Vec<i32>) -> i32 {
+    // do stuff with v1 and v2
+
+    // return the answer
+    42
+}
+
+let v1 = vec![1, 2, 3];
+let v2 = vec![1, 2, 3];
+
+let answer = foo(&v1, &v2);
+
+// we can use v1 and v2 here!
+```
+reference是什么？官方文档是这个说的。
+```
+We call the &T type a ‘reference’, and rather than owning the resource, it borrows ownership.
+```
+borrow,借，也就是所有权是没变的。我借你的书看，书还是你的（所有权归你），但是我现在在用它。
+引用也是这个意思。
+
+默认的References are immutable.
+
+
+Here’s the rules about borrowing in Rust:
+
+First, any borrow must last for a smaller scope than the owner.     
+Second, you may have one or the other of these two kinds of borrows, but not both at the same time:
+
+* 0 to N references (&T) to a resource.
+* exactly one mutable reference (&mut T)
+
+
+
+
+
+
+
+
+
+
 
 ## 一些参考资料 
 [Rust for Rubyists](http://www.rustforrubyists.com/book/book.html)
