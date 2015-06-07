@@ -79,6 +79,13 @@ assert_eq!(vec![1, 2, 3, 4], answer);
 ```
 
 
+## Borrow 和 AsRef
+Choose Borrow when you want to abstract over different kinds of borrowing, or when you’re building a datastructure that treats owned and borrowed values in equivalent ways, such as hashing and comparison.
+当你想`owned`和`borrowed`的值同样对待时，比如在设计你的函数参数时，你就要用Borrow.
+
+Choose AsRef when you want to convert something to a reference directly, and you’re writing generic code.
+
+
 ## move还是copy
 When a local variable is used as an rvalue the variable will either be moved or copied, depending on its type. All values whose type implements Copy are copied, all others are moved.    
 当一个局部变量用做右值时，它可能会被move或copy，取决于它的类型，如果它实现了`Copy`这个trait，那它就会被copied，否则就会被moved.    
