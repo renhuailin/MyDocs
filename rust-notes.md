@@ -86,11 +86,31 @@ Choose Borrow when you want to abstract over different kinds of borrowing, or wh
 Choose AsRef when you want to convert something to a reference directly, and you’re writing generic code.
 
 
+## Ownership
+Rust ensures that there is exactly one binding to any given resource.
+
+
 ## move还是copy
 When a local variable is used as an rvalue the variable will either be moved or copied, depending on its type. All values whose type implements Copy are copied, all others are moved.    
 当一个局部变量用做右值时，它可能会被move或copy，取决于它的类型，如果它实现了`Copy`这个trait，那它就会被copied，否则就会被moved.    
 move是从哪儿move到哪儿?  如果是copy是从哪儿copy到哪儿？
 
+``` rust
+let v = vec![1, 2, 3];
+
+let v2 = v;
+```
+vector没有实现`Copy` trait，所以在赋值后`v`就不可以用了。
+
+``` rust
+let v = 1;
+
+let v2 = v;
+
+println!("v is: {}", v);
+```
+这个例子里v的类型是i32，它实现了`Copy` trait，所以`let v2 = v;`这行代码执行时，rust会把v的值深度copy一份，
+然后给v2，所以v在赋值后可以用的。
 
 
 
