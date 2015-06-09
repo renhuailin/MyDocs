@@ -186,6 +186,86 @@ Second, you may have one or the other of these two kinds of borrows, but not bot
 * exactly one mutable reference (&mut T)
 
 
+# Lifetime
+
+
+在上一节里我们讲了引用和借用
+把资源的引用借给他人使用其结果可能会很复杂。想像一下假如：
+1.   我有一个资源
+2.   我把这个资源的引用借给你
+3.   我释放这个资源(我不关心你那儿还有一个引用，因为我是这个资源的owner,我有权释放它)。然后
+4.   你要使用这个引用。
+
+第4步，当你使用引用时，它所指向的资源已经不在了！这将导致不可预知的问题。
+
+如何避免上述情况的发生？
+
+一种解决方案就是: 当还有一个指向资源的引用存在时，资源就不能被释放。 没有指向资源的引用时，才能释放它。
+
+这个方案下第3步就不会释放资源,第4步就是安全的。
+
+那资源怎么释放呢？也有两种方案，引用计数(ARC)和垃圾回收器GC. Objective-C和Swift使用的是ARC,java和.net使用的是GC.
+
+rust没有使用ARC也没有使用GC.  onwer使用完了资源（通常是owner超出作用范围自动销毁）就会释放资源。
+
+那第4步怎么办？
+
+Rust使用某种机制来保证第4步不会发生！
+
+What?不会发生，怎么不会发生，我代码就要这样写，那当然会发生啊，比如：
+
+``` rust
+struct Foo {
+    f:Box<i32>,
+}
+
+fn main() {
+    let y : &Foo;
+
+    {
+        let mut x = Foo{f : Box::new(18)};   // 这相当于第1步,获得资源。
+
+        y = &x;                              // 这相当于第2步， 借出 reference.
+    }                                        // 这相当于第3步 onwer超出作用范围，释放资源
+
+    println!("{}",y.f);                      // 这相当于第4步。 通过reference来使用资源。
+
+}
+
+```
+好像第4步发生了呀。 不好意思，这段代码无法成功编译。Rust compiler会检查引用的lifetime和
+owner的lifetime。它发现引用的生命周期比资源的owner的长时，它编译时就报错了，根本就不会到
+运行这一步。所以第4步是不会发生的。
+
+因此在Rust里，你必须在owner释放资源之前使用它(借出)的引用。就也是上述的第4步应该发生在第3步之前。
+
+1  我有一个资源
+
+2  我把这个资源的引用借给你
+
+4  你使用这个引用。
+
+3  我释放这个资源。
+
+
+
+上述的代码如果用java或swift来实现肯定可以编译通过。 我们已经习惯写这样的代码了，我们理所当然
+地认为这样的代码可以运行。但是在rust里，你不能这样写代码，因为rust不允许你这样写。
+
+如何保证第4步发生在第3步之前呢？rust实现通过**保证资源owner活得比它的任何一个引用更长来实现的。**
+
+
+ownership系统通过叫`lifetime`的概念来实现的。
+
+
+
+
+```
+The ownership system in Rust does this through a concept called lifetimes, which describe the scope that a reference is valid for.
+```
+
+
+
 
 
 
