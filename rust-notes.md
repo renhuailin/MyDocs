@@ -252,12 +252,10 @@ owner的lifetime。它发现引用的生命周期比资源的owner的长时，�
 上述的代码如果用java或swift来实现肯定可以编译通过。 我们已经习惯写这样的代码了，我们理所当然
 地认为这样的代码可以运行。但是在rust里，你不能这样写代码，因为rust不允许你这样写。
 
-如何保证第4步发生在第3步之前呢？rust实现通过**保证资源owner活得比它的任何一个引用更长来实现的。**
+如何保证第4步发生在第3步之前呢？rust是通过**保证资源owner活得比它的任何一个引用更长来实现的。**
 
 
 ownership系统通过叫`lifetime`的概念来实现的。
-
-
 
 
 ```
@@ -265,7 +263,109 @@ The ownership system in Rust does this through a concept called lifetimes, which
 ```
 
 
+记住，有引用才有lifetime.
 
+
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+struct Bar {
+    foo : &Foo
+}
+
+fn main() {
+    let mut a = Foo {f: Box::new(14)};
+
+    let y : &Foo;
+
+    {
+        let x = &a;
+        y = x;
+    }
+    a.f = Box::new(1);
+    println!("{}" ,  a.f);
+}
+```
+
+上面的代码会在第2个struct处报错`error: missing lifetime specifier`。而第1个就不报错这个错误，因为没有用引用。
+
+好，我们现在给它加上lifetime。
+
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+struct Bar<'a> {
+    foo : &'a Foo
+}
+
+fn main() {
+    let mut a = Foo {f: Box::new(14)};
+
+    let y : &Foo;
+
+    {
+        let x = &a;
+        y = x;
+    }
+    a.f = Box::new(1);
+    println!("{}" ,  a.f);
+}
+```
+
+OK,可以编译通过了。很多人会被`Bar<'a>`和`foo : &'a Foo`里面的`'a`搞懵了。
+
+`'a` 是`Named lifetime`,中文可译为带名有效期。它实际上是告诉编译器，struct Bar有引用，这个引用的lifetime我们把它命名为：a.
+
+做为开发人员我们不用关心`'a`是怎么生效的。因为我们不会直接用到它。开发人员要就做的就是给引用加上一个带名使用期。然后由编译器来使用它。
+
+你也许会说，我们只加了个`'a`代码就能编译了，为什么rust不为我们自动加一个呢？或者在这种情况也可以省略掉`'a`.那是因为我们的struct太简单了了，
+实际上我们的struct可能会包含多个field，有多个引用。rust没有办法为我们自动加一个lifetime。
+
+
+再强调一遍，当我们的struct包含了一个引用，那我们**struct的实例不能比它包含的引用活得更长**。而lifetime是rust用来度量引用有效期的
+一个辅助标识。
+
+
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+struct Bar<'a,'b> {
+    foo : &'a Foo,
+    doo : &'b Foo
+}
+
+fn main() {
+    let mut a = Foo {f: Box::new(14)};
+
+    let d : &Foo;
+
+    { // block1
+        let mut b = Foo {f: Box::new(13)};
+
+        let bar = Bar{ foo : &a,doo : &b};
+        println!("{}" ,  bar.foo.f);
+
+        d = bar.foo;
+    } // end of block1
+
+    //a.f = Box::new(1);
+    println!("{}" ,  d.f);
+}
+```
+首先如果一个struct有多个引用，那它的实例的寿命只能和最短命的那个引用一样长。 a的寿命是整个main函数，而b的寿命是block1,
+所以bar的寿命只能是block1。
+
+如果我们把block1的最后一行改成:
+``` rust
+d = bar.doo;
+```
+就会无法编译.
 
 
 
@@ -276,12 +376,11 @@ The ownership system in Rust does this through a concept called lifetimes, which
 
 
 ## 一些参考资料 
-[Rust for Rubyists](http://www.rustforrubyists.com/book/book.html)
-[Pointers in Rust: a guide](http://words.steveklabnik.com/pointers-in-rust-a-guide)
-[Managed & Owned Boxes in the Rust Programming Language](http://tomlee.co/2012/12/managed-and-owned-boxes-in-the-rust-programming-language/)
-
 
 [Rust Borrow and Lifetimes](http://arthurtw.github.io/2014/11/30/rust-borrow-lifetimes.html)
+
+
+
 
 
 
