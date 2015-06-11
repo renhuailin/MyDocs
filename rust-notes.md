@@ -190,7 +190,8 @@ Second, you may have one or the other of these two kinds of borrows, but not bot
 
 
 在上一节里我们讲了引用和借用
-把资源的引用借给他人使用其结果可能会很复杂。想像一下假如：
+把资源的引用借给他人使用其结果可能会很复杂。假如：
+
 1.   我有一个资源
 2.   我把这个资源的引用借给你
 3.   我释放这个资源(我不关心你那儿还有一个引用，因为我是这个资源的owner,我有权释放它)。然后
@@ -212,7 +213,7 @@ rust没有使用ARC也没有使用GC.  onwer使用完了资源（通常是owner�
 
 Rust使用某种机制来保证第4步不会发生！
 
-What?不会发生，怎么不会发生，我代码就要这样写，那当然会发生啊，比如：
+怎么不会发生，我代码就要这样写，那当然会发生啊，比如：
 
 ``` rust
 struct Foo {
@@ -233,8 +234,9 @@ fn main() {
 }
 
 ```
+
 好像第4步发生了呀。 不好意思，这段代码无法成功编译。Rust compiler会检查引用的lifetime和
-owner的lifetime。它发现引用的生命周期比资源的owner的长时，它编译时就报错了，根本就不会到
+owner的lifetime。它发现引用的生命期比资源的owner的长时，它编译时就报错了，根本就不会到
 运行这一步。所以第4步是不会发生的。
 
 因此在Rust里，你必须在owner释放资源之前使用它(借出)的引用。就也是上述的第4步应该发生在第3步之前。
@@ -248,14 +250,13 @@ owner的lifetime。它发现引用的生命周期比资源的owner的长时，�
 3  我释放这个资源。
 
 
-
 上述的代码如果用java或swift来实现肯定可以编译通过。 我们已经习惯写这样的代码了，我们理所当然
 地认为这样的代码可以运行。但是在rust里，你不能这样写代码，因为rust不允许你这样写。
 
 如何保证第4步发生在第3步之前呢？rust是通过**保证资源owner活得比它的任何一个引用更长来实现的。**
 
 
-ownership系统通过叫`lifetime`的概念来实现的。
+Rust的ownership系统通过叫`lifetime`的概念来实现。
 
 
 ```
@@ -263,7 +264,7 @@ The ownership system in Rust does this through a concept called lifetimes, which
 ```
 
 
-记住，有引用才有lifetime.
+下面我们举些例子来说明lifetime,在这之前，请记住：**有引用才有lifetime,lifetime是跟引用关联的**.
 
 
 ``` rust
@@ -272,7 +273,7 @@ struct Foo {
 }
 
 struct Bar {
-    foo : &Foo
+    foo : &Foo,  //struct包含引用，就必须明确指定lifetime.
 }
 
 fn main() {
@@ -289,7 +290,7 @@ fn main() {
 }
 ```
 
-上面的代码会在第2个struct处报错`error: missing lifetime specifier`。而第1个就不报错这个错误，因为没有用引用。
+上面的代码会在第2个struct: Bar 处报错`error: missing lifetime specifier`。而第1个struct  Foo就不报错这个错误，因为它没有用包含引用。
 
 好，我们现在给它加上lifetime。
 
@@ -316,20 +317,23 @@ fn main() {
 }
 ```
 
-OK,可以编译通过了。很多人会被`Bar<'a>`和`foo : &'a Foo`里面的`'a`搞懵了。
+OK,可以编译通过了。
 
-`'a` 是`Named lifetime`,中文可译为带名有效期。它实际上是告诉编译器，struct Bar有引用，这个引用的lifetime我们把它命名为：a.
+很多人会被`Bar<'a>`和`foo : &'a Foo`里面的`'a`搞懵了，不明白它是干什么的，它如何起作用．
 
-做为开发人员我们不用关心`'a`是怎么生效的。因为我们不会直接用到它。开发人员要就做的就是给引用加上一个带名有效期,然后由编译器来使用它。
+`'a` 是`Named lifetime`,中文可译为`带名生命期`。它实际上是告诉编译器，struct Bar有引用，这个引用的lifetime我们把它命名为：a.
 
-你也许会说，我们只加了个`'a`代码就能编译了，为什么rust不为我们自动加一个呢？或者在这种情况也可以省略掉`'a`.那是因为我们的struct太简单了了，
-实际上我们的struct可能会包含多个field，有多个引用。rust没有办法为我们自动加一个lifetime。
+做为开发人员我们不用关心`'a`是怎么生效的。因为我们不会直接用到它。开发人员要就做的就是给引用加上一个带名生命期。然后由编译器来使用它。
 
+当我们的struct包含了一个引用，那我们**struct的实例不能比它包含的引用活得更长**。
 
-再强调一遍，当我们的struct包含了一个引用，那我们**struct的实例不能比它包含的引用活得更长**。而lifetime是rust用来度量引用有效期的
-一个辅助标识。
+如果不能理解这句话，请翻到前面看开头的那个４步的说明．
 
-下面我们看一个struct包含多个引用时的情况,这时`带名有效期`的作用就更容易理解。
+那什么是lifetime ? lifetime是rust用来度量引用生命期的一个辅助标识。编译器用它来计算引用的寿命有多长。  很多人认为`lifetime`这个词选择不太好，容易产生误解[1]。
+
+`'a`这种东西只是用来计算生命期的标识，好理解了吧？
+
+下面我们看一个struct包含多个引用时的情况,这时`带名生命期`的作用就更容易理解。
 
 ``` rust
 struct Foo {
@@ -359,6 +363,7 @@ fn main() {
     println!("{}" ,  d.f);
 }
 ```
+
 首先如果一个struct有多个引用，那它的实例的寿命只能和最短命的那个引用一样长。 a的寿命是整个main函数，而b的寿命是block1,
 所以bar的寿命只能是block1。
 
@@ -366,7 +371,148 @@ fn main() {
 ``` rust
 d = bar.doo;
 ```
-就会无法编译.
+就会无法编译:
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+struct Bar<'a,'b> {
+    foo : &'a Foo,
+    doo : &'b Foo
+}
+
+fn main() {
+    let mut a = Foo {f: Box::new(14)};
+
+    let d : &Foo;
+
+    { // block1
+        let mut b = Foo {f: Box::new(13)};
+
+        let bar = Bar{ foo : &a,doo : &b};
+        println!("{}" ,  bar.foo.f);
+
+        d = bar.doo;
+    } // end of block1
+
+    //a.f = Box::new(1);
+    println!("{}" ,  d.f);
+}
+```
+
+
+好，接下来我们看看lifetime和函数的关系。
+
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+fn test(a : &Foo,b : &Foo) -> &Foo {
+    println!("a : {} - b : {}",a.f,b.f);
+    b;
+}
+
+fn main() {
+    let  a = Foo {f: Box::new(14)};
+
+
+    let  b = Foo {f: Box::new(13)};
+    //println!("{}" ,  bar.foo.f);
+    test(&a,&b);
+}
+```
+
+函数test有两个类型为&Foo，无需为这个函数显式指定lifetime。如果函数返回一个引用，则必须为函数显式指定lifetime。
+
+我们修改代码，让函数返回一个引用，我们先不给它加lifetime，看看编译器提示什么．
+
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+fn test(a : &Foo,b : &Foo) -> &Foo {
+    println!("a : {} - b : {}",a.f,b.f);
+    b;
+}
+
+fn main() {
+    let  a = Foo {f: Box::new(14)};
+
+
+    let  b = Foo {f: Box::new(13)};
+    //println!("{}" ,  bar.foo.f);
+    test(&a,&b);
+}
+```
+```
+<anon>:5:31: 5:35 error: missing lifetime specifier [E0106]
+<anon>:5 fn test(a : &Foo,b : &Foo) -> &Foo {
+                                       ^~~~
+<anon>:5:31: 5:35 help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `a` or `b`
+error: aborting due to previous error
+playpen: application terminated with error code 101
+```
+
+我们的函数返回了一个引用，px 有两引用类参数，编译器不知道返回的引用是从哪个参数借来的．所以时我们必须显式指定lifetime．
+
+``` rust
+fn test<'a> (a : &Foo,b : &'a Foo) -> &'a Foo {
+    println!("a : {} - b : {}",a.f,b.f);
+    b
+}
+```
+
+可不可以返回值的lifetime与参数的不相关呢？
+
+``` rust
+fn test<'a,'b> (a : &Foo,b : &'a Foo) -> &'b Foo ;
+```
+
+上面的函数可能实现吗？如何从函数里面返回一个带新的lifetime的引用？在函数里新创建一个Foo?这样它就有了一个新的lifetime？
+问题是函数体内创建的实例会在函数返回时销毁，引用就会失效．
+
+``` rust
+fn test<'a,'b> (a : &Foo,b : &'a Foo) -> &'b Foo {
+    println!("a : {} - b : {}",a.f,b.f);
+    &Foo{f : Box::new(12)}
+}
+```
+
+可以看出来**函数返回值的lifetime一定是跟某个参数的一致的**．
+
+函数返回一个引用时必须显示指定lifetime，因为这个返回的引用__延长了引用生命期__.
+
+没有返回值的函数也能延长引用的生命期．
+
+``` rust
+struct Foo {
+    f : Box<i32>,
+}
+
+struct Link<'a> {
+    link: &'a Foo,
+}
+
+fn store_foo<'a> (x: &mut Link<'a>, y: &'a Foo) {
+    x.link = y;
+}
+
+fn main() {
+    let a = Foo{f : Box::new(1)};
+
+    let x = &mut Link{ link : &a };
+
+    if false {
+        let b = Foo { f: Box::new(2) };
+
+        store_foo(x, &b);  //在这里试图延长b的引用的生命期，但是b会在if块后销毁，&b就会成为野引用，所以这行代码无法编译．
+    }
+}
+```
+
 
 
 
@@ -377,6 +523,7 @@ d = bar.doo;
 
 
 ## 一些参考资料 
+[1] [RFC: rename `lifetime` to `scope` ](https://github.com/rust-lang/rfcs/pull/431)
 
 [Rust Borrow and Lifetimes](http://arthurtw.github.io/2014/11/30/rust-borrow-lifetimes.html)
 
