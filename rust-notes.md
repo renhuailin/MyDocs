@@ -86,14 +86,55 @@ Choose Borrow when you want to abstract over different kinds of borrowing, or wh
 Choose AsRef when you want to convert something to a reference directly, and you’re writing generic code.
 
 
-## Ownership
-Rust ensures that there is exactly one binding to any given resource.
+## 5.8 Ownership
+rust的ownership系统是它区别与其它语言的最主要的特征。只有理解了ownership系统，才能真正算是入门。
+
+Variable bindings have a property in Rust: they ‘have ownership’ of what they’re bound to. This means that when a binding goes out of scope, the resource that they’re bound to are freed. For 
+
+Rust的绑定变量有一个属性：获得它所绑定资源的所有权。这意味着当绑定变量超出作用域时，它所绑定资源的资源就会释放。
+``` rust
+fn foo() {
+    let v = vec![1, 2, 3];
+}
+```
+绑定变量v的作用域是函数foo的函数体，创建v时，先会在栈上分配空间来保存v这个变量 ，然后会在堆上分配空间以保存它的3个元素。当v超出作用域时，Rust会清除栈和堆上这些资源。
+
+有一点要注意：**Rust确保有且只有一个变量绑定到给定的资源**。
+
+``` rust
+let v = vec![1, 2, 3];  //创建一个vector,并绑定到一个变量
+
+let v2 = v;   //把它赋给另一个变量。
+
+println!("v[0] is: {}", v[0]);   //使用原来的那个绑定变量。
+```
+运行上面的代码会报错。
+
+```
+error: use of moved value: `v`
+println!("v[0] is: {}", v[0]);
+```
+
+```
+let v2= v;
+```
+这行代码是把v赋给v2,它们都指向同一个vector，这违反了Rust安全承诺。所以在这个赋值后Rust不允许再使用变量v。在编译器优化时，可以会把它释放掉。看起来就像v的所有都转移(move)到v2了。
 
 
-## move还是copy
-When a local variable is used as an rvalue the variable will either be moved or copied, depending on its type. All values whose type implements Copy are copied, all others are moved.    
-当一个局部变量用做右值时，它可能会被move或copy，取决于它的类型，如果它实现了`Copy`这个trait，那它就会被copied，否则就会被moved.    
-move是从哪儿move到哪儿?  如果是copy是从哪儿copy到哪儿？
+下面我们再看一个例子，这回我们把类型从vector换成i32.
+``` rust
+let v  = 1;
+
+let v2 = v;
+
+println!("v is: {}", v);
+```
+ 这个代码就可以运行，为什么？因为这个例子里v的类型是i32，它实现了`Copy` trait，所以`let v2 = v;`这行代码执行时，rust会把v的值深度copy一份，然后给v2，所以v在赋值后可以用的。
+ v2和v拥有不同的资源，分别是各自资源的owner。
+
+**move还是copy ?**
+
+当一个局部变量用做右值时，它可能会被move或copy，取决于它的类型，如果它实现了`Copy`这个trait，那它就会被copied，否则就会被moved. 
 
 ``` rust
 let v = vec![1, 2, 3];
@@ -102,22 +143,8 @@ let v2 = v;
 ```
 vector没有实现`Copy` trait，所以在赋值后`v`就不可以用了。
 
-``` rust
-let v = 1;
 
-let v2 = v;
-
-println!("v is: {}", v);
-```
-这个例子里v的类型是i32，它实现了`Copy` trait，所以`let v2 = v;`这行代码执行时，rust会把v的值深度copy一份，
-然后给v2，所以v在赋值后可以用的。
-
-
-
-http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types
-
-
-试想一下，如果我们写了一个函数，以vector为参数，为了能让函数调用后原来的变量能正常使用，我们必须手动归还这个ownership。
+如果我们写了一个函数，以vector为参数，为了能让函数调用后原来的变量能正常使用，我们必须手动归还这个ownership。
 
 ``` rust
 fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
@@ -130,28 +157,18 @@ fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
 let v1 = vec![1, 2, 3];
 let v2 = vec![1, 2, 3];
 
-let (v1, v2, answer) = foo(v1, v2);
+let (v1, v2, answer) = foo(v1, v2); //调用并归还
 ```
-这简直太变态，无法接受啊！所以rust引入了`borrowing` 来解决这个问题。
+这简直太变态，无法接受啊！     
+
+所以rust引入了`borrowing` 来解决这个问题。
 
 ## 5.9 References and Borrowing
 
-在Ownership一节，我们给出了一个手动hand back Ownership例子
-``` rust
-fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
-    // do stuff with v1 and v2
-
-    // hand back ownership, and the result of our function
-    (v1, v2, 42)
-}
-
-let v1 = vec![1, 2, 3];
-let v2 = vec![1, 2, 3];
-
-let (v1, v2, answer) = foo(v1, v2);
-```
+在Ownership一节，我们给出了一个手动归还Ownership例子，手动归还实在太不方便。
 
 Rust使用`reference` 来解决这个问题。这是reference版本的。
+
 ``` rust
 fn foo(v1: &Vec<i32>, v2: &Vec<i32>) -> i32 {
     // do stuff with v1 and v2
@@ -167,15 +184,67 @@ let answer = foo(&v1, &v2);
 
 // we can use v1 and v2 here!
 ```
-reference是什么？官方文档是这个说的。
+
+reference是什么？官方文档是这样解释的。
+
 ```
 We call the &T type a ‘reference’, and rather than owning the resource, it borrows ownership.
 ```
 borrow,借，也就是所有权是没变的。我借你的书看，书还是你的（所有权归你），但是我现在在用它。
-引用也是这个意思。
+引用也是这个意思,引用可以使用资源，但是不拥有所有权。
 
-默认的References are immutable.
+默认的References不可变的，跟绑定一样.
 
+``` rust
+fn foo(v: &Vec<i32>) {
+     v.push(5);
+}
+
+let v = vec![];
+
+foo(&v);
+
+```
+会报错：
+
+```
+error: cannot borrow immutable borrowed content `*v` as mutable
+v.push(5);
+^
+```
+不可变的引用，不能修改资源的内容。如果要修改资源的内容，我们先取得`可变引用`。
+
+``` rust
+let mut x = 5;
+{
+    let y = &mut x;
+    *y += 1;
+}
+println!("{}", x);
+
+```
+x的值被修改了。你会奇怪，我们为什么要把修改的代码放在{}块里。如果我们把这两个花括号去掉会报错。
+
+```
+error: cannot borrow `x` as immutable because it is also borrowed as mutable
+    println!("{}", x);
+                   ^
+note: previous borrow of `x` occurs here; the mutable borrow prevents
+subsequent moves, borrows, or modification of `x` until the borrow ends
+        let y = &mut x;
+                     ^
+note: previous borrow ends here
+fn main() {
+
+}
+```
+
+为什么？
+我们先来说说Rust对references规定吧。
+
+1.  所有的引用的作用域必须小于所有者(owner)的作用域。
+2.  你可以有多个不可变的引用(&T)，但
+3.  同时只能有一个可变的引用(&mut T)
 
 Here’s the rules about borrowing in Rust:
 
@@ -184,6 +253,27 @@ Second, you may have one or the other of these two kinds of borrows, but not bot
 
 * 0 to N references (&T) to a resource.
 * exactly one mutable reference (&mut T)
+ 
+我们再来看上边的例子:
+``` rust
+let mut x = 5;
+
+let y = &mut x;    // -+ 可变引用 y 开始生效
+                   //  |
+*y += 1;           //  |
+                   //  |
+println!("{}", x); // -+ - 试图使用原来的可变绑定
+                   // -+ 可变引用 y 离开作用域
+```
+我们无法在可变引用y的作用域里使用x. 
+
+
+
+
+
+
+
+
 
 
 # Lifetime
@@ -529,6 +619,6 @@ fn main() {
 
 
 
-
+[Move and Copied Types](http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types)
 
 
