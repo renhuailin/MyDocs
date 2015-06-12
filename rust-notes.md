@@ -68,6 +68,44 @@ let x: String = diverges();
 
 
 
+## 5.12 Struct
+跟其它语言的没有什么太大区别，有两个地方要注意`Tuple structs`和`Unit-like structs`
+
+**Tuple structs**
+
+一种混杂了tuple和struct的数据结构。先看看定义吧
+
+``` rust
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+struct Point1 { x:i32, y:i32};
+
+```
+
+跟tuple比，它是有名字的。跟struct比，它没有field,而且是用圆括号()不是用花括号{}来定义body。
+
+有种情况下它非常有用，那tuple struct只有一个field的时候。我们管它叫`新类型`模式。
+效果相当于C语言里的typedef或宏,其它语言里的type alias.
+
+```  rust
+struct Inches(i32);
+
+let length = Inches(10);
+
+let Inches(integer_length) = length;
+println!("length is {} inches", integer_length);
+```
+
+
+还有一种特殊的struct叫`Unit-like structs`,它就是只有名字，没有任何field的struct.
+
+``` rust
+struct Electron;
+```
+它定义了一个新类型。什么情况下会用到它呢？
+有些library会要求创建一个struct，然后实现xxx,yyy等trait。如果你的struct里没有什么数据可存的，就可以定义一个这样的struct.
+
 
 
 ## 5.24 Closures 闭包
