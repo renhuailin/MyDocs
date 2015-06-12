@@ -129,6 +129,32 @@ enum Message {
 
 其它没什么了。
 
+## 5.14 Match
+
+Rust没有switch，它用了match来代替switch。当然match的功能要比switch强大多了。
+
+``` rust
+let x = 5;
+
+match x {
+    1 => println!("one"),
+    2 => println!("two"),
+    3 => println!("three"),
+    4 => println!("four"),
+    5 => println!("five"),
+    _ => println!("something else"),
+}
+```
+
+`match` enforces ‘exhaustiveness checking’.强制进行全面检查，要求所有的可能性都要考虑到。
+
+如果我们把上面代码里的`_`这个分支去掉，就会报错，Rust会认为你没有考虑所有的可能性。
+
+
+
+
+
+
 
 ## 5.24 Closures 闭包
 
