@@ -49,12 +49,24 @@ error: mismatched types: expected `int` but found `()` (expected int but found (
 还记得我们是怎么说的吗？Statement不能返回值？`unit`就是用来处理这种情况的。分号`;`把Expression的求值的结果抛弃掉，返回`unit类型，这样就实现了把任何的Expression转成了Statement。
 
 
+## 5.2 Function 
+需要注意的是rust有一种叫`Diverging functions`的函数，它不返回值。
+
+``` rust
+fn diverges() -> ! {
+    panic!("This function never returns!");
+}
+
+```
+因为这个函数会引发一个crash，所以它永远不会返回，所以它的返回值只是摆设了，Rust给它一个标识`!`。`Diverging functions`可以用于任何类型，这个设计真奇怪。
 
 
+``` rust
+let x: i32 = diverges();
+let x: String = diverges();
+```
 
-# box unbox
 
-rust 里的 box是从heap分配的内存的指针。
 
 
 
