@@ -629,7 +629,7 @@ fn main() {
 
 [Rust Borrow and Lifetimes](http://arthurtw.github.io/2014/11/30/rust-borrow-lifetimes.html)
 
-
+[Rust by example](http://rustbyexample.com/)
 
 [Move and Copied Types](http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types)
 
