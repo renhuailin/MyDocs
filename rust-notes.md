@@ -1,5 +1,7 @@
+Rust编程语言学习心得备忘
+----------------
 
-# 5.1 Expressions vs. Statements
+## 5.1 Expressions vs. Statements
 从根本上来说，rust是基于expression的一门语言。它只有两种类型的statement，其它的全是expression。
 
 那 Expressions和Statements有什么区别？ Expressions有返回值而Statements没有。
@@ -49,7 +51,7 @@ error: mismatched types: expected `int` but found `()` (expected int but found (
 还记得我们是怎么说的吗？Statement不能返回值？`unit`就是用来处理这种情况的。分号`;`把Expression的求值的结果抛弃掉，返回`unit类型，这样就实现了把任何的Expression转成了Statement。
 
 
-## 5.2 Function 
+# 5.2 Function 
 需要注意的是rust有一种叫`Diverging functions`的函数，它不返回值。
 
 ``` rust
@@ -106,6 +108,26 @@ struct Electron;
 它定义了一个新类型。什么情况下会用到它呢？
 有些library会要求创建一个struct，然后实现xxx,yyy等trait。如果你的struct里没有什么数据可存的，就可以定义一个这样的struct.
 
+
+## 5.13 enum
+
+Rust的enum跟其它语言不太一样。它的每一个变体都可以关联数据，它的变体的定义语法非常像struct的定义语法。
+
+``` rust
+enum Message {
+    Quit,                            // 像unit-like struct
+    ChangeColor(i32, i32, i32),      // 像tuple struct
+    Move { x: i32, y: i32 },         // 这就是一个struct
+    Write(String),                   // 另一个tuple struct.
+}
+```
+
+跟C语言enum太不一样了，跟java的enum也差别很大。它更像是一个小的namespace,里面有着几个类（struct等）。
+
+主要用在match语句中比较多。
+
+
+其它没什么了。
 
 
 ## 5.24 Closures 闭包
