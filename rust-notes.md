@@ -152,8 +152,73 @@ match x {
 
 
 
+## 5.23 Trait Objects
 
 
+Rust里区分`static dispatch`和`dynamic dispatch`.
+
+`static dispatch` 相当于用类来调用方法，而`dynamic dispatch`相当于通过接口来调用方法。
+
+``` rust
+trait Foo {
+    fn method(&self) -> String;
+}
+//We’ll also implement this trait for u8 and String:
+
+impl Foo for u8 {
+    fn method(&self) -> String { format!("u8: {}", *self) }
+}
+
+impl Foo for String {
+    fn method(&self) -> String { format!("string: {}", *self) }
+}
+```
+Foo是一个trait，u8和String 相当于是实现了这个trait的类。
+
+先来看`static dispatch` 。
+``` rust
+//注意参数不是&或Box<T>
+fn do_something<T: Foo>(x: T) {
+    x.method();
+}
+
+fn main() {
+    let x = 5u8;
+    let y = "Hello".to_string();
+
+    do_something(x);
+    do_something(y);
+}
+```
+
+
+**dynamic dispatch**
+
+``` rust
+fn do_something(x: &Foo) {
+    x.method();
+}
+
+fn main() {
+    let x = 5u8;
+    do_something(&x as &Foo);
+}
+```
+or by coercing:
+
+``` rust
+fn do_something(x: &Foo) {
+    x.method();
+}
+
+fn main() {
+    let x = "Hello".to_string();
+    do_something(&x);
+}
+```
+上面函数do_something的参数是&Foo,是一个引用。这很关键，这就会使用dynamic dispatch。
+
+具体实现区别涉及到指针和vtable等,请看官方文档。（有时间补充上）
 
 
 ## 5.24 Closures 闭包
