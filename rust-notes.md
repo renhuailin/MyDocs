@@ -412,10 +412,65 @@ fn main() {
 Here’s the rules about borrowing in Rust:
 
 First, any borrow must last for a smaller scope than the owner.     
+
 Second, you may have one or the other of these two kinds of borrows, but not both at the same time:
 
 * 0 to N references (&T) to a resource.
 * exactly one mutable reference (&mut T)
+
+我们还是举例子来说明吧。
+
+第一种情况，两个 immutable reference.
+
+
+``` rust 
+fn main() {
+    let x = 5;
+    
+    
+    let z = & x;
+    let y = & x;
+    println!("y: {},z:{}",y,z);
+    
+}
+```
+这种情况是OK的。
+
+一个 immutable reference和mutable reference的情况。
+
+
+``` rust
+fn main() {
+    let mut x = 5;
+    
+    
+    let z = & x;
+    let y = &mut x;
+    println!("y: {},z:{}",y,z);
+    
+}
+```
+会报错：
+```
+cannot borrow `x` as mutable because it is also borrowed as immutable,the immutable borrow prevents subsequent moves or mutable borrows of `x` until the borrow ends.
+```
+
+我们先borrow一个mutable reference然后再borrow一个immutable的可以吗？
+
+``` rust
+fn main() {
+    let mut x = 5;
+    
+    let y = &mut x;
+    let z = & x;
+    println!("y: {},z:{}",y,z);
+    
+}
+```
+
+你会发现结果是一样的。
+
+在一个scope里，可能多个immutable borrow，但是一旦有mutable borrow就不一样了。immutable borrow和mutable borrow在同一个scope里不能同时存在。也就是官方文档里说的：`but not both at the same time`。
  
 我们再来看上边的例子:
 ``` rust
