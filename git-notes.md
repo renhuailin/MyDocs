@@ -218,6 +218,17 @@ v1.5 -> v1.5
 ```
 git tag -d v1.4-lw
 ```
+
+## 3.7 检出指定的tag
+
+``` bash
+# 先列出所有的tags
+git tag -l 
+
+# 检出指定的tag.
+git checkout tags/<tag_name>
+```
+
 # 4 分支(branch)
 跟svn的分支不一样，git的分支是指向一个commit的指针。可以说是相当轻量级啊。   
 
