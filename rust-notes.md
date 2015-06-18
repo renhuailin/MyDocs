@@ -832,4 +832,10 @@ Rust的Borrow和Lifetime虽然有一点难理解，但请相信，一旦弄懂�
 
 [Move and Copied Types](http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types)
 
+[Error Handling in Rust](http://blog.burntsushi.net/rust-error-handling/) 对rust错误处理讲得比较详细
+
+
+
+
+
 
