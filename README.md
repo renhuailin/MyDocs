@@ -140,7 +140,9 @@ https://www.modern.ie/zh-cn/tools
 
 
 
+# Editor background color
 
+豆沙绿，RGB值为（199，237，204）,关于这个绿色是否护眼没有什么长期的研究支持这个结论，不过这个绿色看上去眼睛会很舒服倒是真的。
 
 
 
