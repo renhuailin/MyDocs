@@ -1,11 +1,42 @@
 Docker notes
 -------------
 
+
+# docker run 
+
+```
+$ sudo docker run  -d --name registry  -p 5000:5000 registry:2.0
+```
+
+
 docker在使用中，网络问题是比较大的，提供的几种网络模型各有优缺，
 bridge 方式： 有mac地址变更，ip地址等问题。
 
  -p -P来映射port, 在container内部是用iptables来实现的，最多只能处理65535个连接。在大网站里这是不可能接受的。
 IP:host_port:container_port
+
+注意docker映射的格式是:   宿主机的资源[端口或目录]:container的资源。
+
+
+**指定容器的hostname**
+-h --hostname 可以指定容器的hostname
+
+**指定容器的hosts**
+--add-host=[]              Add a custom host-to-IP mapping (host:ip)
+
+**容器重启策略(--restart)**
+
+这个策略控制容器退出后是否自动重启。有些时候我们会发现容器会因为我们的应用或tomcat,apache等进程退出了而退出。
+这通常不是我们想要的，docker允许你指定一个策略在容器退出时，自动重启容器。
+
+Policy | Result
+-------|-------
+no     | 不自动重启 
+on-failure[:max-retries] | 当容器以非0的返回值退出时，重启，这时可以指定最大重启次数。
+always | 一直重启，没有次数限制
+
+
+为了防止宿主机被容器的频繁重启淹没，所以容器每次重启的时间间隔会自动递增，100ms,200ms、400ms、800ms。
 
 
 host:方式，会有端口冲突。但是可以通过上层的编排系统来解决。是新浪目前使用的方式。
@@ -30,7 +61,7 @@ docker version > 1.3，我们还可以使用
 
 # storage driver
 
-`--storage-driver=devicemapper`  
+`--storage-driver=devicemapper`
 
 https://docs.docker.com/reference/commandline/cli/#daemon-storage-driver-option
 下面的[性能测试的文章](http://redhat.slides.com/jeremyeder/performance-analysis-of-docker#/9)里用的storage driver用的就是devicemapper
@@ -43,10 +74,10 @@ http://developerblog.redhat.com/2014/08/19/performance-analysis-docker-red-hat-e
 
 [http://redhat.slides.com/jeremyeder/performance-analysis-of-docke](http://redhat.slides.com/jeremyeder/performance-analysis-of-docke)　,相关Github Repository: [https://github.com/jeremyeder/docker-performance](https://github.com/jeremyeder/docker-performance)
 
+http://www.slideshare.net/jpetazzo/shipping-applications-to-production-in-containers-with-docker
 
 
-
-左耳说vlan能真正解决docker的网络问题。还说已经有了IPVLAN的驱动。   
+左耳说vlan能真正解决docker的网络问题。还说已经有了IPVLAN的驱动。
 [Docker基础技术：Linux Namespace（下）](http://coolshell.cn/articles/17029.html)
 
 
@@ -59,5 +90,139 @@ IO性能不是很好是因为AUFS,网络模式最好是host．
 根据sof这篇文章　[http://stackoverflow.com/a/28725899](http://stackoverflow.com/a/28725899)　来看mesos更成熟．
 
 
+
+# registry
+
+$ sudo docker run -p 5000:5000 registry:2.0  -e ICESCRUM_EMAIL_DEV=dev@icescrum.org
+
+docker run \
+         -e SETTINGS_FLAVOR=s3 \
+         -e AWS_BUCKET=acme-docker \
+         -e STORAGE_PATH=/registry \
+         -e AWS_KEY=AKIAHSHB43HS3J92MXZ \
+         -e AWS_SECRET=xdDowwlK7TJajV1Y7EoOZrmuPEJlHYcNP2k4j49T \
+         -e SEARCH_BACKEND=sqlalchemy \
+         -p 5000:5000 \
+         registry
+
+
+
+
+         
+当你访问一个非localhost的registry时，docker要求你必须用https加密。否则报下面的错误。
+         
+```
+FATA[0000] Error response from daemon: v1 ping attempt failed with error:
+Get https://myregistrydomain.com:5000/v1/_ping: tls: oversized record received with length 20527. 
+If this private registry supports only HTTP or HTTPS with an unknown CA certificate,please add 
+`--insecure-registry myregistrydomain.com:5000` to the daemon's arguments.
+In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag;
+simply place the CA certificate at /etc/docker/certs.d/myregistrydomain.com:5000/ca.crt
+```
+ $ docker run -d -p 5000:5000 \
+    -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry \
+    -v /myregistrydata:/var/lib/registry \
+    --restart=always --name registry registry:2
+    
+mkdir -p certs && openssl req \
+    -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
+    -x509 -days 365 -out certs/domain.crt
+    
+```    
+$ openssl req  -newkey rsa:4096 -nodes -sha256 -keyout certs/registry_ecloud_com_cn.key -x509 -days 365 -out certs/registry_ecloud_com_cn.crt
+```
+
+Then you have to instruct every docker daemon to trust that certificate. This is done by copying the registry_ecloud_com_cn.crt file to /etc/docker/certs.d/registry.ecloud.com.cn:5000/registry_ecloud_com_cn.crt (don't forget to restart docker after doing so).
+
+restart your Docker daemon: on ubuntu, this is usually service docker stop && service docker start
+
+
+``` yaml
+registry:
+  restart: always
+  image: registry:2
+  ports:
+    - 5000:5000
+  environment:
+    REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry_ecloud_com_cn.crt
+    REGISTRY_HTTP_TLS_KEY: /certs/registry_ecloud_com_cn.key
+    REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+  volumes:
+    - /opt/china_ops_docker_registry/data:/var/lib/registry
+    - /opt/china_ops_docker_registry/certs:/certs
+```
+
+如何把自己的镜像push到private registry上呢？ 首先把你的image打一个tag. 这个tag以 <private registry domain>：<port>/开头．
+
+```
+$ docker tag hello-world:latest localhost:5000/hello-mine:latest
+```
+打完tag了，直接push这个镜像就行了．
+
+```
+$ docker push localhost:5000/hello-mine:latest
+```
+
+查看一下private registry．
+
+```
+curl -v -X GET http://localhost:5000/v2/hello-mine/tags/list
+```
+如果你的registry用的自签名的证书，你还需要给curl加上`-k`这个选项．
+
+
+试着从private registry pull a image.
+```
+$ docker pull localhost:5000/hello-mine:latest
+```
+
+# Docker build
+
+**Dockerfile**
+如果想要添加PATH环境变量,在Dockerfile里添加像这样一行：
+
+``` sh
+ENV PATH $PATH:/yourpath
+```
+
+**Dockerfile中的ENTRYPOINT和CMD**
+请看sof的这个帖子[http://stackoverflow.com/a/21564990](http://stackoverflow.com/a/21564990)，讲得比官方文档明白多了。
+
+
+我在做agilefant的images时，遇到了一个问题，tomcat总是启动不起来。因为我的用了一个自定义的shell script来处理环境变量，以更新agilefant的配置。在这个脚本的最后我调用了启动tomcat的脚本。
+
+```
+$CATALINA_HOME/bin/startup.sh
+```
+结果容器启动后就关闭，容器退出说明主命令的进程退出了。怎么会？自己折腾了半天还是不行，网上看了别人写的Dockerfile，发现人家都是这样启动tomcat的。
+``` sh
+exec ${CATALINA_HOME}/bin/catalina.sh run
+```
+为什么要用`exec` ? 这里有讲http://stackoverflow.com/a/18351547。
+
+那我把startup.sh加上exec可以吗？
+``` sh
+exec $CATALINA_HOME/bin/startup.sh
+```
+这样还是不行。
+
+不用exec`catalina.sh run`也能启动tomcat且容器不退出。
+``` sh
+${CATALINA_HOME}/bin/catalina.sh run
+```
+
+生成iamge并打上tag.
+$ docker build -t vieux/apache:2.0 .
+
+
+
+
+
+
+请参考：
+[https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
+
+
+[https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
 
 
