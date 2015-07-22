@@ -44,7 +44,7 @@ century schoolbook monospace , verily serif mono 这两个字体在mac下的显�
 ###【Console2与ConEmu】
 windows下的默认的命令行实在是太难用了，几年前我在网上找到了Console2,感觉不错，跟命令行和cygwin结合得都挺好的。可是最近在windows 7下测试发现有点问题，无法用了。于是我在网上找它的替代品，没想到找到了更好的东西 ConEmu，这个东西比console2强大太多了，而且作者更新的频繁，不像console2，N年不更新了。真心感谢这帮人，另外鄙视一下microsoft,这么难使的终端，你们这么多年都没有人修改一下，可见你们对用户体验有多么不重视，你们真的是太官僚化了。
 
-### What's new in Java 7 & 8 
+### 【What's new in Java 7 & 8 】
 
 [A look at Java 7's new features] (http://radar.oreilly.com/2011/09/java7-features.html)
 
@@ -57,7 +57,7 @@ windows下的默认的命令行实在是太难用了，几年前我在网上找�
 
 What's New in Java 8 [https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional](https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional) 这个讲得真不错。
 
-
+[What’s New in Java 8: Lambdas](http://radar.oreilly.com/2014/04/whats-new-in-java-8-lambdas.html)  这个作者的[其它文章](http://radar.oreilly.com/madhusudhank)也很好。
 
 
 eclipse 换行插件
