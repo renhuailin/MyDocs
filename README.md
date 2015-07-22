@@ -1,12 +1,6 @@
 MyDocs
 ======
 
-imessage enabler    
-http://www.souldevteam.net/blog/2012/11/28/enable-imessage-on-hackintosh/
-
-[Install eucalyptus 3.2.2]
-http://alinush.org/2013/02/19/how-to-compile-and-install-eucalyptus-3-2-0-on-ubuntu-12-0412-10-from-github-sources-cloud-in-a-box/
-
 Useful Git Tips for Beginners
 http://sixrevisions.com/web-development/git-tips/ 
 
@@ -50,12 +44,19 @@ century schoolbook monospace , verily serif mono 这两个字体在mac下的显�
 ###【Console2与ConEmu】
 windows下的默认的命令行实在是太难用了，几年前我在网上找到了Console2,感觉不错，跟命令行和cygwin结合得都挺好的。可是最近在windows 7下测试发现有点问题，无法用了。于是我在网上找它的替代品，没想到找到了更好的东西 ConEmu，这个东西比console2强大太多了，而且作者更新的频繁，不像console2，N年不更新了。真心感谢这帮人，另外鄙视一下microsoft,这么难使的终端，你们这么多年都没有人修改一下，可见你们对用户体验有多么不重视，你们真的是太官僚化了。
 
-### Java 8 
+### What's new in Java 7 & 8 
+
+[A look at Java 7's new features] (http://radar.oreilly.com/2011/09/java7-features.html)
+
 [10 JDK 7 Features to Revisit, Before You Welcome Java 8](http://www.javacodegeeks.com/2014/04/10-jdk-7-features-to-revisit-before-you-welcome-java-8.html)
+
 
 [Java 8 Features – The ULTIMATE Guide](http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html)
 
 [What's New in JDK 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html)
+
+What's New in Java 8 [https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional](https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional) 这个讲得真不错。
+
 
 
 
