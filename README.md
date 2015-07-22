@@ -55,7 +55,7 @@ windows下的默认的命令行实在是太难用了，几年前我在网上找�
 
 [What's New in JDK 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html)
 
-What's New in Java 8 [https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional](https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional) 这个讲得真不错。
+What's New in Java 8 [https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional](https://leanpub.com/whatsnewinjava8/read#leanpub-auto-optional) 这个讲得真不错,尤其是streaming部分讲得挺详细的。
 
 [What’s New in Java 8: Lambdas](http://radar.oreilly.com/2014/04/whats-new-in-java-8-lambdas.html)  这个作者的[其它文章](http://radar.oreilly.com/madhusudhank)也很好。
 
