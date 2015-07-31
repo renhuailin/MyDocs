@@ -27,3 +27,42 @@ $ grep 'Liberation' *
 
   刷新緩存`fc-cache -fr`。
 
+
+
+# 2014-07-31  Reinstall Ubuntu 14.04
+
+重新安裝了以後發現，Google chrome 使用的中文字體是 `Droid Sans Fallback`,沒有使用思源黑體。看來要手動修改fontconfig。
+通過chrome的工具可以看到，頁面上配置的是"Arial",實際render的字體是`Droid Sans Fallback`
+
+我要看看到底有哪些文件包含了`Arial`.
+
+```
+$ cd /etc/fonts/conf.d
+$ grep "Arial" *
+```
+然逐一查看這些文件。
+
+``` xml
+<alias binding="same">
+  <family>Arial</family>
+  <accept>
+    <family>Arimo</family>
+    <family>Liberation Sans</family>
+    <family>Albany</family>
+    <family>Albany AMT</family>
+  </accept>
+</alias>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
