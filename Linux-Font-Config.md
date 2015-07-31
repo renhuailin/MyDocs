@@ -7,7 +7,9 @@ Linux字體配置
 
 
 先轉到/etc/fonts/conf.avail下，先看看有哪些配置裏包含Liberation Sans
-  grep 'Liberation' *
+```
+$ grep 'Liberation' *
+```
 發現在這個文件裏30-metric-aliases.conf有相關的替換。 我把Liberation Sans註釋掉，加上Droid Sans。
 
   
