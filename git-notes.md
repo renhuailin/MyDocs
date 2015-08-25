@@ -7,6 +7,7 @@ git备忘
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
 $ git config --global core.editor emacs
+$ git config --global core.askpass /usr/bin/ksshaskpass
 ```
 
 # 2 git的特点
