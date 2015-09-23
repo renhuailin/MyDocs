@@ -2,7 +2,14 @@ Docker notes
 -------------
 
 
-# docker run 
+# 1 docker run
+
+为了让非root用户使用docker，需要把她加到docker这个组里
+
+```
+$ sudo usermod -aG docker your-user
+```
+
 
 ```
 $ sudo docker run  -d --name registry  -p 5000:5000 registry:2.0
@@ -31,7 +38,7 @@ IP:host_port:container_port
 
 Policy | Result
 -------|-------
-no     | 不自动重启 
+no     | 不自动重启
 on-failure[:max-retries] | 当容器以非0的返回值退出时，重启，这时可以指定最大重启次数。
 always | 一直重启，没有次数限制
 
@@ -51,15 +58,15 @@ docker可以与openstack结合，分别是以Nova的driver和heat的plugin方式
 Magnum是OpenStack的新项目，也就是Container as a Service.
 
 
-# 进入容器的bash
+# 2 进入容器的bash
 
 可以用docker attach,但是docker attach是共享窗口的。
 docker version > 1.3，我们还可以使用
 ```
-# docker exec -it <container id or name> bash
+# 3 docker exec -it <container id or name> bash
 ```
 
-# storage driver
+# 4 storage driver
 
 `--storage-driver=devicemapper`
 
@@ -81,17 +88,17 @@ http://www.slideshare.net/jpetazzo/shipping-applications-to-production-in-contai
 [Docker基础技术：Linux Namespace（下）](http://coolshell.cn/articles/17029.html)
 
 
-# Docker性能问题
+# 5 Docker性能问题
 IO性能不是很好是因为AUFS,网络模式最好是host．
 可以通过Volume来挂载的方式来绕过AUFS.
 
 
-# Mesos VS Kubernates
+# 6 Mesos VS Kubernates
 根据sof这篇文章　[http://stackoverflow.com/a/28725899](http://stackoverflow.com/a/28725899)　来看mesos更成熟．
 
 
 
-# registry
+# 7 registry
 
 $ sudo docker run -p 5000:5000 registry:2.0  -e ICESCRUM_EMAIL_DEV=dev@icescrum.org
 
@@ -106,15 +113,12 @@ docker run \
          registry
 
 
-
-
-         
 当你访问一个非localhost的registry时，docker要求你必须用https加密。否则报下面的错误。
-         
+
 ```
 FATA[0000] Error response from daemon: v1 ping attempt failed with error:
-Get https://myregistrydomain.com:5000/v1/_ping: tls: oversized record received with length 20527. 
-If this private registry supports only HTTP or HTTPS with an unknown CA certificate,please add 
+Get https://myregistrydomain.com:5000/v1/_ping: tls: oversized record received with length 20527.
+If this private registry supports only HTTP or HTTPS with an unknown CA certificate,please add
 `--insecure-registry myregistrydomain.com:5000` to the daemon's arguments.
 In the case of HTTPS, if you have access to the registry's CA certificate, no need for the flag;
 simply place the CA certificate at /etc/docker/certs.d/myregistrydomain.com:5000/ca.crt
@@ -123,11 +127,11 @@ simply place the CA certificate at /etc/docker/certs.d/myregistrydomain.com:5000
     -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry \
     -v /myregistrydata:/var/lib/registry \
     --restart=always --name registry registry:2
-    
+
 mkdir -p certs && openssl req \
     -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
     -x509 -days 365 -out certs/domain.crt
-    
+
 ```    
 $ openssl req  -newkey rsa:4096 -nodes -sha256 -keyout certs/registry_ecloud_com_cn.key -x509 -days 365 -out certs/registry_ecloud_com_cn.crt
 ```
@@ -163,7 +167,14 @@ $ docker tag hello-world:latest localhost:5000/hello-mine:latest
 $ docker push localhost:5000/hello-mine:latest
 ```
 
-查看一下private registry．
+# 7.1 查看 private registry．
+
+
+**From registry 2.1** 终于可以查询这个registry里有哪些镜像了,2.1添加了一`_catalog`api,可以list出所有的镜像，而且支持分页。
+
+```
+curl -v -X GET http://localhost:5000/v2/_catalog
+```
 
 ```
 curl -v -X GET http://localhost:5000/v2/hello-mine/tags/list
@@ -174,6 +185,25 @@ curl -v -X GET http://localhost:5000/v2/hello-mine/tags/list
 试着从private registry pull a image.
 ```
 $ docker pull localhost:5000/hello-mine:latest
+```
+
+
+# 8 Image
+
+# 8.1 导出导入image
+
+使用`docker save`导出image.默認輸出到STDOUT。輸出的是tar格式的。
+
+```
+$ docker save busybox > busybox.tar
+$ docker save -o fedora-all.tar fedora
+```
+
+使用`docker load`來導入tarred image . Load an image from a tar archive or STDIN.
+
+```
+$ docker load < busybox.tar
+$ docker load --input fedora.tar
 ```
 
 # Docker build
@@ -187,6 +217,18 @@ ENV PATH $PATH:/yourpath
 
 **Dockerfile中的ENTRYPOINT和CMD**
 请看sof的这个帖子[http://stackoverflow.com/a/21564990](http://stackoverflow.com/a/21564990)，讲得比官方文档明白多了。
+
+
+
+
+## 卷映射的问题
+
+我给容器
+
+VOLUME
+
+
+
 
 
 我在做agilefant的images时，遇到了一个问题，tomcat总是启动不起来。因为我的用了一个自定义的shell script来处理环境变量，以更新agilefant的配置。在这个脚本的最后我调用了启动tomcat的脚本。
@@ -216,7 +258,15 @@ $ docker build -t vieux/apache:2.0 .
 
 
 
+# 常用docker命令
+```
+$ sudo docker run --name mysql -d     -v /opt/mysql/data:/var/lib/mysql     sameersbn/mysql:latest
 
+$ sudo docker run --name mysql -it     ubuntu:latest bash
+
+$ docker run --name ubuntu -it   -p 5000:5000    registry.ecloud.com.cn:5000/ubuntu:14.04 bash
+
+```
 
 
 请参考：
@@ -224,5 +274,3 @@ $ docker build -t vieux/apache:2.0 .
 
 
 [https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
-
-

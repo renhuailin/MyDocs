@@ -125,6 +125,38 @@ Error: Could not retrieve catalog; skipping run
 Error: Could not send report: Server hostname 'harley-ThinkPad-T420' did not match server certificate; expected one of harley-thinkpad-t420, DNS:puppet, DNS:harley-thinkpad-t420
 ```
 
+
+
+## 主机配置文件site.pp
+从puppet 4开始，这个配置文件跟当前的环境相关，如果是`production`，则放在`/etc/puppetlabs/code/environments/production/manifests`这个目录下。
+
+puppet会先加载这个文件来载入主机的相关配置。
+
+
+# puppet 命令
+
+```
+#show all configs
+$ sudo puppet config print
+
+#print confdir
+$ sudo puppet config print "confdir"
+
+$ sudo puppet config print "codedir"
+
+$ sudo puppet config print "environment"
+
+$ sudo puppet config print "environmentpath"
+
+$ sudo puppet config print "modulepath"
+```
+## 帮助命令
+```
+$ puppet describe --list
+$ puppet describe file --providers
+$ puppet describe user -s -m
+```
+
 # Puppet 语法
 
 ## 语法检查

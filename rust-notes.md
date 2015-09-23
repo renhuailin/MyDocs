@@ -821,6 +821,15 @@ fn main() {
 Rust的Borrow和Lifetime虽然有一点难理解，但请相信，一旦弄懂并开始coding,你会爱上它，：D。
 
 
+# 5.23 Trait Object
+Trait Object其实是Trait指针。  有了多态就要动态dispatch,所以有了Trait Object.
+
+Trait objects, like &Foo or Box<Foo>.
+
+```
+A trait object can be obtained from a pointer to a concrete type that implements the trait by casting it (e.g. &x as &Foo) or coercing it (e.g. using &x as an argument to a function that takes &Foo).
+```
+其实它就是Trait指针嘛
 
 
 ## 一些参考资料 
@@ -833,6 +842,73 @@ Rust的Borrow和Lifetime虽然有一点难理解，但请相信，一旦弄懂�
 [Move and Copied Types](http://doc.rust-lang.org/nightly/reference.html#moved-and-copied-types)
 
 [Error Handling in Rust](http://blog.burntsushi.net/rust-error-handling/) 对rust错误处理讲得比较详细
+
+
+
+# Rust 宏
+
+Kleene star 克林星号
+
+
+
+unwrap
+Rc<T> and Arc<T>
+
+
+
+# unsafe
+
+Code using unsafe has less restrictions than normal code does.
+
+有两种应用场景
+
+**1 标识函数为unsafe**
+
+``` rust
+unsafe fn danger_will_robinson() {
+    // scary stuff 
+}
+
+```
+All functions called from FFI must be marked as unsafe, for example.
+
+**2 unsafe块**   
+``` rust
+unsafe {
+    // scary stuff
+}
+
+```
+
+
+In both unsafe functions and unsafe blocks, Rust will let you do three things that you normally can not do. Just three. Here they are:
+1. Access or update a static mutable variable.
+2. Dereference a raw pointer.
+3. Call unsafe functions. This is the most powerful ability.
+
+
+
+
+
+# 错误处理   
+
+Option,Result,Some,None.这些是要了解的
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
