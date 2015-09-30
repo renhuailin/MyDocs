@@ -58,21 +58,81 @@ book.hasOwnProperty("toString");    //有toString这个属性，但不own它。
 
 ``` js
 var o = { x: 1 }
-o.x !== undefined;                  // true: o has a property x 
+o.x !== undefined;                  // true: o has a property x
 o.y !== undefined;                  // false: o doesn't have a property y
 o.toString !== undefined;           // true: o inherits a toString property
 ```
 这样做无法区别没有这个属性，还是有这个属性,但它的值是undefined.
 
 ## 6.5 Enumerating properties
+property分爲可遍歷的和不可遍歷的，繼承來的屬性都是不可以遍歷的。
+
+你在代碼裏添加的屬性默認是可遍歷的，
+
+``` js
+var o = {x:1, y:2, z:3};              // Three enumerable own properties
+o.propertyIsEnumerable("toString");   // => false: not enumerable
+for(p in o) {                         // Loop through the properties
+    console.log(p);                   // Prints x, y, and z, but not toString
+}
+```
+
+ECMAScript 5 定義了一個方法來遍歷屬性名`Object.keys()`;
+
+``` js
+var o = {x:1, y:2, z:3};              // Three enumerable own properties
+Object.keys(0);
+}
+```
+
+## 6.6 Property Getters and Setters
+
+ECMAScript 5引入了類似C#語法的`accessor properties`，真的很好理解。
+
+``` js
+var p = {
+    // x and y are regular read-write data properties.
+    x: 1.0,
+    y: 1.0,
+
+    // r is a read-write accessor property with getter and setter.  
+    // Don't forget to put a comma after accessor methods.
+    get r() { return Math.sqrt(this.x*this.x + this.y*this.y); },
+    set r(newvalue) {
+        var oldvalue = Math.sqrt(this.x*this.x + this.y*this.y);
+        var ratio = newvalue/oldvalue;
+        this.x *= ratio;
+        this.y *= ratio;
+    },
+    // theta is a read-only accessor property with getter only.
+    get theta() { return Math.atan2(this.y, this.x); }
+};
+```
+## 6.6 Property Attributes（屬性特徵）
+ECMAScript 5 之前的版本js裏創建的屬性都是`writable, enumerable, and configurable`，也
+就是可寫、可遍歷和可配置的。
+
+ECMAScript 5加入了對屬性的控制，從此我們可以控制屬性是否可寫、可遍歷和可配置了。
+這對庫的設計者來說是重要的，因爲可以:
+* 可爲object添加方法，並配置爲不可遍歷的(nonenumerable),這樣就更像是內置的方法了。
+* 可以鎖住object，定義不可改變、不可刪除的屬性。
 
 
+屬性有4個特徵：value, writable, enumerable, and configurable。
 
 
+要獲得指定對象的屬性描述符,需要調用`Object.getOwnPropertyDescriptor()`方法。
 
+``` js
 
+// Returns {value: 1, writable:true, enumerable:true, configurable:true}
+Object.getOwnPropertyDescriptor({x:1}, "x");
 
+// Now query the octet property of the random object defined above.
+// Returns { get: /*func*/, set:undefined, enumerable:true, configurable:true}
+Object.getOwnPropertyDescriptor(random, "octet");
 
+```
 
 
 
@@ -117,5 +177,3 @@ o.toString !== undefined;           // true: o inherits a toString property
 
 # 参考文档
 [Mozilla Javascript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
-
-
