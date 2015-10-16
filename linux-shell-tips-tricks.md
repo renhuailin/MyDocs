@@ -7,6 +7,18 @@ Linux Shell Tips and Tricks
 $ openssl rand -hex 10
 ```
 
+## ubuntu 14.04下查看dns
+```
+$ nm-tool
+```
+
+## ubuntu 14.04禁用dnsmasq
+```sh
+$ sudo gedit /etc/NetworkManager/NetworkManager.conf
+# Comment out the “dns=dnsmasq” line by putting a hash “#” in front it.
+
+$ sudo service network-manager restart
+```
 
 ## 让ls命令显示长日期
 ls 默认是短日期格式，对中国人太不友好了。
