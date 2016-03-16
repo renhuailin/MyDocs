@@ -427,11 +427,10 @@ lvalue和rvalue那段沒怎麼看明白，以後有時間好好研究下。
 # Chapter 6. Functions
 
 ## 6.1. Function Basics
+
 **Parameters and Arguments**
 
 Parameters是形參，Arguments是實參，明白了吧。
-
-
 
 ### 6.2.6. Functions with Varying Parameters
 
@@ -558,3 +557,195 @@ struct Sales_data {
 `Sales_data() = default;`
 
 `= default`可以寫在class body裏，這時它是inline的;也可以寫在definition outside the class,那它就是非inline的。
+
+## 7.2. Access Control and Encapsulation
+
+**Using the class or struct Keyword**
+
+用class还是用struct？
+用class和struct定义类有什么区别？
+区别是默认访问级别的区别。
+
+
+
+## 7.5. Constructors Revisited
+
+**Constructor Initializers Are Sometimes Required**
+有时构造器初始化是必须的
+
+如果你的類裏有常量的成員、有引用類的成員，那Constructor Initializers就是必須的了。爲什麼呢？
+
+```cpp
+class ConstRef {
+public:
+    ConstRef(int ii);
+private:
+    int i;
+    const int ci;
+    int &ri;
+};
+```
+跟其它的常量對象和引用對象一樣，必須被初始化。
+
+```cpp
+// error: ci and ri must be initialized
+ConstRef::ConstRef(int ii)
+{ // assignments:
+    i = ii; // ok
+    ci = ii; // error: cannot assign to a const
+    ri = i; // error: ri was never initialized
+}
+```
+
+當開始執行構造函數體時，初始化工作就完成了。所以上面的代碼報錯，因爲不能給常量賦值，引用必須被初始化。唯一能初始化常量和引用的方法就是constructor
+initializer了，我想這也是爲什麼C++會引入constructor　initializer的原因吧。
+
+好，正確做法是：　　　　
+
+```cpp
+// ok: explicitly initialize reference and const members
+ConstRef::ConstRef(int ii): i(ii), ci(ii), ri(i) {}
+```
+
+**注意**
+```
+在C/C++里变量的定义位置是很重要的,这一点跟Java不一样,要注意.
+
+```
+### 7.5.2. Delegating Constructors
+
+C++11引用了代理构造函数,不是什么新概念，java里早就有了。
+```cpp
+class Sales_data {
+public:
+    // nondelegating constructor initializes members from corresponding arguments
+    Sales_data(std::string s, unsigned cnt, double price):
+        bookNo(s), units_sold(cnt), revenue(cnt*price) {
+    }
+    // remaining constructors all delegate to another constructor
+    Sales_data(): Sales_data("", 0, 0) {}
+    Sales_data(std::string s): Sales_data(s, 0,0) {}
+    Sales_data(std::istream &is): Sales_data()
+    { read(is, *this); }
+    // other members as before
+};
+
+```
+
+### 7.5.4 Implicit Class-Type Conversions
+
+隐式的类类型转换。
+
+注意：单个参数的构造函数，实际上是一个隐式的类型转换器。
+
+```cpp
+string null_book = "9-999-99999-9";
+// constructs a temporary Sales_data object
+// with units_sold and revenue equal to 0 and bookNo equal to null_book
+item.combine(null_book);
+```
+这个转换是编译器帮我们执行的，编译器自动创建了一个Sales_data对象，并把它传给combine这个方法。
+
+注意：compiler只能执行一步的自动转换，下面的例子就不行了。
+
+```cpp
+// error: requires two user-defined conversions:
+// (1) convert "9-999-99999-9" to string
+// (2) convert that (temporary) string to Sales_data
+item.combine("9-999-99999-9");
+```
+上面的代码需要先把"9-999-99999-9"转成string，然后再把string转成Sales_data,这是两步的转换，compiler执行不了。
+
+```cpp
+// ok: explicit conversion to string, implicit conversion to Sales_data
+item.combine(string("9-999-99999-9"));
+// ok: implicit conversion to string, explicit conversion to Sales_data
+item.combine(Sales_data("9-999-99999-9"));
+```
+
+
+**Suppressing Implicit Conversions Defined by Constructors**
+
+有时候我们不希望上述的以自动转换的方式来调用某些constructor，可以在constructor前面加explicit来阻止
+constructor以隐式转换的方式来调用。
+
+```cpp
+class Sales_data {
+public:
+    Sales_data() = default;
+    Sales_data(const std::string &s, unsigned n, double p):
+    bookNo(s), units_sold(n), revenue(p*n) { }
+    explicit Sales_data(const std::string &s): bookNo(s) { }
+    explicit Sales_data(std::istream&);
+    // remaining members as before
+};
+```
+
+另一个使用自动转换的context时copy初始化。
+
+```cpp
+Sales_data item1 (null_book); // ok: direct initialization
+// error: cannot use the copy form of initialization with an explicit constructor
+Sales_data item2 = null_book;
+```
+
+
+### 7.5.6. Literal Classes
+
+字面类？
+
+constexpr　function 的参数和返回值都必须是Literal 类型的。除了算术类型，引用和指针外，有些类也是Literal Type的。
+
+一个aggregate class聚合类，如果它的成员都是Literal Type的，那它就是Literal Type的。
+
+一个非聚合类，它符合下面的条件，也是Literal Type的。
+* 所有的成员必须是Literal Type
+* 必须有至少一个`constexpr`构造函数
+* 如果成员有in-class initializer,如果这个成员是内置类型的（非class）,那给它初始的值必须是`constexpr`的；如果是class类型的，
+必须用那class的`constexpr`构造函数来初始化
+* 必须使用默认的析构函数
+
+```cpp
+class Debug {
+public:
+    constexpr Debug(bool b = true): hw(b), io(b), other(b) {
+    }
+    constexpr Debug(bool h, bool i, bool o):
+        hw(h), io(i), other(o) {
+    }
+    constexpr bool any() { return hw || io || other; }
+    void set_io(bool b) { io = b; }
+    void set_hw(bool b) { hw = b; }
+    void set_other(bool b) { hw = b; }
+private:
+    bool hw; // hardware errors other than IO errors
+    bool io; // IO errors
+    bool other; // other errors
+};
+```
+
+## 7.6. static Class Members
+
+静态成员可以使用incompleted type,一个例子是单例模式里的`instance`,可以声明为跟它的类型一样.
+
+
+
+
+# Chapter 12 Dynamic Memory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EOF

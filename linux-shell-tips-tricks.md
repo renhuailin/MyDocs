@@ -1,6 +1,40 @@
 Linux Shell Tips and Tricks
 ------
 
+# Shell Programming Note
+
+`$#` 是把参数当成一行来看的.
+
+`$@` 是把参数当成数组来看的.  参考1，11章 Special Paramter Variables.
+
+
+You may also see variables referenced using the format ${variable} . The extra braces
+around the variable name are often used to help identify the variable name from the
+dollar sign.
+
+可以用$来引用一个变量，也可以用${}来引用变量，后一种方式是为了让变量名更明显。
+
+
+`$[]` $加方括号是用来做算术计算的。 
+
+``` bash
+$[1 + 5]
+```
+
+()　圆括号是用来生成数组的。
+
+``` bash
+$ mytest=(one two three four five)
+```
+
+`$()` :`$`  + 圆括号用来redirect命令行的输出的。跟backtick的作用是一样的。因为ksh93 shell中不能用backtick。　　参考文档1，22章 The Korn Shell
+
+
+`;;`  只用在`case`中，相当于`break`.
+
+
+
+
 ## 生成随机密码
 
 ```
@@ -51,3 +85,6 @@ alias ll='ls -lh --time-style long-iso'
 ``` bash
 export TIME_STYLE=long-iso
 ```
+
+# 参考文档
+1. 《Linux command line and shell scripting bible》

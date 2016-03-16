@@ -2,7 +2,7 @@ git备忘
 ----------
 
 
-# 1 git config 
+# 1 git config
 ```
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
@@ -14,7 +14,7 @@ $ git config --global core.askpass /usr/bin/ksshaskpass
 Conceptually, most other systems store information as a list of file-based changes.
 其它的vcs都是保存的是基于文件的变更(file-based changes) ,而git保存的是快照(snapshot)
 
-Every time you commit, or save the state of your project in Git, it basically takes a picture of what all your files look like at that moment and stores a reference to that snapshot. To be efficient, if files have not changed, Git doesn't store the file again—just a link to the previous identical file it has already stored. 
+Every time you commit, or save the state of your project in Git, it basically takes a picture of what all your files look like at that moment and stores a reference to that snapshot. To be efficient, if files have not changed, Git doesn't store the file again—just a link to the previous identical file it has already stored.
 
 每次你提交或是在git里保存你的项目的状态，它会创建一个当前项目所有文件的快照，同时保存一个指向这个快照的引用。为了使这个过程更快，如果一个文件没有发生变化（本次提交没有修改），那git不会再保存一份这个文件，而是保存一个指向上一个变化了版本链接。
 
@@ -34,7 +34,7 @@ $ git remote -v
 origin git://github.com/schacon/ticgit.git
 pb git://github.com/paulboone/ticgit.git
 ```
-如果你想查看remote更详细的信息。 
+如果你想查看remote更详细的信息。
 ```
 $ git remote show origin  
 *remote origin   
@@ -44,7 +44,7 @@ $ git remote show origin
   Tracked remote branches   
     master   
     ticgit  
-    
+
 ```
 
 
@@ -215,7 +215,7 @@ v1.5 -> v1.5
 ```
 你把tag分享到server上后，如果有人clone或pull这个repository,他们就会得到你分享的这些tags。
 
-## 3.6  删除tag 
+## 3.6  删除tag
 ```
 git tag -d v1.4-lw
 ```
@@ -224,7 +224,7 @@ git tag -d v1.4-lw
 
 ``` bash
 # 先列出所有的tags
-git tag -l 
+git tag -l
 
 # 检出指定的tag.
 git checkout tags/<tag_name>
@@ -322,7 +322,7 @@ git发现master分支在创建develop分支到merge点这段时间都没有任�
 怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，:smile:     
 
 ## 4.3 Tracking 分支(Tracking Branches)
-Checking out a local branch from a remote branch automatically creates what is called a tracking branch. 
+Checking out a local branch from a remote branch automatically creates what is called a tracking branch.
 检出（checkout）一个远程的分支到本地会自动创建一个叫tracking分支的本地分支。
 
 Tracking branches are local branches that have a direct relationship to a remote branch. If you're on a tracking branch and type git push, Git automatically knows which server and branch to push to. Also, running git pull while on one of these branches fetches all the remote references and then automatically merges in the corresponding remote branch.  
@@ -330,7 +330,7 @@ Tracking branches are local branches that have a direct relationship to a remote
 tracking分支是远程分支有着直接关系的本地分支。如果你在一个tracking分支上执行`git push`,git会自动知道把内容push到哪个服务器哪个分支上。如果你在tracking分支上执行`git pull`,git会自动把远程分支上的内容取到本地并自动合并。
 
 
-When you clone a repository, it generally automatically creates a master branch that tracks origin/master. 
+When you clone a repository, it generally automatically creates a master branch that tracks origin/master.
 That's why git push and git pull work out of the box with no other arguments. However, you can set up other tracking branches if you wish — ones that don't track branches on origin and don't track the master branch. The simple case is the example you just saw, running `git checkout -b [branch] [remotename]/[branch]`. If you have Git version 1.6.2 or later, you can also use the --track shorthand:
 ```
 $ git checkout --track origin/serverfix
@@ -376,7 +376,7 @@ $ git add -i
 
 # 7 Windows下cygwin中的git如何保存密码？
 
-[参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "") 
+[参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "")
 ###git 1.7.9或更新版本
 从git 1.7.9开始，git提供一种简洁便利的方法来保存http和https的密码，这种机制叫*credential helpers*。   
 
@@ -409,7 +409,7 @@ $ git config --global credential.helper cache
 运行了上面的命令后，就可以保存你的密码15分钟。15分钟是默认值，你可以通过下面的命令来调成你喜欢的时长。
 ```
 $ git config --global credential.helper "cache --timeout=3600"
-```	
+```
 
 更多关于保存密码的方法，请查看gitcredentials的manpage
 ```
@@ -420,7 +420,7 @@ $ man gitcredentials
 
 * git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly
 
-出现这个错误是因为git命令发起的http请求的包是大小限制的，你push的文件超过了这个限制。解决这个错误很简单，加大这个值就行了。 
+出现这个错误是因为git命令发起的http请求的包是大小限制的，你push的文件超过了这个限制。解决这个错误很简单，加大这个值就行了。
 ```
 git config http.postBuffer 524288000
 ```
@@ -444,6 +444,19 @@ max_size: 55242880 # 55.megabytes
 timeout: 60
 ```
 
+
+* unable to access 'https://gitlab.china-ops.com/project/ssl-vpn.git/': server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
+
+這個錯誤是因爲你的git服務器用的是自簽名的證書，或是證書過期了。
+
+解決方法是設置環境變量GIT_SSL_NO_VERIFY爲1,或是設置全局配置http.sslverify爲false
+
+```
+export GIT_SSL_NO_VERIFY=1
+#or
+git config --global http.sslverify false
+```
+
 ## git pull和git fetch的区别
 $ git help pull
 ```
@@ -464,4 +477,3 @@ A successful Git branching model http://nvie.com/posts/a-successful-git-branchin
 Useful Git Tips for Beginners http://sixrevisions.com/web-development/git-tips/     
 [Progit](https://github.com/progit/progit "progit")
 http://stackoverflow.com/questions/12651749/git-push-fails-rpc-failed-result-22-http-code-411
-

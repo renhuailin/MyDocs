@@ -22,7 +22,8 @@ bridge 方式： 有mac地址变更，ip地址等问题。
  -p -P来映射port, 在container内部是用iptables来实现的，最多只能处理65535个连接。在大网站里这是不可能接受的。
 IP:host_port:container_port
 
-注意docker映射的格式是:   宿主机的资源[端口或目录]:container的资源。
+**注意**
+docker映射的格式是:   宿主机的资源[端口或目录]:container的资源。
 
 
 **指定容器的hostname**
@@ -223,13 +224,6 @@ ENV PATH $PATH:/yourpath
 
 ## 卷映射的问题
 
-我给容器
-
-VOLUME
-
-
-
-
 
 我在做agilefant的images时，遇到了一个问题，tomcat总是启动不起来。因为我的用了一个自定义的shell script来处理环境变量，以更新agilefant的配置。在这个脚本的最后我调用了启动tomcat的脚本。
 
@@ -241,6 +235,8 @@ $CATALINA_HOME/bin/startup.sh
 exec ${CATALINA_HOME}/bin/catalina.sh run
 ```
 为什么要用`exec` ? 这里有讲http://stackoverflow.com/a/18351547。
+其大概意思是用exec创建出来的process,会替代调用它的那个进程,一旦exec创建出来的进程结束,整个进程就结束了,不会有shell进程会留一下.
+
 
 那我把startup.sh加上exec可以吗？
 ``` sh
@@ -256,6 +252,24 @@ ${CATALINA_HOME}/bin/catalina.sh run
 生成iamge并打上tag.
 $ docker build -t vieux/apache:2.0 .
 
+### Dockerfile里的VOLUME指令
+这个指令用指定的名创建一个挂载点，然后把它标识为一个外部挂载的卷,这个卷可以是从宿主机(native host)或者是其它容器挂载过来的。
+
+那它有什么用呢？ 简单地说docker run时，会的把images里VOLUME指定的那个目录下的所有文件复制到新的卷里去，注意是每次run的时候。
+假设有下面的Dockerfile.
+
+
+```
+FROM ubuntu
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol
+```
+
+TODO：： 这里要继续写，给出一些图片说明，然后整理成一篇blog.
+
+
+
 
 
 # 常用docker命令
@@ -267,6 +281,18 @@ $ sudo docker run --name mysql -it     ubuntu:latest bash
 $ docker run --name ubuntu -it   -p 5000:5000    registry.ecloud.com.cn:5000/ubuntu:14.04 bash
 
 ```
+
+# Some sites about Docker
+
+http://container42.com/  作者是docker公司的人。
+
+# SDN And Docker 
+
+
+Calico A pure L3 approach to Virtual Networking for High avaiable scalable data center.
+https://www.projectcalico.org/
+
+
 
 
 请参考：

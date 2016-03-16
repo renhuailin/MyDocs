@@ -136,6 +136,7 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 
 
+如果用es6的语法，autobinding会问题，请看：https://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html
 
 
 
@@ -161,9 +162,17 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 
 
+# React
+
+react 强制我们以组件的方式去思考。
+每个组件有自己的state，这个东西有点像跟UI关联的model，是一對象。
 
 
+this.props和this.state的区别是什么 ？  
+https://github.com/uberVU/react-guide/blob/master/props-vs-state.md
 
+
+https://facebook.github.io/react/docs/thinking-in-react.html    这个链接讲了如何确定你的Component的state。
 
 
 
