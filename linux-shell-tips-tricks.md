@@ -54,6 +54,10 @@ $ sudo gedit /etc/NetworkManager/NetworkManager.conf
 $ sudo service network-manager restart
 ```
 
+## dpkg -i安装无法自动安装依赖的问题
+`dpkg -i` 安装的包有时会出现依赖没有安装上的问题，可以在运行完`dpkg -i` 后运行`apt-get -f install`来把相关的依赖安装上。
+
+
 ## 让ls命令显示长日期
 ls 默认是短日期格式，对中国人太不友好了。
 ```

@@ -269,9 +269,6 @@ VOLUME /myvol
 TODO：： 这里要继续写，给出一些图片说明，然后整理成一篇blog.
 
 
-
-
-
 # 常用docker命令
 ```
 $ sudo docker run --name mysql -d     -v /opt/mysql/data:/var/lib/mysql     sameersbn/mysql:latest
@@ -288,7 +285,7 @@ http://container42.com/  作者是docker公司的人。
 
 # SDN And Docker 
 
-
+ 
 Calico A pure L3 approach to Virtual Networking for High avaiable scalable data center.
 https://www.projectcalico.org/
 

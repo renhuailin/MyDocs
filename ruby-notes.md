@@ -66,6 +66,11 @@ end
 
 
 
+因为要用emoji字符，所以要把数据库改成utf8mb4，这时在migration里字符串的长度要设置为191，否则会报错：
+ Mysql2::Error: Specified key was too long; max key length is 767 bytes
+
+
+
 
 
 
