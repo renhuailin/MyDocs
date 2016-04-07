@@ -237,7 +237,7 @@ git checkout tags/<tag_name>
 ```
 $git branch message-delivery
 ```
-这样就创建了一个branch，（是在本地还是在远程？应该是在本地）,这时查看branch,你会发现你工作的branch并没有改变。    
+这样就创建了一个branch,这时查看branch,你会发现你工作的branch并没有改变。
 ```
 $ git branch
   message-delivery

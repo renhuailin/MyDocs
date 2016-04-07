@@ -290,6 +290,18 @@ Calico A pure L3 approach to Virtual Networking for High avaiable scalable data 
 https://www.projectcalico.org/
 
 
+[tomcat在启动时假死]
+
+tomcat在容器里假死在下面这里，我是真心不知道为什么了，在本机是好使的。
+```
+[INFO] 19:51:56 [ContextLoader][301]: Root WebApplicationContext: initialization completed in 698 ms
+```
+后来看了http://stackoverflow.com/a/27613367,解决了，感谢大牛，泪流满面。
+
+```
+apt-get install haveged -y
+```
+
 
 
 请参考：
