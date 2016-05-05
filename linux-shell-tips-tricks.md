@@ -64,9 +64,25 @@ Remove matching suffix pattern. The word is expanded to produce a pattern just a
 
 
 
+## Arrays
+把数组转成逗号分隔的字符串
+```bash
+EXTRA_SANS=(
+    IP:${MASTER_IP}
+    IP:${SERVICE_CLUSTER_IP_RANGE%.*}.1
+    DNS:kubernetes
+    DNS:kubernetes.default
+    DNS:kubernetes.default.svc
+    DNS:kubernetes.default.svc.cluster.local
+)
 
-
-
+echo $(echo "${EXTRA_SANS[@]}" | tr ' ' ,)
+```
+根据bash manpage的说明，
+```
+ If the word is double-quoted, ${name[*]} expands to a single word with the value of each array member separated by the first character of the IFS special variable, and ${name[@]} expands each element of name to a separate word.
+```
+`${name[*]}`展开成一个word,`${name[@]}`把每个元素展开成一个word.
 
 
 
