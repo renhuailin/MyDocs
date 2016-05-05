@@ -32,6 +32,30 @@ http://www.opensourcerails.com/
 
 
 
+# Upgrade jekyll to version 3.0.0
+
+$ gem install jekyll
+remove Gemfile.lock
+run `bundle install`
+
+https://jekyllrb.com/docs/upgrading/2-to-3/
+
+
+jekyll serve报错：
+
+```
+cannot load such file -- jekyll/deprecator
+```
+
+可以运行
+
+```
+$ bundle exec jekyll serve
+```
+
+
+
+
 # 自定义配置的用法
 
 http://guides.rubyonrails.org/configuring.html#custom-configuration
@@ -70,7 +94,13 @@ end
  Mysql2::Error: Specified key was too long; max key length is 767 bytes
 
 
+# gem
 
+列出某个gem在source上的所有版本
+gem list rhc --remote --all
+
+查询某个包
+$ gem search jekyll
 
 
 
