@@ -283,13 +283,18 @@ $ docker run --name ubuntu -it   -p 5000:5000    registry.ecloud.com.cn:5000/ubu
 
 http://container42.com/  作者是docker公司的人。
 
-# SDN And Docker 
+# SDN And Docker
 
- 
+
 Calico A pure L3 approach to Virtual Networking for High avaiable scalable data center.
 https://www.projectcalico.org/
 
 
+## IPVLAN技术
+http://networkstatic.net/configuring-macvlan-ipvlan-linux-networking/
+
+
+# Other problems
 [tomcat在启动时假死]
 
 tomcat在容器里假死在下面这里，我是真心不知道为什么了，在本机是好使的。
@@ -306,6 +311,5 @@ apt-get install haveged -y
 
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
-
-
+[左耳朵耗子写的一些关于docker的文章](http://coolshell.cn/tag/docker)
 [https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
