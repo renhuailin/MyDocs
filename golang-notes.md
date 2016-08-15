@@ -12,7 +12,8 @@ https://github.com/realint/labs
 一篇老外的文章：），http://blog.cloudflare.com/recycling-memory-buffers-in-go
 
 
-《Learning Go》
+# 《Learning Go》 笔记     
+
 := 这符号dephi里有，在go里 我看它的意义是 定义并赋值 define and assign。
 
 if和switch都可以包含 初始化语句 (initialization statement)
