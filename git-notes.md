@@ -68,6 +68,12 @@ $git clone
 git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 ```
 
+```
+git clone --depth 1 https://github.com/kubernetes/kubernetes.git
+```
+
+
+
 从库里删除文件，比如我在初始导入时，把一些logs文件也添加了进去，后来我把它们加到了.gitignore中，我想把它们从git repo中删除。
 
 

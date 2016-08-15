@@ -143,25 +143,6 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # React
 
 react 强制我们以组件的方式去思考。
@@ -178,9 +159,77 @@ https://facebook.github.io/react/docs/thinking-in-react.html    这个链接讲�
 
 
 
+## React & Redux
 
 
 
+1. react-redux里的`connect`方法是干什么用的？它的参数具体有什么用?
+
+2. 是不是每个component都要调用`connect`方法?
+
+3. 用什么方法能简单地保证representational components都能使用`store` ?    
+用Provider这个组件。
+
+[深入浅出 - Redux](http://www.w3ctech.com/topic/1561) 这篇文章对于`connect`方法的讲解还是具有参考价值的。
+
+connect把Dispatch做为子组件的props了。
+
+* 参数前面带...是什么意思？
+```js
+return (
+      <TodoList todos={todos}
+                {...boundActionCreators} />
+    )
+```
+上面代码里的`...`是什么意思?
+
+答：  这是ES6里的新feature，叫spread operators,  简单地说就是把数组拆分成用`,`分隔的参数序列。
+```js
+// ES5
+Math.max.apply(null, [14, 3, 77])
+
+// ES6
+Math.max(...[14, 3, 77])
+
+// 等同于
+Math.max(14, 3, 77);
+```
+
+请参考 https://wohugb.gitbooks.io/ecmascript-6/content/docs/function.html
+
+另外使用...的方法叫 Rest Parameter.  通过rest parameter，我们通过数组的方式向函数提供变长的参数。 在这以前代码里要用`arguments`来判断是否还有额外的参数。
+
+```js
+// Before rest parameters, the following could be found:
+function f(a, b){
+  var args = Array.prototype.slice.call(arguments, f.length);
+
+  // …
+}
+
+// to be equivalent of
+
+function f(a, b, ...args) {
+  
+}
+```
+注意，rest参数之后不能再有其他参数，否则会报错。
+
+
+每个reducer都应该改变state,因为这是change state的唯一方法，而且每个reducer应该会关心或是关注一个或几个state的属性,某些component可能会因为这些属性的change而重新render.
+
+**NOTE**
+```js
+//in reducers/todos.js
+export default function todos1(state = initialState, action) {
+}
+
+// in configureStore.dev.js
+const store = createStore(rootReducer, initialState, enhancer);
+
+```
+
+这时生成的state里有个属性就叫todos1。这是非常诡异的，我是调试了好久才发现的，要好好看看createStore的源代码。
 
 
 

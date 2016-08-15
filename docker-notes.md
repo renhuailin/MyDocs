@@ -293,6 +293,8 @@ https://www.projectcalico.org/
 ## IPVLAN技术
 http://networkstatic.net/configuring-macvlan-ipvlan-linux-networking/
 
+docker客户已经在研究IPVLAN了。
+https://github.com/docker/docker/blob/master/experimental/vlan-networks.md
 
 # Other problems
 [tomcat在启动时假死]
@@ -307,6 +309,19 @@ tomcat在容器里假死在下面这里，我是真心不知道为什么了，�
 apt-get install haveged -y
 ```
 
+# Docker new features
+
+## Health Check  
+from v 1.12    
+支持用户定义的health check,比如一个http server,可以检查它是否还能响应用户的新请求，是不是已经假死了（进程还在，今是但是连接总是超时）。   
+```
+HEALTHCHECK --interval=5m --grace=20s --timeout=3s --exit-on-unhealthy \
+  CMD curl -f http://localhost/](
+```
+
+具体请看： https://github.com/docker/docker/pull/22719
+
+https://github.com/docker/docker/releases/tag/v1.12.0-rc2 找时间把这里的feature都看一遍。
 
 
 请参考：

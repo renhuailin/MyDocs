@@ -77,7 +77,7 @@ ruby的實例變量只能通過實例方法來訪問，注意只能。
 ``` ruby
 # Incorrect code!
 class Point
-    @x = 0　 # Create instance variable @x and assign a default. WRONG!這樣定義的不是　Point實例的實例變量，而是Point的class的實例變量. 相當於java類裏的static變量。 
+    @x = 0　 # Create instance variable @x and assign a default. WRONG!這樣定義的不是Point實例的實例變量，而是Point的class的實例變量. 相當於java類裏的static變量。 
     @y = 0　 # Create instance variable @y and assign a default. WRONG!
     def initialize(x,y)
         @x, @y = x, y　# Now initialize previously created @x and @y.
@@ -102,5 +102,31 @@ gem list rhc --remote --all
 查询某个包
 $ gem search jekyll
 
+# Active Record
+如何删除 `has_and_belongs_to_many`里的关联对象？
+
+使用delete, `collection.delete(object, ...)`,请参见：
+http://guides.rubyonrails.org/association_basics.html#has-and-belongs-to-many-association-reference
+
+
+* Migration里的`create_join_table`有什么作用？
+
+用来创建`has_and_belongs_to_many`关联的中间表的。
+如果不用
+
+``` ruby
+create_table :assemblies_parts, id: false do |t|
+  t.belongs_to :assembly, index: true
+  t.belongs_to :part, index: true
+end
+```
+
+用`create_join_table`
+``` ruby
+create_join_table :members, :tags do |t|
+  t.index :member_id
+  t.index :tag_id
+end
+```
 
 

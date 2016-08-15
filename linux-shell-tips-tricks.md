@@ -172,5 +172,25 @@ https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subn
 [create a bootable USB stick on ubuntu]
 http://www.ubuntu.org.cn/download/desktop/create-a-usb-stick-on-ubuntu
 
+
+# SSH
+ssh client如果长时间不向服务器发数据，连接就会断开，如：
+```
+packet_write_wait: Connection to xxx.xxx.xx.xxx: Broken pipe
+```
+如果频繁的断开连接影响了你的工作，你可以client端设置`ServerAliveInterval 60`，这个值的意思是每隔60秒，向服务器发一个KeepAlive包，用以保持连接。
+
+```
+$ sudo vi /etc/ssh/ssh_config
+```
+
+Add this line.
+
+```
+ServerAliveInterval 60
+```
+
+
+
 # 参考文档
 1. 《Linux command line and shell scripting bible》
