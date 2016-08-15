@@ -516,7 +516,8 @@ func ShowTag(i interface{}) {
 	switch t := reflect.TypeOf(i); t.Kind() { ← Get type, switch on Kind()
 	case reflect.Ptr: ← Its a pointer, hence a reflect.Ptr
 		tag := t.Elem().Field(0).Tag
-}```
+}
+```
 
 下面的文字摘自godoc reflect
 ```go
