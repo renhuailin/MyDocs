@@ -123,6 +123,14 @@ $ sudo service network-manager restart
 `dpkg -i` 安装的包有时会出现依赖没有安装上的问题，可以在运行完`dpkg -i` 后运行`apt-get -f install`来把相关的依赖安装上。
 
 
+## IP地址反查
+
+$ dig -x 8.8.8.8 +short
+大多数的邮件服务器会查询 PTR record of an IP address it receives email from. 如果没有查询到 PTR record ，可能会把邮件当做垃圾邮件。
+
+
+
+
 ## 让ls命令显示长日期
 ls 默认是短日期格式，对中国人太不友好了。
 ```
@@ -191,6 +199,68 @@ ServerAliveInterval 60
 ```
 
 
+# tmux
+
+列出了tmux的几个基本模块之后，就要来点实实在在的干货了，和screen默认激活控制台的Ctrl+a不同，tmux默认的是Ctrl+b，使用快捷键之后就可以执行一些相应的指令了。当然如果你不习惯使用Ctrl+b，也可以在~/.tmux文件中加入以下内容把快捷键变为Ctrl+a：
+
+`Set prefix key to Ctrl-a`
+unbind-key C-b
+set-option -g prefix C-a
+以下所有的操作都是激活控制台之后，即键入Ctrl+b前提下才可以使用的命令【这里假设快捷键没改，改了的话则用Ctrl+b】。
+
+基本操作：
+
+?	列出所有快捷键；按q返回
+d	脱离当前会话,可暂时返回Shell界面，输入tmux attach能够重新进入之前会话
+s	选择并切换会话；在同时开启了多个会话时使用
+D	选择要脱离的会话；在同时开启了多个会话时使用
+:	进入命令行模式；此时可输入支持的命令，例如kill-server所有tmux会话
+[	复制模式，光标移动到复制内容位置，空格键开始，方向键选择复制，回车确认，q/Esc退出
+]	进入粘贴模式，粘贴之前复制的内容，按q/Esc退出
+~	列出提示信息缓存；其中包含了之前tmux返回的各种提示信息
+t	显示当前的时间
+Ctrl+z	挂起当前会话
+窗口操作:
+
+c	创建新窗口
+&	关闭当前窗口
+数字键	切换到指定窗口
+p	切换至上一窗口
+n	切换至下一窗口
+l	前后窗口间互相切换
+w	通过窗口列表切换窗口
+,	重命名当前窗口，便于识别
+.	修改当前窗口编号，相当于重新排序
+f	在所有窗口中查找关键词，便于窗口多了切换
+面板操作:
+
+“	将当前面板上下分屏
+%	将当前面板左右分屏
+x	关闭当前分屏
+!	将当前面板置于新窗口,即新建一个窗口,其中仅包含当前面板
+Ctrl+方向键	以1个单元格为单位移动边缘以调整当前面板大小
+Alt+方向键	以5个单元格为单位移动边缘以调整当前面板大小
+空格键	可以在默认面板布局中切换，试试就知道了
+q	显示面板编号
+o	选择当前窗口中下一个面板
+方向键	移动光标选择对应面板
+{	向前置换当前面板
+}	向后置换当前面板
+Alt+o	逆时针旋转当前窗口的面板
+Ctrl+o	顺时针旋转当前窗口的面板
+z	tmux 1.8新特性，最大化当前所在面板
+
+
+
+# 生成自定义的证书
+一条命令就行了。
+$ openssl req \
+       -newkey rsa:2048 -nodes -keyout domain.key \
+       -x509 -days 365 -out domain.crt
+
+请参考：
+http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html
+http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
 
 # 参考文档
 1. 《Linux command line and shell scripting bible》

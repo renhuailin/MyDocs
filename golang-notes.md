@@ -70,6 +70,13 @@ func shouldEscape(c byte) bool {
 }
 ```
 
+## 数据类型
+Go語言將數據類型分爲四類：基礎類型、複合類型、引用類型和接口類型。本章介紹基礎類型，包括：數字、字符串和布爾型。複合數據類型——數組（§4.1）和結構體（§4.2）——是通過組合簡單類型，來表達更加複雜的數據結構。引用類型包括指針（§2.3.2）、切片（§4.2)）字典（§4.3）、函數（§5）、通道（§8），雖然數據種類很多，但它們都是對程序中一個變量或狀態的間接引用。這意味着對任一引用類型數據的脩改都會影響所有該引用的拷貝。我們將在第7章介紹接口類型。
+
+wizardforcel (2016-01-10T06:36:17.671085+00:00). Go 语言圣经 中文版 (Kindle Locations 2446-2449). GitBook. Kindle Edition. 
+
+
+
 array是值类型，意味着如果把数组传给函数，实际上是传递了一个数组的copy。slice是引用类型，传给函数传了一个引用。
 
 【函数 function】=========================================
@@ -100,6 +107,7 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 	return
 }
 ```
+
 【Deferred code 延迟执行的代码 】=========================================
 假设你写了一个函数，打开了一个文件，执行写操作，并且在这个函数中有多个return，那么你要在每个return前写上关闭文件的代码。像下面的代码一样。
 ```go
@@ -189,7 +197,7 @@ chapter 4  Package
 @是否要像java一样，把一个包入在包里的目录里？
 
 我们来定义一个包：
-```go
+``` go
 package even
 
 func Even(i int) bool { //← Exported function
@@ -265,9 +273,11 @@ go有垃圾收集器，你不用担心内存的回收。
 
 go里有两个关键字用来分配内存，new 和 make。它们做不同的工作，应用到不同的类型，这可能会让你迷惑，不过其实规则挺简单的。
 Allocation with new 用new来分配
-内置的指令new非常必要的，new(T)，为T分配了一个0大小的内存，并返回地址。用go的术语来说是：它返回了一个指向零值T的一个指针。这一点很重要，要记住。
+内置的指令new非常必要的，new(T)，为T分配了一个0大小的内存，并返回地址。用go的术语来说是：它返回了一个指向零值T的一个指针。返回值是`指针`，这一点很重要，要记住。
+
 这意味着你可以通过new创建一个用户的数据结构，并马上开始使用它。例如bytes.Buffer的文档是这样说的，“零值的Buffer是一个即时可用空的Buffer” ready to use.
 The zero-value-is-useful property works transitively. 零值可用这个属性是可传递的。
+
 ```go
 type SyncedBuffer struct {
 	lock sync.Mutex
@@ -280,6 +290,7 @@ In this snippet, both p and v will work correctly without further arrangement.
 p := new(SyncedBuffer) 	//← Type *SyncedBuffer, ready to use
 var v SyncedBuffer 		//← Type SyncedBuffer, idem
 ```
+
 - 用make来分配
 内置函数make(T,args)与new(T)服务目的不一样。它只能创建一个slice,maps和channel.它返回一个已初始化（非零值）的T，而不是*T。这样区分的主要原因是用户的数据结构必须初始化才能用。
 例如，make([]int,10,100)分配了一个100 int的数组，并创建了一个长度为10，容量为100，指向这个数组前10个元素的slice。作为对比，new([]int) 返回一个指向新分配的、零值的slice结构，也就是一个指向nilslice值的指针。
@@ -326,7 +337,7 @@ return &File{fd:fd,name:name}  		← 这个跟ruby好像啊。
 
 - Defining your own types 定义你自己的类型
 你可以通过关键字 type 定义自己的类型
-```go
+``` go
 type foo int
 ```
 这个感觉跟C的typedef效果是一样的。
@@ -356,7 +367,9 @@ struct {
 	F func()
 }
 ```
+
 如果你省略了字段的名称，你就创建了一个匿名字段。
+
 ```go
 struct {
 	T1			← Field name is T1
@@ -398,7 +411,10 @@ NewMutex 等同于 Mutex，但是它不包含Mutex的任何方法。也就说它
 但是 PrintableMutex 继承了Mutex的方法集。也就是说：
 	PrintableMutex的方法集包含了方法 Lock 和 Unlock，这两个方法绑定到PrintableMutex的匿名字段Mutex上。
 
-## chapter 6 Interface
+`struct`的匿名成员有点像Mixin吧？
+问题来了，如果两个匿名成员类型里都包含x,那我访问的是哪个x?这个书没有给出例子。
+
+# chapter 6 Interface
 
 在Go里，interface被重载成表示几个不同的东西。每种类型都有一个interface,即它定义的方法集。请看下面的例子。
 Listing 6.1. Defining a struct and methods on it

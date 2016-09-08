@@ -101,6 +101,8 @@ gem list rhc --remote --all
 
 查询某个包
 $ gem search jekyll
+安装指定版本的包
+$ gem install jekyll -v 1.8
 
 # Active Record
 如何删除 `has_and_belongs_to_many`里的关联对象？
@@ -129,4 +131,13 @@ create_join_table :members, :tags do |t|
 end
 ```
 
+# Use rvm install ruby.
+
+
+
+
+
+#  Incorporating Discourse SSO with Existing Rails Site with Devise http://stackoverflow.com/questions/25478510/incorporating-discourse-sso-with-existing-rails-site-with-devise
+
+讲了如何整合Discourse与现有的rails项目。
 

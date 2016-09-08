@@ -23,6 +23,8 @@ https://help.github.com/articles/github-flavored-markdown
 https://github.com/blog/1289-emoji-autocomplete   :smile:
 
 
+
+语义化版本 2.0.0 http://semver.org/lang/zh-CN/ 
 ### Ceph的一些资料
 
 https://github.com/ceph/ceph/blob/master/doc/architecture.rst

@@ -8,6 +8,8 @@ $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
 $ git config --global core.editor emacs
 $ git config --global core.askpass /usr/bin/ksshaskpass
+
+$ git config --global http.sslverify false
 ```
 
 # 2 git的特点
@@ -294,6 +296,12 @@ $ git push origin serverfix:awesomebranch
 $ git branch -d hotfix
 ```
 
+
+查看所有分支
+```
+$ git branch -a
+```
+
 查看远程分支
 ```
 $ git branch -r
@@ -422,6 +430,8 @@ $ git config --global credential.helper "cache --timeout=3600"
 $ man gitcredentials
 ```
 
+**Mac下用credential-osxkeychain来保存密码**
+git config --global credential.helper osxkeychain
 # 8 一些问题的解决方法
 
 * git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly

@@ -309,6 +309,9 @@ tomcat在容器里假死在下面这里，我是真心不知道为什么了，�
 apt-get install haveged -y
 ```
 
+在线迁移方法：
+https://www.infoq.com/articles/container-live-migration
+
 # Docker new features
 
 ## Health Check  
