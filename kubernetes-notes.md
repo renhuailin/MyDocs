@@ -1,6 +1,30 @@
 Docker notes
 -------------
 
+# Kubernetes 架构图
+https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md
+
+# 多节点部署时的 Bootstrap Docker
+https://kubernetes.io/docs/getting-started-guides/docker-multinode/
+
+Bootstrap Docker
+
+This guide uses a pattern of running two instances of the Docker daemon:    
+1) A bootstrap Docker instance which is used to start etcd and flanneld, on which the Kubernetes components depend    
+2) A main Docker instance which is used for the Kubernetes infrastructure and user’s scheduled containers
+This pattern is necessary because the flannel daemon is responsible for setting up and managing the network that interconnects all of the Docker containers created by Kubernetes. To achieve this, it must run outside of the main Docker daemon. However, it is still useful to use containers for deployment and management, so we create a simpler bootstrap daemon to achieve this.
+
+因为这个部署方案的flannel是运行在docker里的。 它必须在主docker daemon外运行，所以需要另外一个docker daemon--Bootstrap Docker Daemon.
+那到底什么是 bootstrap docker instance呢？其实它就是另一个docker daemon,这个daemon在启动时指定了一个新的socket文件。
+
+``` bash
+BOOTSTRAP_DOCKER_SOCK="unix:///var/run/docker-bootstrap.sock"
+```
+在这个daemon下启动的container，用`docker ps`查看的时候必须要加上`-H unix:///var/run/docker-bootstrap.sock`。
+```
+$ docker -H unix:///var/run/docker-bootstrap.sock ps
+```
+
 
 # Pod
 它可以包含一个或多个container，
@@ -155,8 +179,17 @@ The cluster has to be started with `ENABLE_CUSTOM_METRICS` environment variable 
 一组有状态的Pods,有状态的东西都很麻烦。
 A Pet Set, in contrast, is a group of stateful pods that require a stronger notion of identity.
 
+# 源代码分析
+
+
+http://blog.csdn.net/screscent/article/category/2488081
 
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
 [左耳朵耗子写的一些关于docker的文章](http://coolshell.cn/tag/docker)
 [https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
+
+
+https://www.safaribooksonline.com/library/view/kubernetes-cookbook/9781785880063/
+
+

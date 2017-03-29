@@ -12,7 +12,33 @@ https://github.com/realint/labs
 一篇老外的文章：），http://blog.cloudflare.com/recycling-memory-buffers-in-go
 
 
+GoDep 
+https://blog.codeship.com/godep-dependency-management-in-golang/
+
 # 《Learning Go》 笔记     
+
+GOPATH和GOROOT区别
+
+http://stackoverflow.com/a/10847122
+
+```
+directory for go related things: ~/programming/go
+directory for go compiler/tools: ~/programming/go/go-1.4
+directory for go software      : ~/programming/go/packages
+GOROOT, GOPATH, PATH are set as following:
+
+export GOROOT=/home/user/programming/go/go-1.4
+export GOPATH=/home/user/programming/go/packages
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+So, in short:
+
+GOROOT is for compiler/tools that comes from go installation.
+GOPATH is for your own go projects / 3rd party libraries (downloaded with "go get").
+```
+
+
+
+
 
 := 这符号dephi里有，在go里 我看它的意义是 定义并赋值 define and assign。
 

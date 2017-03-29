@@ -1,7 +1,5 @@
 
 
-
-
 # 创建一个空的map
 ```ruby
 dict = {}
@@ -134,10 +132,23 @@ end
 # Use rvm install ruby.
 
 
+#  Incorporating Discourse SSO with Existing Rails Site with Devise
+[Incorporating Discourse SSO with Existing Rails Site with Devise](http://stackoverflow.com/questions/25478510/incorporating-discourse-sso-with-existing-rails-site-with-devise)  讲了如何整合Discourse与现有的rails项目。
+
+https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045  
 
 
 
-#  Incorporating Discourse SSO with Existing Rails Site with Devise http://stackoverflow.com/questions/25478510/incorporating-discourse-sso-with-existing-rails-site-with-devise
+Q. How to reconfigurate discourse? 
+A. Edit app.yml and then ./launcher rebuild app
 
-讲了如何整合Discourse与现有的rails项目。
+Test Discourse account: admin/2dff3a0858d6f658
+
+部署rails
+
+apt install libmysqlclient-dev
+
+sudo apt-get install nodejs
+
+
 

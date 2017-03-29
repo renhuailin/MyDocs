@@ -58,6 +58,11 @@ docker可以与openstack结合，分别是以Nova的driver和heat的plugin方式
 
 Magnum是OpenStack的新项目，也就是Container as a Service.
 
+`--privileged` 
+https://blog.docker.com/2013/09/docker-can-now-run-within-docker/
+
+
+
 
 # 2 进入容器的bash
 
@@ -168,6 +173,11 @@ $ docker tag hello-world:latest localhost:5000/hello-mine:latest
 $ docker push localhost:5000/hello-mine:latest
 ```
 
+如果nginx报下面的错，请在配置里添加：`client_max_body_size 0;`
+```
+error parsing HTTP 413 response body: invalid character '<' looking for beginning of value: "<html>\r\n<head><title>413 Request Entity Too Large</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>413 Request Entity Too Large</h1></center>\r\n<hr><center>nginx/1.4.6 (Ubuntu)</center>\r\n</body>\r\n</html>\r\n"
+```
+
 # 7.1 查看 private registry．
 
 
@@ -181,6 +191,11 @@ curl -v -X GET http://localhost:5000/v2/_catalog
 curl -v -X GET http://localhost:5000/v2/hello-mine/tags/list
 ```
 如果你的registry用的自签名的证书，你还需要给curl加上`-k`这个选项．
+
+```
+$ docker login localhost:5000
+```
+
 
 
 试着从private registry pull a image.
@@ -206,6 +221,11 @@ $ docker save -o fedora-all.tar fedora
 $ docker load < busybox.tar
 $ docker load --input fedora.tar
 ```
+
+
+### 通过 docker commit来创建一个image.
+$ sudo docker commit 614122c0aabb rhl/apache2
+
 
 # Docker build
 
@@ -290,11 +310,24 @@ Calico A pure L3 approach to Virtual Networking for High avaiable scalable data 
 https://www.projectcalico.org/
 
 
-## IPVLAN技术
+### IPVLAN 
 http://networkstatic.net/configuring-macvlan-ipvlan-linux-networking/
 
 docker客户已经在研究IPVLAN了。
 https://github.com/docker/docker/blob/master/experimental/vlan-networks.md
+
+
+### MacVLAN 技术
+MacVLAN:
+https://docs.docker.com/engine/userguide/networking/get-started-macvlan/
+https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/
+http://kb.netgear.com/21586/What-is-a-MAC-based-VLAN-and-how-does-it-work-with-my-managed-switch?cid=wmt_netgear_organic
+[Pipework配置Docker容器macvlan网络](http://blog.gesha.net/archives/611/)
+
+
+容器网络插件 Calico 与 Contiv Netplugin深入比较
+http://dockone.io/article/1935  这个东西Contiv Netplugin不错。
+
 
 # Other problems
 [tomcat在启动时假死]
@@ -326,6 +359,68 @@ HEALTHCHECK --interval=5m --grace=20s --timeout=3s --exit-on-unhealthy \
 
 https://github.com/docker/docker/releases/tag/v1.12.0-rc2 找时间把这里的feature都看一遍。
 
+
+1.13.0 (2017-01-18)
+* 1.12引入的实验版本的管理api plugin做了改动。在升级到1.13版之前必须卸载掉你在1.12版本安装的插件。
+* (实验性) 添加一个选项，可以在镜像构建成功后粉碎中镜像层 [#22641](https://github.com/docker/docker/pull/22641)
+
+Runtime
+* Add boolean flag --init on dockerd and on docker run to use tini a zombie-reaping init process as PID 1 [#26061](https://github.com/docker/docker/pull/26061) [#28037](https://github.com/docker/docker/pull/28037)  为`dockerd`和`docker run`添加了一个boolean的选项 `--init`,它使用`tini`僵尸收割进程来清理僵尸进程。 （这块我要提供一个例子）
+
+* Add a new daemon flag --init-path to allow configuring the path to the docker-init binary #26941 可以配置`docker-init`文件的目录了。
+* Add support for live reloading insecure registry in configuration #22337 也就是添加 insecure registry不用重启daemon了。
+
+
+# Docker on mac 
+
+screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty
+用户名是：root
+
+
+# Docker做本地开发环境
+
+
+# Harbor
+坑总结：
+
+* 不能把harbor放在nginx后面，nginx做反向代理，我试了，这样在image Push到一半时会报错：
+```
+unauthorized: authentication required
+```
+* 官方文档上的ssl的配置方法没有用，根本不用./prepare，也不用修改什么harbor.cfg，只要把证书放在config/nginx/cert,然后编辑`nginx.conf`这个文件，把ssl配置加上就行了。请不要编辑`nginx.https.conf`,没用。
+
+
+
+# 错误解决
+
+问题： Driver devicemapper failed to remove root filesystem 11568bbc999a490ccb783cb23fc5a532de444215b4617132d2185a831d4f1905: Device is Busy
+
+http://blog.hashbangbash.com/2014/11/docker-devicemapper-fix-for-device-or-resource-busy-ebusy/
+
+https://github.com/docker/docker/issues/5684#issuecomment-69052334
+
+http://www.tuicool.com/articles/y2UBjqB
+
+从这个回复看，应该是内核版本太低的原因，我是在CentOS 7上发现这个问题的，内核版本3.10.0。
+https://github.com/docker/docker/issues/17902
+
+
+从这个帖子的last reply来看，应该在3.10的centos7上没有办法解决了，:(  
+http://blog.hashbangbash.com/2014/11/docker-devicemapper-fix-for-device-or-resource-busy-ebusy/
+
+
+Device is Busy这个一般的解决步骤：
+1. 看容器进程是否已经杀掉。没有的话，可以手动杀死。
+2. mount -l看是不是该容器的路径还在挂载状态。是的话，umount掉。
+3. 然后再次尝试docker rm。
+
+
+
+问题： 今天发现docker login登录超时了，就是在jenkins这台机器上，用`docker daemon -D`可以看到是请求超时了。把registry.xiangcloud.com.cn手工绑定在/etc/hosts上，瞬间登录成功，看来是dns
+的问题，可是我用户dig测试registry.xiangcloud.com.cn时，解析的速度非常快，应该是docker login在处理解析时的问题吧。
+
+Answer: 问题找到了，是host主机的dns的问题：在`/etc/resolv.conf`里配置了两个nameserver，其中的第一个是自建的powerdns的测试，已经不在了，所以导致解析的时候速度极慢。删除了这个nameserver就可以了。
+关于docker 的dns，请参考：https://robinwinslow.uk/2016/06/23/fix-docker-networking-dns/
 
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)

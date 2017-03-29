@@ -8,3 +8,8 @@ let s = "hello";
 let i = 10;
 var ns = s + i;
 ```
+
+#### The differences between API and ABI
+http://stackoverflow.com/questions/2171177/what-is-application-binary-interface-abi
+
+environment 

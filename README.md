@@ -46,6 +46,7 @@ century schoolbook monospace , verily serif mono 这两个字体在mac下的显�
 ###【Console2与ConEmu】
 windows下的默认的命令行实在是太难用了，几年前我在网上找到了Console2,感觉不错，跟命令行和cygwin结合得都挺好的。可是最近在windows 7下测试发现有点问题，无法用了。于是我在网上找它的替代品，没想到找到了更好的东西 [ConEmu](http://conemu.github.io/)，这个东西比console2强大太多了，而且作者更新的频繁，不像console2，N年不更新了。真心感谢这帮人，另外鄙视一下microsoft,这么难使的终端，你们这么多年都没有人修改一下，可见你们对用户体验有多么不重视，你们真的是太官僚化了。
 
+# Java
 ### 【What's new in Java 7 & 8 】
 
 [A look at Java 7's new features] (http://radar.oreilly.com/2011/09/java7-features.html)
@@ -53,7 +54,8 @@ windows下的默认的命令行实在是太难用了，几年前我在网上找�
 [10 JDK 7 Features to Revisit, Before You Welcome Java 8](http://www.javacodegeeks.com/2014/04/10-jdk-7-features-to-revisit-before-you-welcome-java-8.html)
 
 
-[Java 8 Features – The ULTIMATE Guide](http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html)
+这个非常好，而且作者一直在更新：[Java 8 Features – The ULTIMATE Guide](http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html)
+
 
 [What's New in JDK 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html)
 
@@ -66,89 +68,16 @@ eclipse 换行插件
 
 http://dev.cdhq.de/eclipse/word-wrap/
 
-###【GoGoTester】
-https://code.google.com/p/gogo-tester/
+JRebel or Spring Loaded  
+Thymeleaf
+Liquibase
+Spring Data JPA
 
-### Available decompilers
+Hotswap Agent project : http://hotswapagent.org/
 
-Procyon - https://bitbucket.org/mstrobel/procyon/wiki/Java%20Decompiler
-
-2014. JDK 5, partly 6. Written in Java. Worth trying.
-
- 
-
-CFR - http://www.benf.org/other/cfr/
-
-2014. JDK 6, 7, 8 support. Written in Java 6.
-
-“CFR by Lee Benfield is well on its way to becoming the premier Java Decompiler. Lee and I actually work for the same company and share regression tests. We're engaged in a friendly competition to see who can deliver a better decompiler. Based on his progress thus far, there's a very good chance he will win--at least on decompiling obfuscated code :)”
-
-Candle - https://github.com/bradsdavis/candle-decompiler
-
-2013. Written in Java. By Brad Davis @ RH. “only decompiles a subset of the JVM operations”.
-
-Krakatau - https://github.com/Storyyeller/Krakatau
-
-2014.  JDK 7 support? Written in Python.
-
-“Includes a robust verifier. Focuses on translating arbitrary bytecode into valid Java code, as opposed to reconstructing the original code.”
-
-JBVD - https://sourceforge.net/projects/jbdec/?source=directory
-
-2013. Academic Free License (AFL). Javassist approach. Unknown quality.
-
-EDJC - https://sourceforge.net/projects/ejdc/
-
-2011. Written in Java.
-
-JD - http://jd.benow.ca/
-
-JD-Core and JD-GUI are written in C++.
-
-OpenWrt  [OpenWrt，下一个时代的Android](http://www.csdn.net/article/2014-09-11/2821630-jinjiang-interview-WRTnode)
-
-### jQuery File Upload
-
-ajax file upload widget.
-
-https://github.com/blueimp/jQuery-File-Upload/
-
-With Sprint MVC: http://hmkcode.com/spring-mvc-jquery-file-upload-multiple-dragdrop-progress/
-
-##【制作电子书】
-### pandoc
-pandoc是一個轉換器，可以通過markdown來生成pdf,epub等電子書，很不錯，而且它提供了一個擴展版的markdown，相當不錯。
-
-请参考：http://yijiebuyi.com/blog/17e31502e8a6229a18971a2499f0e72b.html
-
-calibre 也是一款不错的ebook maker.
-### 一些有用的links
-[用Markdown来写自由书籍-开源技术的方案](http://www.ituring.com.cn/article/828)
-
-[用 Github、Markdown 和 GitBook 写开源书](http://www.waylau.com/using-github-markdown-gitbook-write-open-source-books/)
-[pandoc markdown 生成pdf文档](http://yijiebuyi.com/blog/17e31502e8a6229a18971a2499f0e72b.html)
-
-http://www.zamzar.com/ 这个网站是做格式转换的，我试了一下chm to mobi,转完的效果相当不错，还支持Pdf to mobi，没下次试试效果。
+Dynamic Source Lookup plugin for Eclipse : https://github.com/ifedorenko/com.ifedorenko.m2e.sourcelookup
 
 
+Wiremock 用来mock一些api，主要用来测试。
 
-
-# 【RFC】
-一个RFC文件阅读的网站 [rfcreader](http://www.rfcreader.com/)
-这个网站好像更好：[Pretty RFC](https://pretty-rfc.herokuapp.com/)
-
-
-# 【remote IE】
-可以翻墙
-https://www.modern.ie/zh-cn/tools
-
-
-
-# Editor background color
-
-豆沙绿，RGB值为（199，237，204）  #C7EDCC ,关于这个绿色是否护眼没有什么长期的研究支持这个结论，不过这个绿色看上去眼睛会很舒服倒是真的。
-
-
-
-
-
+阿里的RPC框架 [dubbo](http://dubbo.io/)

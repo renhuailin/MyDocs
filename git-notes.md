@@ -12,6 +12,9 @@ $ git config --global core.askpass /usr/bin/ksshaskpass
 $ git config --global http.sslverify false
 ```
 
+
+如果自签名的证书在Jenkins下有问题，请添加一个构建参数： GIT_SSL_NO_VERIFY  true
+
 # 2 git的特点
 Conceptually, most other systems store information as a list of file-based changes.
 其它的vcs都是保存的是基于文件的变更(file-based changes) ,而git保存的是快照(snapshot)
@@ -73,7 +76,6 @@ git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 ```
 git clone --depth 1 https://github.com/kubernetes/kubernetes.git
 ```
-
 
 
 从库里删除文件，比如我在初始导入时，把一些logs文件也添加了进去，后来我把它们加到了.gitignore中，我想把它们从git repo中删除。
@@ -140,6 +142,63 @@ $ git stash apply stash@{2}
 $ git stash clear
 ```
 
+
+## 2.3 git reset
+
+[Reset Demystified](https://git-scm.com/blog/2011/07/11/reset.html) 这篇blog讲解的非常详细了。
+progit.en chapter 7讲得也是这个。
+
+要理解git reset,首先要理解 HEAD,index,working directory
+
+The HEAD	last commit snapshot, next parent
+The Index	proposed next commit snapshot  其实这里保存是将要提交的文件，也就是Stage files.
+The Working Directory	sandbox
+
+
+git reset以简单、可预测的方式来直接操作这3棵树
+
+Step 1: Moving HEAD
+git reset 在当前的分支上移动HEAD,  这跟`checkout`不一样，checkout是把HEAD移动到另外的分支上了。
+$ git reset 9e5e6a4 
+$ git reset --soft HEAD~
+请注意上面的命令里的`HEAD~`这是(the parent of HEAD)，那么`HEAD~2`就是爷爷？。
+
+STEP 2: UPDATING THE INDEX (--MIXED)
+The next thing reset will do is to update the Index with the contents of whatever snapshot HEAD now points to.
+接下reset会把`HEAD`所指向的快照的内容更新到`Index`tree上。
+
+如果你指定`--mixed`，那么git reset做到这步就OK了。`--mixed`是默认的选项，也就是`git reset HEAD~`等于`git reset --mixed HEAD~`.
+
+STEP 3: UPDATING THE WORKING DIRECTORY (--HARD)
+默认的git reset操作不会走到这步，当你手动指定`--hard`选项时，会走到这步。
+在这一步，reset操作会把`HEAD`所指向的快照的内容更新到`Working directory`tree上。也就是你工作目录的内容会被覆盖掉！也是reset操作危险的地方。请谨慎使用`--hard`选项，除非你真知道你在干什么。
+
+```
+$ git reset 9e5e6a4
+```
+如果运行了这条命令，如果原来在`9e5e6a4`后面还有很多提交的话，现在就没有了。你这时用'git log --graph'看时就会看到HEAD指向了`9e5e6a4`.这些丢失的commit如何找回？
+另外，默认的git reset（不指定--hard）不会影响working directory，你的working directory仍然是最新,所以，如果你在`9e5e6a4`只是做了些没用的提交，搞乱了commit history.你可以在这时提交，相当于把之前的提交合并成一个提交了,术语叫：Squashing Commits。当然`Squashing Commits`用更好的实现方法，在这里只是说明用git reset可以做。
+
+综上所述，reset分别更新了这3棵树。只要不乱用`--hard`，reset还是很安全的。
+
+
+## 2.4 git revert
+
+[Undoing Changes](https://www.atlassian.com/git/tutorials/undoing-changes)
+
+$ git revert
+revert操作相对来说比较安全，它不会改变project history。
+`git revert xxxx`创建新commit的方式来让项目回到某个历史提交点。
+假设你checkout一个分支，有个v3的文件，你编辑了这个文件，乱搞一通，把文件搞乱了，然后提交了。这是历史里有v3-v4.
+这时你想回到v3这个状态，你执行`git revert v3xxx`,这时git会创建一个新提交v5,v5的内容跟v3是一样的。
+
+
+
+## 2.5 git log 
+```
+$ git log --graph
+$ git log --oneline --graph --decorate --all
+```
 # 3 Tag
 tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.
 
@@ -244,6 +303,9 @@ git checkout tags/<tag_name>
 创建一个分支：
 ```
 $git branch message-delivery
+
+#下面是从一个提交创建分支
+$ git branch branchname <sha1-of-commit>
 ```
 这样就创建了一个branch,这时查看branch,你会发现你工作的branch并没有改变。
 ```
@@ -333,7 +395,16 @@ git发现master分支在创建develop分支到merge点这段时间都没有任�
 `$ git merge --no-ff develop`   
 合并后的history图如下：  
 ![--no-ff合并后的效果](images/img_1329193179_3.png "--no-ff合并后的效果")      
-怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，:smile:     
+怎么样？合并后保留了develop分支完整的历史信息，图看起来漂亮多了吧，:smile:    
+
+
+
+### Cherry-Pick
+一个可以提高开发效率的Git命令-- Cherry-Pick
+
+合并的时候可以选择某一个或几个commit合并了。很有用的。
+
+
 
 ## 4.3 Tracking 分支(Tracking Branches)
 Checking out a local branch from a remote branch automatically creates what is called a tracking branch.
@@ -361,6 +432,10 @@ Branch sf set up to track remote branch refs/remotes/origin/serverfix.
 Switched to a new branch "sf"
 Now, your local branch sf will automatically push to and pull from origin/serverfix.
 
+## rebase 
+
+[merge和rebase详解](http://chuansong.me/n/377054)
+
 
 # 5 Archive 归档
 Archive The Repository
@@ -386,9 +461,19 @@ $ git add -i
 详细操作请参考[progit](https://github.com/progit/progit "progit")
 
 
+# 7 Git tools 
+
+## reflog
+
+reflog是非常有用的命令，我在rebase代码后发现我的代码被删除了，然后在rebase以后的log里没有我在rebase之前的commit。我靠，当时的感觉就是要疯了。后来查了网上才知道有这个命令，用这个命令看是可以看到Rebase之前的commit的。
 
 
-# 7 Windows下cygwin中的git如何保存密码？
+```
+$ git reflog
+$ git show ca82a6dff817ec66f44342007202690a93763949
+```
+
+## Windows下cygwin中的git如何保存密码？
 
 [参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "")
 ###git 1.7.9或更新版本

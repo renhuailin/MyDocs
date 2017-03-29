@@ -1,3 +1,184 @@
+# 快捷键汇总
+
+写在前面
+  `C-'               Control-(即 Ctrl-)，按住 Ctrl 键再按其他键
+  `M-'               Meta-(或 Alt-)，按住 Alt 键再按其他键；或按一下 ESC，再按其他键
+  `C-M-'             Control-Alt-，按住 Ctrl 和 Alt 两个键再按其他键
+  point              位点。文档中的一个位置，一般是光标的左下角
+  mark               标记。由命令设置，用来定义/保存文档中的位置信息
+  region             区域。在 mark 和 point 之间部分，称为一个 region
+
+  RET                回车键
+  TAB                制表符键
+  ESC                ESC 键
+  SPC                空格键
+  Backspace, DEL	   退格键
+  Delete	   	   删除键
+
+
+如果不知道
+  C-x C-c            退出并关闭 Emacs
+
+  C-z                
+  C-x C-z            退出并挂起 Emacs
+
+  C-x C-f            打开文件/目录
+  C-x i              插入文件内容
+  C-x C-r            只读方式打开一个文件
+
+  C-x u              Undo( 想要Redo，动一下光标或按一下 C-g 再Undo :)
+  C-x C-s            保存文件
+  C-x s              询问保存所有未存盘文件
+  C-x C-w            文件另存为…
+
+  C-l                刷新窗口，并将当前行移至窗口中心。给定参数，可以设置
+                     当前行的位置，不妨试试 M-0 C-l 或 M-- C-l 或 M-4 C-l
+
+  C-g                退出当前命令。如果你不知道Emacs正在干什么呢，多按几次
+                     C-g，就会恢复到正常状态
+
+
+在线帮助
+  C-h t              TUTORIAL
+  C-h i              Online Info
+
+  C-h c              给出键序列（简称键）绑定的命令名字
+  C-h w              由命令名字给出键的绑定
+
+
+给命令传参数
+  C-u                给定参数前缀
+
+  M-0
+  ...
+  M-9                参数0...9
+
+  M--                负参数
+
+
+光标的移动
+  C-a                行首
+  C-e                行尾
+
+  C-n                下一行
+  C-p                上一行
+  C-f                前进一个字符
+  C-b                后退一个字符
+
+  M-f                前进一个词
+  M-b                后退一个词
+
+
+搜索和替换
+  C-s                增量搜索
+  C-r                向后增量搜索
+
+  M-x search-forward
+                     搜索
+  M-x search-backward
+                     向后搜索
+
+  C-M-s
+  M-x isearch-forward-regexp
+                     正则表达式增量搜索
+  C-M-r
+  M-x isearch-backward-regexp
+                     正则表达式向后增量搜索
+
+  M-x search-forward-regexp
+                     正则表达式搜索
+  M-x search-backward-regexp
+                     正则表达式向后搜索
+
+  ESC %              询问替换
+  M-x query-replace-regexp
+                     正则表达式询问替换
+
+  M-x replace-string 替换
+  M-x replace-regexp 正则表达式替换
+
+
+区域的拷贝和粘贴
+区域是Mark和Point之间的部分，Point就是光标的左下角，Mark由命令设置。 `Yanking ring'是一个存放文本的地方，从这里你可以拷贝删除(kill)的文本。 `Yanking'表示插入刚刚删除(kill)的文本。 
+
+
+  C-SPC              
+  C-@                
+  M-x set-mark-command
+                     设置 mark
+  C-x C-x            交换 mark 和 point
+
+  C-w                将区域的文本删除，并放入yanking ring中
+  M-w                复制区域到yanking ring中
+
+  C-y                将yanking ring中最后一个区域插入当前缓冲区
+
+  M-y                按一次C-y后，多次按M-y，则用yanking ring中的其他区域替
+                     换刚刚插入的区域
+
+  C-o                在光标后面插入空行
+  C-x C-o            将光标附近的空行去掉，多行的时候，第一次只剩一行，第二
+                     次全部删除
+
+  C-d                删除一个字符（不能yank）
+  M-d                删除光标附近的一个词
+
+  C-x h              将整个缓冲区设置为区域（缓冲区尾是mark，首是point）
+
+  C-k                删除（kill）从光标处到行尾
+
+
+基本编辑
+  C-q                插入下一个的字符,比如插入字符`^X'用“C-q C-x”
+
+  C-t                交换两个字符
+  M-t                交换两个词
+  C-x C-t            交换两行
+
+  C-x =              显示光标所在字符的信息
+
+  C-v                向下滚动窗口
+  M-v                向上滚动窗口
+
+
+多窗口和多缓冲区
+  C-x b              转到另一个缓冲区
+  C-x k              删除缓冲区
+
+  C-x 2              水平分个窗口
+  C-x 3              垂直分割窗口
+  C-x 1              去掉其它窗口
+  ESC ESC ESC        同上
+  C-x 0              去掉当前窗口
+
+  C-x o              光标到另一个窗口中
+
+  C-M-v              向下滚动另一个窗口，给一个负的参数，则向上滚动
+
+
+宏
+  C-x (              开始一个宏的定义
+  C-x )              结束一个宏的定义
+
+  C-x e              执行宏
+
+  M-x name-last-kbd-macro
+                     给最后一个宏命名
+
+  M-x insert-kbd-macro
+                     在当前文件中插入一个已定义并命名过的宏
+
+
+矩形区域操作
+  * 矩形区域的两端是由 Mark 和 Point 确定的。
+
+  C-x r t            用串填充矩形区域
+  C-x r o            插入空白的矩形区域
+  C-x r y            插入之前删除的矩形区域
+  C-x r k            删除矩形区域
+  C-x r c            将当前矩形区域清空
+
+
 #【移动】
 `C-n`   向前移动一行
 `C-p`   向后移动一行
@@ -101,7 +282,35 @@ The following makes outline mode easy to use generally, not just when editing Go
            (lambda ()
              (require 'outline-magic)
              (define-key outline-minor-mode-map [(f10)] 'outline-cycle)))
+             
+             
+## Set default font
+
+Chose the menu 〖Options ▸ Set Default Font…〗, then 〖Options ▸ Save Options〗.
+
+Or:
+
+``` lisp
+;; set a default font
+(when (member "DejaVu Sans Mono" (font-family-list))
+  (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
+
+```
+
+## Access menu in terminal mode 
+press F10
+
+# BackupDirectory
+https://www.emacswiki.org/emacs/BackupDirectory
+
+
 ## emacs lisp 学习
 Alternatively, you can call ielm. It will start a interactive elisp command line interface.
 
 http://ergoemacs.org/emacs/elisp.html
+
+
+
+
+
+

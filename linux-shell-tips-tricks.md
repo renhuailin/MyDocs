@@ -1,6 +1,12 @@
 Linux Shell Tips and Tricks
 ------
 
+
+# bash or dash 
+Ubuntu 6.10 开始用 dash 做为 /bin/sh，而不是bash.  所以，如果脚本是以`#! /bin/sh` 开头的要注意了。可能会出现有些命令不能用的情况。
+所以还是以`#! /bin/bash`
+
+
 # Shell Programming Note
 
 `$#` 参数的个数.  ${$#}输出的就是最后一个参数。
@@ -97,8 +103,11 @@ $ mytest=(one two three four five)
 
 `;;`  只用在`case`中，相当于`break`.
 
-
-
+## 
+Absolute path this script is in.
+``` bash
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+```
 
 ## 生成随机密码
 
@@ -129,7 +138,26 @@ $ dig -x 8.8.8.8 +short
 大多数的邮件服务器会查询 PTR record of an IP address it receives email from. 如果没有查询到 PTR record ，可能会把邮件当做垃圾邮件。
 
 
+# ethtool 查看本地网卡情况
 
+```
+# ethtool bond0
+Settings for bond0:
+	Supported ports: [ ]
+	Supported link modes:   Not reported
+	Supported pause frame use: No
+	Supports auto-negotiation: No
+	Advertised link modes:  Not reported
+	Advertised pause frame use: No
+	Advertised auto-negotiation: No
+	Speed: 2000Mb/s
+	Duplex: Full
+	Port: Other
+	PHYAD: 0
+	Transceiver: internal
+	Auto-negotiation: off
+	Link detected: yes
+```
 
 ## 让ls命令显示长日期
 ls 默认是短日期格式，对中国人太不友好了。
@@ -198,6 +226,15 @@ Add this line.
 ServerAliveInterval 60
 ```
 
+echo "harley ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+## ssh x11 forward
+加速它
+
+```
+$ ssh -XC -c blowfish-cbc,arcfour xmodulo@remote_host.com
+```
+请参考文献【3】
 
 # tmux
 
@@ -250,7 +287,7 @@ Alt+o	逆时针旋转当前窗口的面板
 Ctrl+o	顺时针旋转当前窗口的面板
 z	tmux 1.8新特性，最大化当前所在面板
 
-
+tmux a 或 tmux attach.
 
 # 生成自定义的证书
 一条命令就行了。
@@ -262,5 +299,144 @@ $ openssl req \
 http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html
 http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
 
+
+# command-not-found包
+debian 安装这个包，可以实现Ubuntu那样的，命令不存在时提示可以哪个包里找到这个命令的功能。
+$ sudo apt-get install command-not-found
+
+# Ubuntu 14.04打开crontab日志
+
+ubuntu 14.04默认是没有打开crontab的日志的，需要手动打开：
+```
+cd /etc/rsyslog.d/
+sudo nano 50-default.conf
+```
+
+Uncoment line:
+```
+#cron.*                         /var/log/cron.log
+```
+
+Save file and restart rsyslog
+```
+sudo service rsyslog restart 
+```
+
+Restart your cron daemon for get it's messages from new file
+```
+sudo service cron restart
+```
+参考：[http://askubuntu.com/a/624785](http://askubuntu.com/a/624785)
+
+
+
+# 命令行下的多线程下载工具 aria2c
+```
+# aria2c -x5  http://23.106.147.145/ubuntu-source-registry-ocata.tar.gz
+```
+文档： https://aria2.github.io/
+
+# IPMI
+
+# 翻墙
+shadowsocks + privoxy  
+网上推荐的什么polipo 根本不好使！还是privoxy好使。
+
+# systemd 
+systemctl list-unit-files | grep enabled will list all enabled ones.
+
+If you want which ones are currently running, you need systemctl | grep running
+
+
+# letsencrypt.org
+我的域名用了reverse proxy,所以需要在nginx里配置特殊处理一下
+
+```
+upstream docker_private_registry {
+	server 127.0.0.1:5000;
+}
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
+
+	listen 443 ssl;
+	client_max_body_size 0;
+	ssl_certificate /etc/letsencrypt/live/registry.xiangcloud.com.cn/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/registry.xiangcloud.com.cn/privkey.pem;
+
+	root /usr/share/nginx/html;
+	index index.html index.htm;
+
+	# Make site accessible from http://localhost/
+	server_name registry.xiangcloud.com.cn;
+    location /.well-known {
+		allow all;
+		alias /usr/share/nginx/html/.well-known;
+    }
+
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		#try_files $uri $uri/ =404;
+		# Uncomment to enable naxsi on this location
+		# include /etc/nginx/naxsi.rules
+		proxy_pass  https://docker_private_registry;
+     	proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+    	proxy_redirect off;
+     	proxy_buffering off;
+     	proxy_set_header        Host            $host;
+     	proxy_set_header        X-Real-IP       $remote_addr;
+     	proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+
+	# Only for nginx-naxsi used with nginx-naxsi-ui : process denied requests
+	#location /RequestDenied {
+	#	proxy_pass http://127.0.0.1:8080;
+	#}
+
+	#error_page 404 /404.html;
+
+	# redirect server error pages to the static page /50x.html
+	#
+	#error_page 500 502 503 504 /50x.html;
+	#location = /50x.html {
+	#	root /usr/share/nginx/html;
+	#}
+
+	# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+	#
+	#location ~ \.php$ {
+	#	fastcgi_split_path_info ^(.+\.php)(/.+)$;
+	#	# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+	#
+	#	# With php5-cgi alone:
+	#	fastcgi_pass 127.0.0.1:9000;
+	#	# With php5-fpm:
+	#	fastcgi_pass unix:/var/run/php5-fpm.sock;
+	#	fastcgi_index index.php;
+	#	include fastcgi_params;
+	#}
+
+	# deny access to .htaccess files, if Apache's document root
+	# concurs with nginx's one
+	#
+	#location ~ /\.ht {
+	#	deny all;
+	#}
+}
+```
+
+```
+./certbot-auto certonly -a webroot --webroot-path=/usr/share/nginx/html -d registry.xiangcloud.com.cn
+```
+
+请见参考文档[2]
+
+
+
+
 # 参考文档
 1. 《Linux command line and shell scripting bible》
+2. [How To Secure Nginx with Let's Encrypt on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04)
+3. [How to speed up X11 forwarding in SSH](http://xmodulo.com/how-to-speed-up-x11-forwarding-in-ssh.html)
