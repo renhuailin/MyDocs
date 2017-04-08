@@ -4,7 +4,11 @@ Docker notes
 # Kubernetes 架构图
 https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md
 
-# 多节点部署时的 Bootstrap Docker
+https://github.com/kubernetes/kubernetes/blob/release-1.5/docs/design/architecture.md
+
+# 安装
+kubeadm是用apt安装的，atp支持https_proxy这个系统变量，所以我用 shadowsocks + privoxy 翻墙然后安装了kubeadm.
+## 多节点部署时的 Bootstrap Docker
 https://kubernetes.io/docs/getting-started-guides/docker-multinode/
 
 Bootstrap Docker
@@ -17,10 +21,16 @@ This pattern is necessary because the flannel daemon is responsible for setting 
 因为这个部署方案的flannel是运行在docker里的。 它必须在主docker daemon外运行，所以需要另外一个docker daemon--Bootstrap Docker Daemon.
 那到底什么是 bootstrap docker instance呢？其实它就是另一个docker daemon,这个daemon在启动时指定了一个新的socket文件。
 
+
+```
+This pattern is necessary because the flannel daemon is responsible for setting up and managing the network that interconnects all of the Docker containers created by Kubernetes. To achieve this, it must run outside of the main Docker daemon. However, it is still useful to use containers for deployment and management, so we create a simpler bootstrap daemon to achieve this.
+```
+
 ``` bash
 BOOTSTRAP_DOCKER_SOCK="unix:///var/run/docker-bootstrap.sock"
 ```
 在这个daemon下启动的container，用`docker ps`查看的时候必须要加上`-H unix:///var/run/docker-bootstrap.sock`。
+
 ```
 $ docker -H unix:///var/run/docker-bootstrap.sock ps
 ```
@@ -54,6 +64,9 @@ A: 它们有不同的IP,不能通过IPC沟通
 co-location 主机托管
 
 通常用户不应该直接创建pods，而是应该通过controllers。
+
+`-o wide`这个选项可以显示pod的IP和所在主机。
+$ kubectl get pods -o wide
 
 
 # Label
@@ -139,7 +152,7 @@ A Daemon Set确保所有的节点都运行一个Pod的复本，当一个新的�
 
 典型的应用场景如为所有的节点提供存储的Pod，日志收集，监控。
 
-DaemonSet管理的Pods用的是hostPort也，所以能用节点的IP直接访问。
+DaemonSet管理的Pods用的是hostPort，所以能用节点的IP直接访问。
 
 
 # Deployment
@@ -180,9 +193,32 @@ The cluster has to be started with `ENABLE_CUSTOM_METRICS` environment variable 
 A Pet Set, in contrast, is a group of stateful pods that require a stronger notion of identity.
 
 # 源代码分析
-
-
 http://blog.csdn.net/screscent/article/category/2488081
+
+
+
+
+
+# 概念 CONCEPTS
+## Cluster Administration
+### Cluster Networking
+这章一定要好好理解，这是k8s的网络基础。
+
+1. Highly-coupled container-to-container communications: this is solved by pods and localhost communications.
+2. Pod-to-Pod communications: this is the primary focus of this document.
+3. Pod-to-Service communications: this is covered by services.
+4. External-to-Service communications: this is covered by services.
+
+
+Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):
+* all containers can communicate with all other containers without NAT
+* all nodes can communicate with all containers (and vice-versa) without NAT
+* the IP that a container sees itself as is the same IP that others see it as
+看来K8S的网络真追求速度呀，最后一条很有用的呢。
+
+This model is not only less complex overall, but it is principally compatible with the desire for Kubernetes to enable low-friction porting of apps from VMs to containers. If your job previously ran in a VM, your VM had an IP and could talk to other VMs in your project. This is the same basic model.
+
+
 
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
@@ -191,5 +227,6 @@ http://blog.csdn.net/screscent/article/category/2488081
 
 
 https://www.safaribooksonline.com/library/view/kubernetes-cookbook/9781785880063/
+
 
 

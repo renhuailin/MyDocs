@@ -313,7 +313,567 @@ reset : undefined
 关于`yield`更多信息请参见[这里](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield)
 
 
+## Promise
 
+``` js
+var getJSON = function(url) {
+    var promise = new Promise(function(resolve, reject) {
+        var client = new XMLHttpRequest();
+        client.open("GET", url);
+        client.onreadystatechange = handler;
+        client.responseType = "json";
+        client.setRequestHeader("Accept", "application/json");
+        client.send();
+
+        function handler() {
+            if (this.status === 200) {
+                resolve(this.response);
+            } else {
+                reject(new Error(this.statusText));
+            }
+        };
+    });
+    return promise;
+};
+
+getJSON("/posts.json").then(function(json) {
+    console.log('Contents: ' + json);
+}, function(error) {
+    console.error('出错了', error);
+});
+```
+
+##  async await 关键字
+
+The await expression causes async function execution to pause, to wait for the Promise's resolution, and to resume the async function execution when the value is resolved. It then returns the resolved value. If the value is not a Promise, it's converted to a resolved Promise.
+
+If the Promise is rejected, the await expression throws the rejected value.
+
+`await`会暂停async函数的调用,等待Promise resolution.当值被解析后继续执行async函数,如果await后面接不是Promise,await会反它转成一个`resolved Promise`.
+
+``` js
+var fetchDoubanApi = function() {  
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          var response;
+          try {
+            response = JSON.parse(xhr.responseText);
+          } catch (e) {
+            reject(e);
+          }
+          if (response) {
+            resolve(response, xhr.status, xhr);
+          }
+        } else {
+          reject(xhr);
+        }
+      }
+    };
+    xhr.open('GET', 'https://api.douban.com/v2/user/aisk', true);
+    xhr.setRequestHeader("Content-Type", "text/plain");
+    xhr.send(data);
+  });
+};
+
+(async function() {
+  try {
+    let result = await fetchDoubanApi();
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+})();
+```
+
+
+[TypeScript 1.7](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-7.html) 就已经支持async await了.
+
+
+
+# Webpack
+多页面设置
+https://webpack.github.io/docs/optimization.html#multi-page-app
+
+
+# JQuery 
+
+jQuery操作select总结：
+1.添加option
+
+``` js
+jQuery('#listCity').append( jQuery('<option></option').val(city.id).html(city.name) );
+
+$("#select_id").change(function(){//code...});   //为Select添加事件，当选择其中一项时触发
+var checkText=$("#select_id").find("option:selected").text();  //获取Select选择的Text
+var checkValue=$("#select_id").val();  //获取Select选择的Value
+var checkIndex=$("#select_id ").get(0).selectedIndex;  //获取Select选择的索引值
+var maxIndex=$("#select_id option:last").attr("index");  //获取Select最大的索引值 
+
+$("#select_id ").get(0).selectedIndex=1;  //设置Select索引值为1的项选中
+$("#select_id ").val(4);   //设置Select的Value值为4的项选中
+$("#select_id option[text='jQuery']").attr("selected", true);   //设置Select的Text值为jQuery的项选中
+
+$("#select_id").append("<option value='Value'>Text</option>");  //为Select追加一个Option(下拉项)
+$("#select_id").prepend("<option value='0'>请选择</option>");  //为Select插入一个Option(第一个位置)
+$("#select_id option:last").remove();  //删除Select中索引值最大Option(最后一个)
+$("#select_id option[index='0']").remove();  //删除Select中索引值为0的Option(第一个)
+$("#select_id option[value='3']").remove();  //删除Select中Value='3'的Option
+$("#select_id option[text='4']").remove();  //删除Select中Text='4'的Option
+``` 
+
+获得选中的项的index
+
+``` js
+jQuery('#trunkTags :selected').first().get(0).index //这个是把select的multiple属性设置为true的时候，需要用first().
+```
+
+获得index=4的option
+
+``` js
+jQuery("#trunkTags option[index=4]").get(0)
+```
+
+In jQuery, working with select box required some additional knowledge and interaction with jQuery. You may have some problem manipulating select box during your web development on jQuery. In this article we will discuss how you can solve this without any additional plugin to kill efficiency.
+
+Create Selext Box In jQuery
+
+Create a select box is very simple and straight forward. Just write a string with the normal select tag and a select box is created in jQuery
+
+
+这下面的代码在IE8下无法正常运行：
+``` js
+$("#start_instance_dialog #lbxIPs option:selected").val();
+```
+为了兼容IE8，只能写成
+``` js
+$("#start_instance_dialog #lbxIPs option:selected").attr("value");
+```
+
+``` js
+jQuery('#some_element').append('<select></select>');
+```
+
+I bet everyone would have tried this and it work. However, manipulating might be a more challenging task.
+
+Add Option In Select Box With jQuery
+
+One easy way is to create a string with the whole element and create it straight away
+
+
+``` js
+//obj is the list of option values
+
+function(obj) {
+
+    var create = '<select id="test">';
+
+    for (var i = 0; i < obj.length; i++) {
+
+        create += '<option value="' + obj[i] + '">' + obj[i] + '</option>';
+
+    }
+
+    create += '</select>';
+
+    jQuery('#some_element').append(create);
+
+}}
+```
+
+Another way to create a list of elements is to create its option and append it in using pure jQuery.
+
+``` js
+function(id, obj) {
+
+    jQuery('#some_element').append('<select id="' + id + '"></select>');
+
+    jQuery.each(obj, function (val, text) {
+
+        jQuery('#' + id).append(
+
+            jQuery('<option></option').val(val).html(text)
+
+        );
+    })
+
+
+```
+You may not be familiar what i wrote above. Hence, a more javascript approach is shown below.
+
+``` js
+function(id, obj) {
+
+    jQuery('#some_element').append('<select id="' + id + '"></select>');
+
+    for (var i = 0; i < obj.length; i++) {
+
+        jQuery('#' + id).append('<option value="' + obj[i] + '">' + obj[i] + '</option')
+
+    }
+
+}
+```
+
+Get Select Box Value/Text In jQuery
+
+Sometimes we want to know what is the value of the selected option. This is how we do it. Please bear in mind that there shouldn’t be any spaces between the : and selected.
+
+```
+//#selectbox is the id of the select box
+2
+jQuery('#selectbox option:selected').val();
+On the other hand, we can get the text of the option by doing this.
+
+1
+//#selectbox is the id of the select box
+2
+jQuery('#selectbox option:selected').text();
+What if you know the value of the options you want to get instead of the one selected?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option[value='thisistheone']").text();
+How about the first element on the select box?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option:first").text()
+How about the n element on the select box?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option:eq(3)").text()
+How about getting all elements but the first and last one in a select box?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option:not(option:first, option:last)").each(function(){
+3
+$(this).text();
+4
+});
+
+Get Multiple Selected Value/Text In jQuery Select Box
+
+Now we want to try to retrieve multiple selected values, we can do it easily with the following code.
+
+1
+jQuery('#some_element:selected').each(function(){
+2
+    alert(jQuery(this).text());
+3
+    alert(jQuery(this).val());
+4
+});
+How about storing these values?
+
+1
+var current = [];
+2
+jQuery('#some_element:selected').each(function(index, selectedObj){
+3
+    current[index] = $(selectedObj).text();
+4
+});
+This way we eliminate the additional index needed to follow through the loop! How about shorten the cold a bit?
+
+1
+var foo = jQuery('#multiple :selected').map(function(){return jQuery(this).val();}).get();
+This way we eliminate the need to create an array.
+
+Remove Element In Select Box With jQuery
+
+So we can get and add element into the select box. How about remove them? Basically, you will need to use one of the get element method describe above before applying the remove instruction.
+
+1
+jQuery('#selectbox: selected').remove();
+Here we will remove all elements except the first and last one.
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectbox option:not(option:first, option:last)").remove();
+Select an option in the select box with jQuery
+
+If you want to select an option in the select box, you can do this.
+
+1
+jQuery('#selectbox option[value="something"]').attr('selected', 'selected');
+all option will be selected in this case.
+
+UnSelect an option in the select box with jQuery
+
+If you want to unselect an option in the select box, you can do this.
+
+1
+jQuery('#selectbox option[value="something"]').attr('selected', false);
+all option will be unselected n this case.
+
+OnChange find selected option from the select box
+
+onchange find select box selected item.
+
+1
+$('#selectbox').change(function(){
+2
+    var val = $(this).find('option:selected').text();r
+3
+    alert('i selected: ' + val);
+4
+});
+onchange find select box selected items.
+
+1
+$('#selectbox').change(function(){
+2
+    $(this).find('option:selected').each(function () {
+3
+        alert('i selected: ' + $(this).text());
+4
+    }
+5
+});
+
+jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
+解决方法是在 jquery post中加入 contentType: "application/json; charset=utf-8",就行了，
+$.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",//加入这行就行了，奇怪的是默认浏览器是会加的呀。
+url: contextPath  + "/securitygroups/create.do",
+data: JSON.stringify(securityGroup),
+success: function(ajaxResponse) {
+if(ajaxResponse.success) {
+$("#step-4.wizard-step #security_groups_error").text("OK!");
+} else {
+$("#step-4.wizard-step #security_groups_error").text( ajaxResponse.message );
+}
+},
+error : function(XMLHttpRequest, textStatus, errorThrown) {
+alert(textStatus.error + " " + errorThrown);
+},
+dataType : "json"
+});
+
+```
+
+jQuery('#some_element').append('<select></select>');
+I bet everyone would have tried this and it work. However, manipulating might be a more challenging task.
+
+Add Option In Select Box With jQuery
+
+One easy way is to create a string with the whole element and create it straight away
+
+1
+//obj is the list of option values
+2
+function(obj)
+3
+{
+4
+    var create = '<select id="test">';
+5
+    for(var i = 0; i < obj.length;i++)
+6
+    {
+7
+        create += '<option value="'+obj[i]+'">'+obj[i]+'</option>';
+8
+    }
+9
+    create += '</select>';
+10
+    jQuery('#some_element').append(create);
+11
+}
+Another way to create a list of elements is to create its option and append it in using pure jQuery.
+
+1
+function(id, obj)
+2
+{
+3
+    jQuery('#some_element').append('<select id="'+id+'"></select>');
+4
+    jQuery.each(obj, function(val, text) {
+5
+        jQuery('#'+id).append(
+6
+        jQuery('<option></option').val(val).html(text)
+7
+    );})
+8
+}
+You may not be familiar what i wrote above. Hence, a more javascript approach is shown below.
+
+1
+function(id, obj)
+2
+{
+3
+    jQuery('#some_element').append('<select id="'+id+'"></select>');
+4
+    for(var i = 0; i < obj.length;i++)
+5
+    {
+6
+        jQuery('#'+id).append('<option value="'+obj[i]+'">'+obj[i]+'</option')
+7
+    }
+8
+}
+Get Select Box Value/Text In jQuery
+
+Sometimes we want to know what is the value of the selected option. This is how we do it. Please bear in mind that there shouldn’t be any spaces between the : and selected.
+
+1
+//#selectbox is the id of the select box
+2
+jQuery('#selectbox option:selected').val();
+On the other hand, we can get the text of the option by doing this.
+
+1
+//#selectbox is the id of the select box
+2
+jQuery('#selectbox option:selected').text();
+What if you know the value of the options you want to get instead of the one selected?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option[value='thisistheone']").text();
+How about the first element on the select box?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option:first").text()
+How about the n element on the select box?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option:eq(3)").text()
+How about getting all elements but the first and last one in a select box?
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectList option:not(option:first, option:last)").each(function(){
+3
+$(this).text();
+4
+});
+
+Get Multiple Selected Value/Text In jQuery Select Box
+
+Now we want to try to retrieve multiple selected values, we can do it easily with the following code.
+
+1
+jQuery('#some_element:selected').each(function(){
+2
+    alert(jQuery(this).text());
+3
+    alert(jQuery(this).val());
+4
+});
+How about storing these values?
+
+1
+var current = [];
+2
+jQuery('#some_element:selected').each(function(index, selectedObj){
+3
+    current[index] = $(selectedObj).text();
+4
+});
+This way we eliminate the additional index needed to follow through the loop! How about shorten the cold a bit?
+
+1
+var foo = jQuery('#multiple :selected').map(function(){return jQuery(this).val();}).get();
+This way we eliminate the need to create an array.
+
+Remove Element In Select Box With jQuery
+
+So we can get and add element into the select box. How about remove them? Basically, you will need to use one of the get element method describe above before applying the remove instruction.
+
+1
+jQuery('#selectbox: selected').remove();
+Here we will remove all elements except the first and last one.
+
+1
+//#selectbox is the id of the select box
+2
+$("#selectbox option:not(option:first, option:last)").remove();
+Select an option in the select box with jQuery
+
+If you want to select an option in the select box, you can do this.
+
+1
+jQuery('#selectbox option[value="something"]').attr('selected', 'selected');
+all option will be selected in this case.
+
+UnSelect an option in the select box with jQuery
+
+If you want to unselect an option in the select box, you can do this.
+
+1
+jQuery('#selectbox option[value="something"]').attr('selected', false);
+all option will be unselected n this case.
+
+OnChange find selected option from the select box
+
+onchange find select box selected item.
+
+1
+$('#selectbox').change(function(){
+2
+    var val = $(this).find('option:selected').text();r
+3
+    alert('i selected: ' + val);
+4
+});
+onchange find select box selected items.
+
+1
+$('#selectbox').change(function(){
+2
+    $(this).find('option:selected').each(function () {
+3
+        alert('i selected: ' + $(this).text());
+4
+    }
+5
+});
+
+jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
+解决方法是在 jquery post中加入 contentType: "application/json; charset=utf-8",就行了，
+
+```
+$.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",//加入这行就行了，奇怪的是默认浏览器是会加的呀。
+url: contextPath  + "/securitygroups/create.do",
+data: JSON.stringify(securityGroup),
+success: function(ajaxResponse) {
+if(ajaxResponse.success) {
+$("#step-4.wizard-step #security_groups_error").text("OK!");
+} else {
+$("#step-4.wizard-step #security_groups_error").text( ajaxResponse.message );
+}
+},
+error : function(XMLHttpRequest, textStatus, errorThrown) {
+alert(textStatus.error + " " + errorThrown);
+},
+dataType : "json"
+});
+```
 
 
 # 参考文档

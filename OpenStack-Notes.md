@@ -156,20 +156,30 @@ https://www.ustack.com/author/luyuanyuan/
 
 [Neutron社区每周记（10.24-10.28）| Neutron 终于不“浪费”公网 IP 了](http://mp.weixin.qq.com/s?__biz=MjM5NjUxNDIwNw==&mid=2654062576&idx=1&sn=f8f20a7d8770afe94648f1e7542d34f5&chksm=bd2d77008a5afe16d6a3e8ac6ab2f5d500003f028297748deb67cb4bf8e6906d9649b0a39203&mpshare=1&scene=2&srcid=1107mvc0vYLowJrmjADElouY&from=timeline#wechat_redirect)
 
-OpenDayLight支持  hardware VXLAN tunnel endpoints(VTEPs) for hardware switches.   我们是不是将来可以把openstack的L3下放到hardware switches?
 
 
 ## Linux bridge
 https://wiki.linuxfoundation.org/networking/bridge
 
+## OVS with DPDK
+
+[OVS-DPDK installation guide](https://github.com/openvswitch/ovs/blob/v2.5.0/INSTALL.DPDK.md)
 
 
 
+https://communities.cisco.com/community/developer/openstack/blog/2017/02/01/how-to-deploy-openstack-newton-with-opendaylight-boron-and-open-vswitch
 
+## mininet.org
 
+## 与OpenDayLight整合
+https://wiki.opendaylight.org/view/OpenStack_and_OpenDaylight
+http://www.sdnlab.com/18099.html
+http://files.meetup.com/14446642/neutron.pdf
+http://superuser.openstack.org/articles/open-daylight-integration-with-openstack-a-tutorial/
 
+http://verticalindustriesblog.redhat.com/successful-integration-of-opendaylight-boron-release-with-mitaka-release-of-openstack/
 
-
+OpenDayLight支持  hardware VXLAN tunnel endpoints(VTEPs) for hardware switches.   我们是不是将来可以把openstack的L3下放到hardware switches? 
 
 # Kolla 
 使用kolla快速部署openstack all-in-one环境
@@ -810,12 +820,7 @@ nova = client.Client("2.1", session=sess)
 nova.flavors.list()
 ```
 
-# mininet.org
 
-# 与OpenDayLight整合
-https://wiki.opendaylight.org/view/OpenStack_and_OpenDaylight
-http://www.sdnlab.com/18099.html
-http://files.meetup.com/14446642/neutron.pdf
 
 
 
@@ -847,6 +852,13 @@ git clone http://git.trystack.cn/openstack/kolla-ansible
 172.16.69.227 network1
 172.16.69.228 compute1
 ```
+
+管理网段：192.168.56.0/24
+This network requires a gateway to provide Internet access to all nodes for administrative purposes such as package installation, security updates, DNS, and NTP.
+
+Provider network：172.16.69.0/24,This network requires a gateway to provide Internet access to instances in your OpenStack environment.
+
+
 
 ```
 $ sudo echo "xcadmin ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/xcadmin sudo chmod 0440 /etc/sudoers.d/xcadmin
@@ -950,7 +962,7 @@ EOF
 
 ```
 EXT_NET_CIDR='172.16.69.0/24'
-EXT_NET_RANGE='start=172.16.69.250,end=172.16.69.260'
+EXT_NET_RANGE='start=172.16.69.245,end=172.16.69.253'
 EXT_NET_GATEWAY='172.16.69.1'
 ```
 
@@ -1008,33 +1020,6 @@ aiting for nova-compute service up\n  ^ here\n"}
 升级ansible
 pip install  ansible -U -i https://pypi.douban.com/simple
 
-
-
-nova service 启动不起来： 
-
-```
-TASK [nova : Waiting for nova-compute service up] ******************************
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (20 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (19 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (18 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (17 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (16 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (15 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (14 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (13 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (12 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (11 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (10 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (9 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (8 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (7 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (6 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (5 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (4 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (3 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (2 retries left).
-FAILED - RETRYING: TASK: nova : Waiting for nova-compute service up (1 retries left).
-fatal: [control01 -> 172.16.69.226]: FAILED! => {"attempts": 20, "changed": false, "cmd": ["docker", "exec", "kolla_toolbox", "openstack", "--os-auth-url", "http://172.16.69.235:35357/v3", "--os-identity-api-version", "3", "--os-project-domain-name", "default", "--os-tenant-name", "admin", "--os-username", "admin", "--os-password", "1OAlFqPb0kpewTPQmsAOOSQq2lRkKqgc9V6lAKmD", "--os-user-domain-name", "default", "compute", "service", "list", "-f", "json", "--service", "nova-compute"], "delta": "0:00:01.774160", "end": "2017-03-07 09:20:36.671417", "failed": true, "rc": 1, "start": "2017-03-07 09:20:34.897257", "stderr": "The server is currently unavailable. Please try again at a later time.<br /><br />\n\n\n (HTTP 503) (Request-ID: req-25107883-2248-44ae-9a80-847c6e42bbb0)", "stdout": "", "stdout_lines": [], "warnings": []}
 ```
 
 我报了个bug。
@@ -1042,6 +1027,14 @@ https://bugs.launchpad.net/kolla-ansible/+bug/1676790
 
 后来用`pip freeze`来查看kolla和kolla-ansible发现两个的版本都是开发版，把它们都升级到4.0.0，重新部署了一遍，就没问题了。
 
+
+
+默认镜像的登录账号： cirros/cubswin:)
+
+
+要使用floating IP 必须 有外部网络。
+
 参考： 
 http://www.chenshake.com/kolla-installation/
 
+[DRBD](https://zh.wikipedia.org/zh-hans/DRBD)

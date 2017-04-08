@@ -422,6 +422,31 @@ Device is Busy这个一般的解决步骤：
 Answer: 问题找到了，是host主机的dns的问题：在`/etc/resolv.conf`里配置了两个nameserver，其中的第一个是自建的powerdns的测试，已经不在了，所以导致解析的时候速度极慢。删除了这个nameserver就可以了。
 关于docker 的dns，请参考：https://robinwinslow.uk/2016/06/23/fix-docker-networking-dns/
 
+
+* MySQL in docker exit occasionally with these errors: 
+
+```
+2017-04-06T20:10:41.248511Z 0 [ERROR] InnoDB: mmap(137428992 bytes) failed; errno 12
+2017-04-06T20:10:41.248530Z 0 [ERROR] InnoDB: Cannot allocate memory for the buffer pool
+2017-04-06T20:10:41.248535Z 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
+2017-04-06T20:10:41.248542Z 0 [ERROR] Plugin 'InnoDB' init function returned error.
+2017-04-06T20:10:41.248559Z 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
+2017-04-06T20:10:41.248564Z 0 [ERROR] Failed to initialize plugins.
+2017-04-06T20:10:41.248567Z 0 [ERROR] Aborting
+
+2017-04-06T20:10:41.248582Z 0 [Note] Binlog end
+2017-04-06T20:10:41.248630Z 0 [Note] Shutting down plugin 'MyISAM'
+2017-04-06T20:10:41.249775Z 0 [Note] Shutting down plugin 'CSV
+```
+docker 默认是不限制内存使用的,会向Host申请尽可能多的内存.
+这个MySQL是与Gitlab一起用的,Gitlab在备份时会占用大量的内存,导致MySQL无法分配到内存了.解决方案是为gitlab的主机多分配些内存.
+
+http://stackoverflow.com/questions/12114746/mysqld-service-stops-once-a-day-on-ec2-server/12683951#12683951
+https://github.com/docker-library/mysql/issues/248
+https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-unexpectedly
+
+
+
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
 [左耳朵耗子写的一些关于docker的文章](http://coolshell.cn/tag/docker)
