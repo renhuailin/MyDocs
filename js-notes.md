@@ -388,6 +388,33 @@ var fetchDoubanApi = function() {
 })();
 ```
 
+注意async 方法返回是Promise,不能直接返回一个value,
+``` js
+function resolveAfter2Seconds(x) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x);
+    }, 2000);
+  });
+}
+
+async function add1(x) {
+  var a = resolveAfter2Seconds(20);
+  var b = resolveAfter2Seconds(30);
+  return x + await a + await b;
+}
+
+//我们不能这样使用async
+let result = add1(10);
+//这时result就是Promise.正确的使用方法是调用Promise的then方法.
+
+add1(10).then(v => {
+  console.log(v);  // prints 60 after 2 seconds.
+});
+
+```
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
 
 [TypeScript 1.7](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-7.html) 就已经支持async await了.
 
@@ -509,9 +536,7 @@ function(id, obj) {
     jQuery('#some_element').append('<select id="' + id + '"></select>');
 
     for (var i = 0; i < obj.length; i++) {
-
-        jQuery('#' + id).append('<option value="' + obj[i] + '">' + obj[i] + '</option')
-
+        jQuery('#' + id).append('<option value="' + obj[i] + '">' + obj[i] + '</option');
     }
 
 }
@@ -600,65 +625,80 @@ Here we will remove all elements except the first and last one.
 //#selectbox is the id of the select box
 2
 $("#selectbox option:not(option:first, option:last)").remove();
+```
+
+删除所有的options
+``` js
+$("#id_province option").remove();
+```
+
 Select an option in the select box with jQuery
 
 If you want to select an option in the select box, you can do this.
 
-1
+``` js
 jQuery('#selectbox option[value="something"]').attr('selected', 'selected');
+```
 all option will be selected in this case.
 
-UnSelect an option in the select box with jQuery
 
+
+
+**取消选中**
+UnSelect an option in the select box with jQuery
 If you want to unselect an option in the select box, you can do this.
 
-1
+``` js
 jQuery('#selectbox option[value="something"]').attr('selected', false);
+```
 all option will be unselected n this case.
+
+
+
 
 OnChange find selected option from the select box
 
 onchange find select box selected item.
 
-1
+``` js
 $('#selectbox').change(function(){
-2
-    var val = $(this).find('option:selected').text();r
-3
+    var val = $(this).find('option:selected').text();
     alert('i selected: ' + val);
-4
 });
+```
+
+在select `onchange`事件里获取选中项的text.
 onchange find select box selected items.
 
-1
+``` js
 $('#selectbox').change(function(){
-2
     $(this).find('option:selected').each(function () {
-3
         alert('i selected: ' + $(this).text());
-4
     }
-5
-});
 
-jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
+});
+```
+
+SpringMVC, jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
 解决方法是在 jquery post中加入 contentType: "application/json; charset=utf-8",就行了，
+
+``` js
 $.ajax({
-type: "POST",
-contentType: "application/json; charset=utf-8",//加入这行就行了，奇怪的是默认浏览器是会加的呀。
-url: contextPath  + "/securitygroups/create.do",
-data: JSON.stringify(securityGroup),
-success: function(ajaxResponse) {
-if(ajaxResponse.success) {
-$("#step-4.wizard-step #security_groups_error").text("OK!");
-} else {
-$("#step-4.wizard-step #security_groups_error").text( ajaxResponse.message );
-}
-},
-error : function(XMLHttpRequest, textStatus, errorThrown) {
-alert(textStatus.error + " " + errorThrown);
-},
-dataType : "json"
+    type: "POST",
+    contentType: "application/json; charset=utf-8",//加入这行就行了，奇怪的是默认浏览器是会加的呀。
+    url: contextPath + "/securitygroups/create.do",
+    data: JSON.stringify(securityGroup),
+    success: function (ajaxResponse) {
+        if (ajaxResponse.success) {
+            $("#step-4.wizard-step #security_groups_error").text("OK!");
+        } else {
+            $("#step-4.wizard-step #security_groups_error").text(ajaxResponse.message);
+        }
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert(textStatus.error + " " + errorThrown);
+    },
+    dataType: "json"
 });
 
 ```

@@ -69,7 +69,7 @@ guestfish的命令行提示符是`><fs>`。
 
 你需要先运行这个镜像
 ```
-><fs> run
+
 ```
 
 如果这一步报错：  
@@ -156,7 +156,10 @@ https://www.ustack.com/author/luyuanyuan/
 
 [Neutron社区每周记（10.24-10.28）| Neutron 终于不“浪费”公网 IP 了](http://mp.weixin.qq.com/s?__biz=MjM5NjUxNDIwNw==&mid=2654062576&idx=1&sn=f8f20a7d8770afe94648f1e7542d34f5&chksm=bd2d77008a5afe16d6a3e8ac6ab2f5d500003f028297748deb67cb4bf8e6906d9649b0a39203&mpshare=1&scene=2&srcid=1107mvc0vYLowJrmjADElouY&from=timeline#wechat_redirect)
 
-
+##  关于router路由器
+如果router绑定网关,就需要一个floating IP,可以用端口转发的方式访问云主机.
+云主机也可以再绑定一个floating ip,外部可以直接用这个IP访问到主机.
+如果router不设置网关也就是不绑定floatingIP,那它只能做连接内部网络用,被外网访问,这时内网的主机是不能绑定floating IP的.
 
 ## Linux bridge
 https://wiki.linuxfoundation.org/networking/bridge

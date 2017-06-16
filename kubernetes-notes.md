@@ -8,6 +8,7 @@ https://github.com/kubernetes/kubernetes/blob/release-1.5/docs/design/architectu
 
 # 安装
 kubeadm是用apt安装的，atp支持https_proxy这个系统变量，所以我用 shadowsocks + privoxy 翻墙然后安装了kubeadm.
+
 ## 多节点部署时的 Bootstrap Docker
 https://kubernetes.io/docs/getting-started-guides/docker-multinode/
 
@@ -95,7 +96,34 @@ ReplicaSet 是下一代的 Replication Controlle，支持新的set-based label s
 
 # Service
 
-Service是一组Pods的逻辑集合，和访问它们的相关策略，这些pods是通过Label Selector确定的。
+Service是一组Pods的逻辑集合和访问它们的相关策略，这些pods是通过Label Selector确定的。
+
+符合这个label的Pod会自动加入Service,移除相关的label或pod死了,也会自动从Service中移除.
+
+这些pods是通过endpoints来expose的.
+
+它是一个抽象的概念.它并不真正地去启动Pod,启动Pods是通过`Deployment`.
+
+## Accessing the Service
+K8s支持2种发现服务的方式:环境变量和DNS,
+ environment variables and DNS
+
+**环境变量**
+文档里举的例子是进入到Pod里查看 evn ,要测试一下在node节点上是否也有这样的evn.
+如果先创建的pods,然后创建的Service,那么env里不包含服务相关的信息.但是最常用的创建service的方式.
+如果Pods是在Service之后创建的,那么pods里的env里就会包含服务的相关的信息.
+
+
+文档上为了测试pods在服务之后创建,它先把Service的`replicas`减为0,然后再设置为2. 这样pods就在服务之后创建了.
+
+
+**DNS**
+好像这个也是Pods内的,也就是这两种方式都是让其它的pods找到这个service,也就是cluster内部的.
+
+
+## Exposing the Service
+这个就是把服务暴露给外部使用了.
+支持NodePort和LoadBalancer这两种方式.
 
 
 ### Services without selectors
@@ -127,6 +155,7 @@ ServiceType
 * **ClusterIP：** 只能集群内部访问。 
 * **NodePort：**  映射到Node上某个Port，并且在每个Node上都使用相同Port。
 * **LoadBalancer：** 使用云提供的Load Balancer。
+* **externName** 使用云提供的Load Balancer。
 
 
 
@@ -135,7 +164,7 @@ ServiceType
 ## hostPath
 这个是我们在用docker最常用的模式，但是在k8s里时要注意：
 
-* when Kubernetes adds resource-aware scheduling, as is planned, it will not be able to account for resources used by a hostPath     k8s执行资源调度时，`hostPath`使用的资源（也就是磁盘容量了）不会被计算在内！！！
+* when Kubernetes adds resource-aware scheduling, as is planned, it will not be able to account for resources used by a hostPath     k8s执行资源调度时，`hostPath`使用的资源（也就是磁盘容量）不会被计算在内！！！
 
 
 # Namespaces
@@ -170,8 +199,10 @@ Pause and resume a Deployment.
 #  Ingress Resources
 
 如果我们用的不GCE，AWS等云主机，是物理机那该如何配置loadbalancer？请参考：
-https://github.com/kubernetes/contrib/tree/master/service-loadbalancer
+https://github.com/kubernetes/contrib/tree/master/service-loadbalancer  这是用Haproxy来做负载均衡的项目。
 
+
+要想做PaaS这是相当重要的一块。
 
 
 # Horizontal Pod Autoscaling
@@ -218,12 +249,24 @@ Kubernetes imposes the following fundamental requirements on any networking impl
 
 This model is not only less complex overall, but it is principally compatible with the desire for Kubernetes to enable low-friction porting of apps from VMs to containers. If your job previously ran in a VM, your VM had an IP and could talk to other VMs in your project. This is the same basic model.
 
+## Network Policies
+https://kubernetes.io/docs/concepts/services-networking/networkpolicies/
+https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/
+
+
+A network policy is a specification of how groups of pods are allowed to communicate with each other and other network endpoints.
+y default, all traffic is allowed between all pods (and NetworkPolicy resources have no effect).
+Isolation can be configured on a per-namespace basis. Currently, only isolation on inbound traffic (ingress) can be defined. When a namespace has been configured to isolate inbound traffic, all traffic to pods in that namespace (even from other pods in the same namespace) will be blocked. NetworkPolicy objects can then be added to the isolated namespace to specify what traffic should be allowed
 
 
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
 [左耳朵耗子写的一些关于docker的文章](http://coolshell.cn/tag/docker)
 [https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
+
+[唯品会基于Kubernetes的网络方案演进](http://dockone.io/article/1815)  这个有讲到用HAProxy来实现公网IP访问。
+
+[Kubernetes 有状态集群服务部署与管理](http://dockone.io/article/2016)    这里有不少干货，不错。 [这里是infoQ上的视频](http://www.infoq.com/cn/presentations/kubernetes-stateful-cluster-service-deployment-and-management)
 
 
 https://www.safaribooksonline.com/library/view/kubernetes-cookbook/9781785880063/

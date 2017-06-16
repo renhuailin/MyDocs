@@ -445,6 +445,13 @@ http://stackoverflow.com/questions/12114746/mysqld-service-stops-once-a-day-on-e
 https://github.com/docker-library/mysql/issues/248
 https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-unexpectedly
 
+# 使用supervisord来管理进程
+
+https://docs.docker.com/engine/admin/multi-service_container/
+
+http://liuzxc.github.io/blog/supervisor/
+
+
 
 
 请参考：

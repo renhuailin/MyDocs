@@ -192,6 +192,10 @@ Selenium只是自动化浏览测试。开发者经常使用这个工具配合其
 
 [10 JDK 7 Features to Revisit, Before You Welcome Java 8](http://www.javacodegeeks.com/2014/04/10-jdk-7-features-to-revisit-before-you-welcome-java-8.html)
 
+java 7的 可以自动关闭资源了:
+[The try-with-resources Statement](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html)
+
+
 
 这个非常好，而且作者一直在更新：[Java 8 Features – The ULTIMATE Guide](http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html)
 

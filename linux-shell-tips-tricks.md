@@ -4,7 +4,7 @@ Linux Shell Tips and Tricks
 
 # bash or dash 
 Ubuntu 6.10 开始用 dash 做为 /bin/sh，而不是bash.  所以，如果脚本是以`#! /bin/sh` 开头的要注意了。可能会出现有些命令不能用的情况。
-所以还是以`#! /bin/bash`
+所以还是以`#! /bin/bash`
 
 
 # Shell Programming Note
@@ -159,6 +159,19 @@ Settings for bond0:
 	Link detected: yes
 ```
 
+## 统计当目录下的所有目录的大小
+```
+$ du -d 1 -h
+```
+# 查看配置文件
+有时我们想查看一个配置文件,但是想过滤掉注释,可以这样:
+```
+$ grep -v '^$\|^\s*\#'   pdns.conf
+```
+
+
+
+
 ## 让ls命令显示长日期
 ls 默认是短日期格式，对中国人太不友好了。
 ```
@@ -235,6 +248,16 @@ echo "harley ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 $ ssh -XC -c blowfish-cbc,arcfour xmodulo@remote_host.com
 ```
 请参考文献【3】
+
+##  远程和本地端口的映射(转发)
+
+### 把远程主机的某个端口映射到本地
+ssh -L <local port>:<remote host>:<remote port> <SSH hostname>
+
+### 把本地的某个端口映射到远程主机
+ssh -R <remote port>:<localhost or local IP>:<local port> <SSH hostname>
+
+
 
 # tmux
 
@@ -349,6 +372,11 @@ If you want which ones are currently running, you need systemctl | grep running
 
 
 # letsencrypt.org
+
+```
+$ ./certbot-auto certonly -a webroot --webroot-path=/usr/share/nginx/html -d registry.xiangcloud.com.cn
+```
+
 我的域名用了reverse proxy,所以需要在nginx里配置特殊处理一下
 
 ```
@@ -434,7 +462,36 @@ server {
 请见参考文档[2]
 
 
+# iptables
 
+
+显示规则
+
+```
+$ iptables -L -n -v --line-number
+```
+
+删除input的第3条规则  
+```
+[root@linux ~]# iptables -D INPUT 3  
+```
+
+
+-A默认是插入到尾部的，可以-I来插入到指定位置
+
+```
+[root@linux ~]# iptables -I INPUT 3 -p tcp -m tcp --dport 20 -j ACCEPT
+```
+
+参考: http://blog.51yip.com/linux/1404.html
+
+# PowerDNS
+
+
+用monitor mode启动.
+```
+# service pdns monitor
+```
 
 # 参考文档
 1. 《Linux command line and shell scripting bible》
