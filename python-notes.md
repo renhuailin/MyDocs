@@ -85,7 +85,11 @@ python manage.py showmigrations
 
 python manage.py migrate
 
- 
+## view
+
+``` python
+HttpResponseRedirect(reverse('author-detail', kwargs={'pk': self.object.pk}))
+```
 ## Managing static files
 https://docs.djangoproject.com/en/1.10/howto/static-files/
 

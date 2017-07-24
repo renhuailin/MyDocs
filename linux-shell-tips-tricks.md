@@ -128,6 +128,27 @@ $ sudo gedit /etc/NetworkManager/NetworkManager.conf
 $ sudo service network-manager restart
 ```
 
+
+
+## Cent OS监控网卡流量
+```
+$ sudo yum install iptraf
+$ sudo iptraf-ng
+```
+## 安装指定版本的包
+有时候我们不希望安装最近版的某个软件，如docker,我可能希望安装特定版本的。      
+我需要先用下面的命令列出源里所有的docker版本
+
+```
+$ apt-cache policy docker-engine
+$ apt-cache madison docker-ce
+```
+
+然后安装指定版本的docker.
+```
+$ apt-get install docker-engine=1.12.6-0~ubuntu-xenial
+```
+
 ## dpkg -i安装无法自动安装依赖的问题
 `dpkg -i` 安装的包有时会出现依赖没有安装上的问题，可以在运行完`dpkg -i` 后运行`apt-get -f install`来把相关的依赖安装上。
 

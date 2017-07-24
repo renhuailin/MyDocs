@@ -274,7 +274,7 @@ Liquibase
 
 
 
-Hotswap Agent project : http://hotswapagent.org/
+Hotswap Agent project : http://hotswapagent.org/  这个是用DCEVM的，实现的是jvm级的reload，比Spring loaded更强。
 
 Dynamic Source Lookup plugin for Eclipse : https://github.com/ifedorenko/com.ifedorenko.m2e.sourcelookup
 

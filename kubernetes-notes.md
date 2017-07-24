@@ -155,7 +155,8 @@ ServiceType
 * **ClusterIP：** 只能集群内部访问。 
 * **NodePort：**  映射到Node上某个Port，并且在每个Node上都使用相同Port。
 * **LoadBalancer：** 使用云提供的Load Balancer。
-* **externName** 使用云提供的Load Balancer。
+* **externName** : Maps the service to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record with its value. No proxying of any kind is set up. This requires version 1.7 or higher of kube-dns.  这个还没弄明白。
+
 
 
 
@@ -174,7 +175,7 @@ k8s支持物理集群上的多个虚拟集群，这些虚拟集群被称做`name
 
 # Service Accounts
 A service account provides an identity for processes that run in a Pod.
-service account我称之为服务账号为运行在Pod里的进程提供了一个身份。
+service account我称之为服务账号,为运行在Pod里的进程提供了一个身份。
 
 # Daemon Set
 A Daemon Set确保所有的节点都运行一个Pod的复本，当一个新的节点加入到集群时，这个pod就自动加入到这个。
