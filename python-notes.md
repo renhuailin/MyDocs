@@ -45,6 +45,12 @@ def func(request, *args, **kwargs):
 请参见：Learning Python 5th . Chapter 18. Arguments `Special Argument-Matching Modes`
 
 
+python 中像ruby的pp的函数： 
+
+``` python
+from pprint import pprint
+pprint(myobj)
+```
 # pip 自定义豆瓣 pypi 源
 
 sudo pip install -v Flask -i https://pypi.douban.com/simple
@@ -98,29 +104,22 @@ http://stackoverflow.com/a/6015706
 
 ## templates
 
-每行显示三个
-Try something like this:
+在include其它页面时指定页面里的变量：
 
-``` html
-<div class="row">
-{% for item in items %}
-    <div class="three columns">{{ item }}
-    </div>
-    {% if forloop.counter|divisibleby:3 %}
-</div>
-<div class="row">
-    {% endif %}
-{% endfor %}
-</div>
+```
+{% include "name_snippet.html" with person="Jane" greeting="Hello" %}
 ```
 
+##  write custom template  tags
+
+https://docs.djangoproject.com/en/1.11/howto/custom-template-tags/
 
 ## Form 
 ### Create model from a from.
 https://docs.djangoproject.com/en/1.10/topics/forms/modelforms/
 
 
-djanto Form在产生的html widget里会生成`required`这个属性,如果不想生成这个属性,需要在model定义时添加`bland=True`这个参数.
+djanto Form在产生的html widget里会生成`required`这个属性,如果不想生成这个属性,需要在model定义时添加`blank=True`这个参数.
 ``` python
 tags = models.CharField(max_length=191, null=True, blank=True)
 ```
