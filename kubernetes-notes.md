@@ -9,6 +9,15 @@ https://github.com/kubernetes/kubernetes/blob/release-1.5/docs/design/architectu
 # 安装
 kubeadm是用apt安装的，atp支持https_proxy这个系统变量，所以我用 shadowsocks + privoxy 翻墙然后安装了kubeadm.
 
+
+## 在线体验
+
+You need to have a Kubernetes cluster, and the kubectl command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using Minikube, or you can use one of these Kubernetes playgrounds:
+[Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
+[Play with Kubernetes](http://labs.play-with-k8s.com/)
+
+
+
 ## 多节点部署时的 Bootstrap Docker
 https://kubernetes.io/docs/getting-started-guides/docker-multinode/
 
@@ -94,6 +103,55 @@ ReplicaSet 是下一代的 Replication Controlle，支持新的set-based label s
 如果你的pods要提示机器级别的功能，如：在所有的pods启动之前启动，在机器重启或关闭之前安全关闭。
 
 
+
+# ReplicaSet
+
+
+
+ReplicaSet is the next-generation Replication Controller.  The only difference between a *ReplicaSet* and a [*Replication Controller*](https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/) right now is the selector support. 
+
+`ReplicaSet`和Replication Controller的唯一区别就是selector的支持。
+
+ReplicaSet supports the new set-based selector requirements as described in the [labels user guide](https://kubernetes.io/docs/user-guide/labels/#label-selectors) whereas a Replication Controller only supports equality-based selector requirements.
+
+`ReplicaSet`支持 new set-based selector，而`Replication Controller`只支持`equality-based selector`.
+
+大部分支持Replication Controller的kubectl命令也支持ReplicaSet，只有[`rolling-update`](https://kubernetes.io/docs/user-guide/kubectl/v1.7/#rolling-update)这个命令例外。
+
+如果你想要支持[`rolling-update`](https://kubernetes.io/docs/user-guide/kubectl/v1.7/#rolling-update) ，请使用*Deployment*。
+
+
+
+
+
+
+
+# Deployment
+
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ 
+
+要理解这个概念，这是个非常重要的概念，要注意它与`ReplicaSet`的关系。
+
+A *Deployment* controller provides declarative updates for [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/) and [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+
+Deployment为Pod和复本提供了一种声明式的升级方式，它是下一代的Replication Controller。
+
+A typical use case is:
+Create a Deployment to bring up a Replica Set and Pods.
+Check the status of a Deployment to see if it succeeds or not.
+Later, update that Deployment to recreate the Pods (for example, to use a new image).
+Rollback to an earlier Deployment revision if the current Deployment isn’t stable.
+Pause and resume a Deployment.
+
+
+
+**Note:** *You should not manage ReplicaSets owned by a Deployment. All the use cases should be covered by manipulating the Deployment object. Consider opening an issue in the main Kubernetes repository if your use case is not covered below.*
+
+你不要管理由Deployment所创建的ReplicaSets。
+
+
+
+
 # Service
 
 Service是一组Pods的逻辑集合和访问它们的相关策略，这些pods是通过Label Selector确定的。
@@ -160,6 +218,24 @@ ServiceType
 
 
 
+Expose与Publish的区别是什么？
+
+
+
+
+
+## Deployment  ReplicaSet  Service的关系
+
+Deployment负责维护pods的数量，我们可以手动pod，然后通过Service来expose。这种情况，如果我们kill一个pod,系统不会自动启动一个pod.而使用Deployment后系统会自动维护一定数量的replica.这样再expose成Service，Servcie就更稳定。
+
+
+
+## Service Load Balancer 
+
+[Service Load Balancer](https://github.com/kubernetes/contrib/tree/master/service-loadbalancer)
+
+
+
 # Volumes
 
 ## hostPath
@@ -185,25 +261,20 @@ A Daemon Set确保所有的节点都运行一个Pod的复本，当一个新的�
 DaemonSet管理的Pods用的是hostPort，所以能用节点的IP直接访问。
 
 
-# Deployment
-Deployment为Pod和复本提供了一种声明式的升级方式，它是下一代的Replication Controller。
-
-
-A typical use case is:
-Create a Deployment to bring up a Replica Set and Pods.
-Check the status of a Deployment to see if it succeeds or not.
-Later, update that Deployment to recreate the Pods (for example, to use a new image).
-Rollback to an earlier Deployment revision if the current Deployment isn’t stable.
-Pause and resume a Deployment.
-
-
 #  Ingress Resources
 
 如果我们用的不GCE，AWS等云主机，是物理机那该如何配置loadbalancer？请参考：
 https://github.com/kubernetes/contrib/tree/master/service-loadbalancer  这是用Haproxy来做负载均衡的项目。
 
-
 要想做PaaS这是相当重要的一块。
+
+集群内的服务可以通过ClusterIP来相互访问，但是这边些服务无法越过Cluster边界被外部的系统访问。Ingress是集群外部访问集群内服务的入口控制器。
+
+
+
+部署一个Ingress
+
+http://blog.frognew.com/2017/04/kubernetes-ingress.html
 
 
 # Horizontal Pod Autoscaling
@@ -214,6 +285,16 @@ https://github.com/kubernetes/contrib/tree/master/service-loadbalancer  这是�
 目前主要是依据cpu来做scale,1.2版添加了自定义的metrics, like QPS (queries per second) or average request latency.
 集群启动时`ENABLE_CUSTOM_METRICS`必须被设置为true.
 The cluster has to be started with `ENABLE_CUSTOM_METRICS` environment variable set to true.
+
+```
+$ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+```
+
+
+
+
+
+
 
 # Job
 这个干嘛用的，还没研究明白
@@ -246,7 +327,7 @@ Kubernetes imposes the following fundamental requirements on any networking impl
 * all containers can communicate with all other containers without NAT
 * all nodes can communicate with all containers (and vice-versa) without NAT
 * the IP that a container sees itself as is the same IP that others see it as
-看来K8S的网络真追求速度呀，最后一条很有用的呢。
+  看来K8S的网络真追求速度呀，最后一条很有用的呢。
 
 This model is not only less complex overall, but it is principally compatible with the desire for Kubernetes to enable low-friction porting of apps from VMs to containers. If your job previously ran in a VM, your VM had an IP and could talk to other VMs in your project. This is the same basic model.
 
@@ -258,6 +339,104 @@ https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/
 A network policy is a specification of how groups of pods are allowed to communicate with each other and other network endpoints.
 y default, all traffic is allowed between all pods (and NetworkPolicy resources have no effect).
 Isolation can be configured on a per-namespace basis. Currently, only isolation on inbound traffic (ingress) can be defined. When a namespace has been configured to isolate inbound traffic, all traffic to pods in that namespace (even from other pods in the same namespace) will be blocked. NetworkPolicy objects can then be added to the isolated namespace to specify what traffic should be allowed
+
+# CLI
+
+[Kubectl Overview](https://kubernetes.io/docs/user-guide/kubectl-overview/)   这里包含了它的sub commands , resource type.
+
+[Kubectl Cheat Sheet](https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/)
+
+[API 1.6](https://kubernetes.io/docs/api-reference/v1.6/)  这里有ymal的具体格式 
+
+
+
+显示pods的更多信息
+
+```shell
+$ kubectl get pods -o wide
+
+$ kubectl create -f my-nginx.yml
+
+$ kubectl describe deployment my-nginx
+
+$ kubectl expose   deployment/my-nginx
+
+$ kubectl delete services example-service     # unexpose a service
+
+$ kubectl get pods --namespace=kube-system
+
+# Get a Shell to a running pod.
+$ kubectl exec -it shell-demo -- /bin/bash
+
+# Create multiple YAML objects from stdin
+$ cat <<EOF | kubectl create -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-sleep
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    args:
+    - sleep
+    - "1000000"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-sleep-less
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    args:
+    - sleep
+    - "1000"
+EOF
+
+# Create a secret with several keys
+$ cat <<EOF | kubectl create -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  password: $(echo "s33msi4" | base64)
+  username: $(echo "jane" | base64)
+EOF
+
+
+# The kubectl command can create a proxy that will forward communications into the cluster-wide, private network. The proxy can be terminated by pressing control-C and won't show any output while its running.
+$ kubectl proxy
+
+
+# You can see all those APIs hosted through the proxy endpoint, now available at through http://localhost:8001. For example, we can query the version directly through the API using the curl command:
+
+$ curl http://localhost:8001/version
+
+# Show cluster info.
+$ kubectl cluster-info
+```
+
+
+
+http://deployment-msa-demo.default.svc.cluster.local:8082
+
+
+
+# Autoscaling
+
+
+
+```shell
+$ kubectl help autoscale
+$ kubectl autoscale deployment deployment-msa-demo --min=1 --max=4 --cpu-percent=80
+$ kubectl get hpa
+$ kubectl delete horizontalpodautoscalers deployment-msa-demo
+```
+
 
 
 请参考：
@@ -271,6 +450,14 @@ Isolation can be configured on a per-namespace basis. Currently, only isolation 
 
 
 https://www.safaribooksonline.com/library/view/kubernetes-cookbook/9781785880063/
+
+
+[基于Jenkins和Kubernetes的CI工作流](http://dockone.io/article/2114)
+
+[使用JENKINS实现CI/CD【ZOUES](http://www.zoues.com/2017/03/19/%E4%BD%BF%E7%94%A8kubernetes-jenkins%E5%AE%9E%E7%8E%B0cicd%E3%80%90zoues-com%E3%80%91/)
+
+
+
 
 
 

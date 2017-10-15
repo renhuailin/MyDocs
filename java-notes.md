@@ -1,6 +1,8 @@
 要好好了解java 8里的 Predicate，Function,Consumer这几个类，跟lambda有关。
 
+mac下找java home
 
+运行： `/usr/libexec/java_home`
 
 有了缺省方法的interface与abstract class有什么区别？？
 
@@ -270,6 +272,7 @@ http://dev.cdhq.de/eclipse/word-wrap/
 
 JRebel or Spring Loaded  
 Thymeleaf
+
 Liquibase
 
 
@@ -289,6 +292,9 @@ https://yq.aliyun.com/articles/60789
 如何live reload log4j configuration.
 http://stackoverflow.com/a/4599083
 
+
+# Liquibase 数据库变更管理工具
+Rails的Db Migration的java alternative.
 
 # IDEA spring boot & spring Loaded
 首先要设计项目自动编译

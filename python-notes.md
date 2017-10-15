@@ -192,6 +192,28 @@ $.ajax({
 ## Django Channels
 这是个异步的框架,可以处理WebSocket,HTTP2等请求.可以运行后台的任务.
 
+## Static files
+所有的用户上传的文件都应该放在media_root下
+## `STATIC_ROOT` 和 `STATICFILES_DIRS`
+我发现在运行`python manage.py collectstatic`时报错了：
+```
+django.core.exceptions.ImproperlyConfigured: The STATICFILES_DIRS setting should not contain the STATIC_ROOT setting
+```
+
+``` python
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static_files')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static/"),
+    # os.path.join(BASE_DIR, "media"),
+]
+```
+我没有理解`STATIC_ROOT` 和 `STATICFILES_DIRS`的作用，
+`STATIC_ROOT`是`collectstatic`收集到的文件存放的目录，collectstatic除了`INSTALLED_APPS`下的所有的静态文件外，还会去STATICFILES_DIRS下的静态文件。
+STATICFILES_DIRS这个目录下的文件是开发模式服务器`runserver`寻找静态文件的目录。
+
+当我们部署在生产环境，尤其是用apache部署时，通常我们是用apache来服务静态文件的，我们要先运行`python manage.py collectstatic`，再在apache的配置文件里把`/static/` alias到`STATIC_ROOT下就行了。
+
+总之django的这个思路是挺奇怪的，他假设你在部署的时候一定是用nginx或apache等来服务静态文件的。开发模式和生产模式是完全不一样的。
 
 # Setup tools 
 

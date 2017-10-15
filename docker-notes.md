@@ -1,6 +1,9 @@
 Docker notes
 -------------
 
+# Install
+$ curl -fsSL get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
 
 # 1 docker run
 
@@ -37,11 +40,11 @@ docker映射的格式是:   宿主机的资源[端口或目录]:container的资�
 这个策略控制容器退出后是否自动重启。有些时候我们会发现容器会因为我们的应用或tomcat,apache等进程退出了而退出。
 这通常不是我们想要的，docker允许你指定一个策略在容器退出时，自动重启容器。
 
-Policy | Result
--------|-------
-no     | 不自动重启
-on-failure[:max-retries] | 当容器以非0的返回值退出时，重启，这时可以指定最大重启次数。
-always | 一直重启，没有次数限制
+| Policy                   | Result                         |
+| ------------------------ | ------------------------------ |
+| no                       | 不自动重启                          |
+| on-failure[:max-retries] | 当容器以非0的返回值退出时，重启，这时可以指定最大重启次数。 |
+| always                   | 一直重启，没有次数限制                    |
 
 
 为了防止宿主机被容器的频繁重启淹没，所以容器每次重启的时间间隔会自动递增，100ms,200ms、400ms、800ms。
@@ -450,6 +453,28 @@ https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-une
 https://docs.docker.com/engine/admin/multi-service_container/
 
 http://liuzxc.github.io/blog/supervisor/
+
+
+# Ubuntu 16.04 修改启动的 `-H`参数
+为了在jenkins里调用docker，我需要为docker daemon添加-H的启动参数，但是在16.04的`/etc/docker/daemon.json`里加是不好使的，因为systemd的启动脚本里指定了host的参数，如果在`/etc/docker/daemon.json`也指定一个host,docker daemon启动就会报错：
+
+```
+unable to configure the Docker daemon with file /etc/docker/daemon.json: the following directives are specified both as a flag and in the configuration file: hosts: (from flag: [fd://], from file: [tcp://0.0.0.0:2375 unix:///var/run/docker.sock])
+```
+
+
+
+这其实是个bug: https://github.com/moby/moby/issues/22339 
+
+所以只能在systemd的service file里来指定它。
+
+docker的systemd的启动文件放在：`/etc/systemd/system/multi-user.target.wants/docker.service`
+
+It is conventional to use port `2375` for un-encrypted, and port `2376` for encrypted communication with the daemon.
+
+
+
+
 
 
 

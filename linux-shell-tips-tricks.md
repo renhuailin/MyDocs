@@ -514,6 +514,11 @@ $ iptables -L -n -v --line-number
 # service pdns monitor
 ```
 
+
+# 用wget来做压力测试
+
+while true; do wget -q -O- http://9.112.190.95:32758/; done
+
 # 参考文档
 1. 《Linux command line and shell scripting bible》
 2. [How To Secure Nginx with Let's Encrypt on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04)

@@ -915,6 +915,47 @@ dataType : "json"
 });
 ```
 
+# 
+NodeJS 8.0 install polymer 2.0 failed:
+```
+> wd@1.4.0 install /usr/local/lib/node_modules/polymer-cli/node_modules/wd
+> node scripts/build-browser-scripts
+
+/usr/local/lib/node_modules/polymer-cli/node_modules/mkdirp/index.js:90
+                    throw err0;
+                    ^
+
+Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/polymer-cli/node_modules/wd/build'
+    at Object.fs.mkdirSync (fs.js:891:18)
+    at sync (/usr/local/lib/node_modules/polymer-cli/node_modules/mkdirp/index.js:71:13)
+    at Object.<anonymous> (/usr/local/lib/node_modules/polymer-cli/node_modules/wd/scripts/build-browser-scripts.js:6:1)
+    at Module._compile (module.js:573:30)
+    at Object.Module._extensions..js (module.js:584:10)
+    at Module.load (module.js:507:32)
+    at tryModuleLoad (module.js:470:12)
+    at Function.Module._load (module.js:462:3)
+    at Function.Module.runMain (module.js:609:10)
+    at startup (bootstrap_node.js:158:16)
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! wd@1.4.0 install: `node scripts/build-browser-scripts`
+npm ERR! Exit status 1
+npm ERR!
+npm ERR! Failed at the wd@1.4.0 install script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/harley/.npm/_logs/2017-08-31T06_52_00_690Z-debug.log
+```
+解决方法：
+```
+npm -g config set user root
+```
+
+
+# npm 使用国内的源
+
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 # 参考文档
 [Mozilla Javascript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
