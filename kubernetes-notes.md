@@ -1,4 +1,4 @@
-Docker notes
+Kubernetes notes
 -------------
 
 # Kubernetes 架构图
@@ -76,7 +76,18 @@ co-location 主机托管
 通常用户不应该直接创建pods，而是应该通过controllers。
 
 `-o wide`这个选项可以显示pod的IP和所在主机。
+
+```
 $ kubectl get pods -o wide
+```
+
+
+
+## Static Pods
+
+今天在跟陈晖请教如何在ICP安装完后启动audit logs的问题时，知道了这个概念。
+
+
 
 
 # Label
@@ -151,6 +162,22 @@ Pause and resume a Deployment.
 
 
 
+### 显示部署的历史记录
+
+```
+$ kubectl rollout history deployment/nginx-deployment
+```
+
+
+
+回退到指定的某次部署
+
+```
+$ kubectl rollout history deployment/nginx-deployment --revision=2
+```
+
+
+
 
 # Service
 
@@ -174,9 +201,20 @@ K8s支持2种发现服务的方式:环境变量和DNS,
 
 文档上为了测试pods在服务之后创建,它先把Service的`replicas`减为0,然后再设置为2. 这样pods就在服务之后创建了.
 
-
-**DNS**
+### DNS
 好像这个也是Pods内的,也就是这两种方式都是让其它的pods找到这个service,也就是cluster内部的.
+
+#### A records
+
+“Normal” (not headless) Services are assigned a DNS A record for a name of the form `my-svc.my-namespace.svc.cluster.local`. This resolves to the cluster IP of the Service.
+
+“Headless” (without a cluster IP) Services are also assigned a DNS A record for a name of the form `my-svc.my-namespace.svc.cluster.local`. Unlike normal Services, this resolves to the set of IPs of the pods selected by the Service. Clients are expected to consume the set or else use standard round-robin selection from the set.
+
+比如，我的服务名叫`nginx`,在`default`名空间里，我的clust的域名是`cluster.local`(这是在安装时指定的)，那么我们可以通过`nginx.default.svc.cluster.local`这个域名来访问此服务。
+
+#### SRV records
+
+SRV Records are created for named ports that are part of normal or [Headless Services](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services). For each named port, the SRV record would have the form `_my-port-name._my-port-protocol.my-svc.my-namespace.svc.cluster.local`. For a regular service, this resolves to the port number and the CNAME: `my-svc.my-namespace.svc.cluster.local`. For a headless service, this resolves to multiple answers, one for each pod that is backing the service, and contains the port number and a CNAME of the pod of the form `auto-generated-name.my-svc.my-namespace.svc.cluster.local`.
 
 
 ## Exposing the Service
@@ -222,8 +260,6 @@ Expose与Publish的区别是什么？
 
 
 
-
-
 ## Deployment  ReplicaSet  Service的关系
 
 Deployment负责维护pods的数量，我们可以手动pod，然后通过Service来expose。这种情况，如果我们kill一个pod,系统不会自动启动一个pod.而使用Deployment后系统会自动维护一定数量的replica.这样再expose成Service，Servcie就更稳定。
@@ -236,12 +272,50 @@ Deployment负责维护pods的数量，我们可以手动pod，然后通过Servic
 
 
 
+# Network
+
+解析k8s网络  http://dockone.io/article/3211
+
+https://blog.csdn.net/zjysource/article/details/52052420
+
+
+
 # Volumes
 
 ## hostPath
 这个是我们在用docker最常用的模式，但是在k8s里时要注意：
 
 * when Kubernetes adds resource-aware scheduling, as is planned, it will not be able to account for resources used by a hostPath     k8s执行资源调度时，`hostPath`使用的资源（也就是磁盘容量）不会被计算在内！！！
+
+
+
+
+## Lifecycle of a volume and claim
+
+卷有两种提供方式：
+
+* static
+
+  A cluster administrator creates a number of PVs. They carry the details of the real storage which is available for use by cluster users. They exist in the Kubernetes API and are available for consumption.
+
+  ​
+
+* dynamic
+
+  ​
+
+
+
+
+
+| 卷类型       | Multi-Writers |      |
+| --------- | ------------- | ---- |
+| NFS       | Yes           |      |
+| GlusterFS | Yes           |      |
+| CephFS    | Yes           |      |
+
+
+
 
 
 # Namespaces
@@ -277,6 +351,14 @@ https://github.com/kubernetes/contrib/tree/master/service-loadbalancer  这是�
 http://blog.frognew.com/2017/04/kubernetes-ingress.html
 
 
+
+[DockOne微信分享（一三三）：深入理解Kubernetes网络策略](http://dockone.io/article/2529) 这里面讲到了network policy.
+
+
+
+
+
+
 # Horizontal Pod Autoscaling
 
 
@@ -292,12 +374,20 @@ $ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 
 
 
-
-
-
-
 # Job
-这个干嘛用的，还没研究明白
+可以执行一次的任务，也可以定时多次执行。
+
+
+
+### backoffLimit
+
+这个参数控制着这个Job在重试多少次之后就失败。
+
+```
+There are situations where you want to fail a Job after some amount of retries due to a logical error in configuration etc. To do so, set .spec.backoffLimit to specify the number of retries before considering a Job as failed. The back-off limit is set by default to 6. Failed Pods associated with the Job are recreated by the Job controller with an exponential back-off delay (10s, 20s, 40s …) capped at six minutes, The back-off limit is reset if no new failed Pods appear before the Job’s next status check.
+```
+
+
 
 
 
@@ -346,7 +436,39 @@ Isolation can be configured on a per-namespace basis. Currently, only isolation 
 
 [Kubectl Cheat Sheet](https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/)
 
-[API 1.6](https://kubernetes.io/docs/api-reference/v1.6/)  这里有ymal的具体格式 
+[API 1.7](https://v1-7.docs.kubernetes.io/docs/api-reference/v1.7/)  这里有ymal的具体格式 
+
+
+
+把所有的相关文件放在一个目录里，用一条命令创建。
+
+```
+$ kubectl apply -f <directory>/
+```
+
+
+
+zsh下的completion
+
+```
+$ source <(kubectl completion zsh)
+```
+
+
+
+bash下的completion
+
+```
+$ source <(kubectl completion bash)
+```
+
+
+
+强制删除一个pod.
+
+```
+$ kubectl delete pod gitlab --grace-period=0 --force
+```
 
 
 
@@ -361,9 +483,14 @@ $ kubectl describe deployment my-nginx
 
 $ kubectl expose   deployment/my-nginx
 
+$ kubectl expose   deployment/my-nginx  --name=name --port=80 --target-port=8080 --type=NodePort
+
 $ kubectl delete services example-service     # unexpose a service
 
 $ kubectl get pods --namespace=kube-system
+
+#显示某个 label的pods
+$ kubectl get pod -l app=msa-demo
 
 # Get a Shell to a running pod.
 $ kubectl exec -it shell-demo -- /bin/bash
@@ -426,9 +553,101 @@ http://deployment-msa-demo.default.svc.cluster.local:8082
 
 
 
-# Autoscaling
+## Helm and Charts
+
+https://github.com/kubernetes/helm/blob/master/docs/charts.md
 
 
+
+
+
+https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts/
+
+## Autoscaling
+
+
+
+为了实现autoscaling,必须对容器所使用的资源进行限制,参考 [kubernetes 资源限制](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/) 。
+
+resources下面有两个属性： requests ,limits
+
+* `requests` 是在pod调试时用的，schedular用它来计算应该在哪个节点启动容器。
+* `limits` 是在运行时判断的，如果运行的容器的CPU超过了这个限制，容器会被杀掉。
+
+
+
+下面是json格式的Deployment的创建文件：限制了cpu和内存。
+
+```json
+{
+  "apiVersion": "extensions/v1beta1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "msa-demo",
+    "namespace": "default",
+    "resourceVersion": "247395",
+    "labels": {
+      "app": "msa-demo"
+    },
+    "annotations": {
+      "deployment.kubernetes.io/revision": "1"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "msa-demo"
+      }
+    },
+    "template": {
+      "metadata": {
+        "creationTimestamp": null,
+        "labels": {
+          "app": "msa-demo"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "msa-demo-container",
+            "image": "harleyren/scm-msa-demo:1.0.41",
+            "ports": [
+              {
+                "containerPort": 8082,
+                "protocol": "TCP"
+              }
+            ],
+            "resources": {"limits": {"memory": "128Mi","cpu": "1"}},
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "imagePullPolicy": "IfNotPresent",
+            "securityContext": {
+              "privileged": false
+            }
+          }
+        ],
+        "restartPolicy": "Always",
+        "terminationGracePeriodSeconds": 30,
+        "dnsPolicy": "ClusterFirst",
+        "securityContext": {},
+        "schedulerName": "default-scheduler"
+      }
+    },
+    "strategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxUnavailable": 1,
+        "maxSurge": 1
+      }
+    }
+  }
+}
+```
+
+
+
+下面是autoscaling的相关命令。
 
 ```shell
 $ kubectl help autoscale
@@ -436,6 +655,129 @@ $ kubectl autoscale deployment deployment-msa-demo --min=1 --max=4 --cpu-percent
 $ kubectl get hpa
 $ kubectl delete horizontalpodautoscalers deployment-msa-demo
 ```
+
+
+
+用wget来做压力测试：
+
+```shell
+while true; do wget -q -O- http://9.112.190.95:32758/; done
+```
+
+
+
+ab的压力测试
+
+```shell
+$ ab -n 100 -c 10 http://9.112.190.95:32758/
+$ ab -n 100 0-c 10 http://9.112.190.95:32758/
+$ ab -n 1000 -c 10 http://9.112.190.95:32758/
+$ ab -n 1000 -c 100 http://9.112.190.95:32758/
+$ ab -n 10000 -c 500 http://9.112.190.95:32758/
+$ ab -n 100000 -c 1000 http://9.112.190.95:32758/
+$ ab -n 10000000 -c 100 http://9.112.190.95:32758/
+$ ab -n 100000 -c 100 http://9.112.190.95:32758/
+$ ab -n 10000000 -c 100 http://9.112.190.95:32758/
+```
+
+
+## Kompose
+https://github.com/kubernetes/kompose
+
+这个工具可以把`docker-compose.yaml`转成kubernetes的资源。
+
+```yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mc1
+spec:
+  volumes:
+  - name: html
+    emptyDir: {}
+  containers:
+  - name: 1st
+    image: nginx
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html
+  - name: 2nd
+    image: debian
+    volumeMounts:
+    - name: html
+      mountPath: /html
+    command: ["/bin/sh", "-c"]
+    args:
+      - while true; do
+          date >> /html/index.html;
+          sleep 1;
+        done
+
+
+```
+
+
+
+
+
+##  PersistentVolumeClaimResize 
+
+1.8 支持PV的resize,但是要开启 [feature gate](https://kubernetes.io/docs/reference/feature-gates/) `ExpandPersistentVolumes`  同时最好要开启`PersistentVolumeClaimResize` admission controller。
+
+
+
+
+
+# Helm & Charts
+
+For more information about Helm, see [https://github.com/kubernetes/helm/tree/master/docs ![External link icon](https://www.ibm.com/support/knowledgecenter/SSBS6K_2.1.0/images/icons/launch-glyph.svg)](https://github.com/kubernetes/helm/tree/master/docs).
+
+Helm 参考：https://docs.helm.sh/using_helm/#quickstart
+
+
+
+
+
+```
+$ helm init --client-only --skip-refresh
+$ helm repo add https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts
+$ helm search -l
+$ 
+
+
+
+```
+
+
+
+
+
+# 监控
+
+kubernetes不再用 `model API`提供的api来实现监控了，而是用 [metrics](https://github.com/kubernetes/metrics) 项目来做收集监控信息。
+
+Grafana service by default requests for a LoadBalancer. If that is not available in your cluster, consider changing that to NodePort. Use the external IP assigned to the Grafana service, to access Grafana. The default user name and password is 'admin'. Once you login to Grafana, add a datasource that is InfluxDB. The URL for InfluxDB will be `http://INFLUXDB_HOST:INFLUXDB_PORT`. Database name is 'k8s'. Default user name and password is 'root'. Grafana documentation for InfluxDB [here](http://docs.grafana.org/datasources/influxdb/).
+
+
+
+
+
+
+
+
+
+# 开发环境
+
+
+
+https://www.ibm.com/developerworks/cn/opensource/os-kubernetes-developer-guide/index.html
+
+
+
+# 案例分享
+
+[DockOne微信分享（一四二）：容器云在万达的落地经验](http://dockone.io/article/2730)    这里有不少的干货，包含kubemaster的高可用，Etcd的高可用，存储的方案，ceph的使用。网络的Open VSwitch的开发是基于`OpenShift SDN` .
 
 
 

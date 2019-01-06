@@ -1,3 +1,9 @@
+# Java Notes
+
+
+
+## Java 1.8
+
 要好好了解java 8里的 Predicate，Function,Consumer这几个类，跟lambda有关。
 
 mac下找java home
@@ -8,7 +14,20 @@ mac下找java home
 
 Supplier这个东西是干什么的？
 
+
+
+# jdk 1.4 
+
+NIO  这篇文章讲得最好： https://www.ibm.com/developerworks/cn/education/java/j-nio/j-nio.html
+
+JDK1.5_update10版本使用epoll替代了传统的select/poll，极大的提升了NIO通信的性能。
+
+
+
+
+
 # Spring
+
 Spring boot是可以写web的，请看：https://stormpath.com/blog/build-spring-boot-spring-security-app
 
 http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications
@@ -42,7 +61,7 @@ Maven "Bill Of Materials" Dependency
         <artifactId>spring-web</artifactId>
     </dependency>
 <dependencies>
-```  
+```
 
 Spring的配置已经可以不用xml了，现在大家都用Java-Based configuration.  `@Configuration` ,`@Bean` ,`@Import`,`@DependOn` annotations.
 
@@ -147,12 +166,12 @@ $ mvn archetype:generate -DgroupId=com.vianet -DartifactId=ManrecaServer -Darche
 	mvn archetype:generate -DgroupId=com.chinaops.tuts -DartifactId=Tuts -DarchetypeArtifactId=maven-archetype-webapp
 
 mvn archetype:create -DarchetypeGroupId=com.totsp.gwt \
-    -DarchetypeArtifactId=maven-googlewebtoolkit2-archetype \
-    -DarchetypeVersion=1.0.4 \
-    -DremoteRepositories=http://gwt-maven.googlecode.com/svn/trunk/mavenrepo \
-    -DgroupId=com.chinaops \
-    -DartifactId=CloudOps
-    
+​    -DarchetypeArtifactId=maven-googlewebtoolkit2-archetype \
+​    -DarchetypeVersion=1.0.4 \
+​    -DremoteRepositories=http://gwt-maven.googlecode.com/svn/trunk/mavenrepo \
+​    -DgroupId=com.chinaops \
+​    -DartifactId=CloudOps
+
 #### 把本地包加入的本地库中
 mvn install:install-file \
   -Dfile=/Users/harley/Downloads/typica-m4c-1.6.jar \
@@ -166,9 +185,34 @@ Print dependency tree.
 mvn dependency:tree
 
 如果mvn archetype:generate卡住了，增加参数-DarchetypeCatalog=internal后解决卡住问题。
+
+```
 $ mvn -X archetype:generate -DgroupId=cn.com.xiangcloud -DartifactId=xiangcloud-common -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeCatalog=internal
+```
 
 如果出现问题，请加`-X`用来调试。
+
+
+
+## Create a new ArcheType
+
+https://maven.apache.org/guides/mini/guide-creating-archetypes.html
+
+
+
+```
+mvn archetype:create-from-project -Darchetype.filteredExtensions=java
+
+cd target/generated-sources/archetype/
+
+mvn install
+
+mvn archetype:generate -DarchetypeCatalog=local
+
+```
+
+
+
 
 # 工具备注
 
@@ -184,9 +228,39 @@ $ mvn -X archetype:generate -DgroupId=cn.com.xiangcloud -DartifactId=xiangcloud-
 最受欢迎的Java模拟测试框架。
 
 自动化Web浏览测试 
+
 最流行的：Selenium
 
 Selenium只是自动化浏览测试。开发者经常使用这个工具配合其他的测试框架，来测试大型Web应用。
+
+
+
+**GraalVM**:  可以把java的代码编码成本地代码，这个有点厉害了。
+
+* [这个blog](https://royvanrijn.com/blog/2018/09/part-2-native-microservice-in-graalvm/)讲了如何使用GraalVM+SpringBoot来实现一个native的微服务。
+
+
+
+* [这个](https://medium.com/graalvm/instant-netty-startup-using-graalvm-native-image-generation-ed6f14ff7692)是把Netty的应用编译成了native image.
+
+https://medium.com/graalvm/instant-netty-startup-using-graalvm-native-image-generation-ed6f14ff7692
+
+GraalVM native image实现的原理是用 Substrate VM 来编译java,这个vm会被打包进native的二进制可执行文件里。由它来负责内存的相关的管理。
+
+
+
+这个pdf讲了它的https://www.oracle.com/technetwork/java/jvmls2015-wimmer-2637907.pdf
+
+```
+Substrate VM is …
+an embeddable VM
+for, and written in, a subset of Java
+optimized to execute Truffle languages
+ahead-of-time compiled using Graal
+integrating with native development tools.
+```
+
+
 
 ### 【What's new in Java 7 & 8 】
 
@@ -196,8 +270,6 @@ Selenium只是自动化浏览测试。开发者经常使用这个工具配合其
 
 java 7的 可以自动关闭资源了:
 [The try-with-resources Statement](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html)
-
-
 
 这个非常好，而且作者一直在更新：[Java 8 Features – The ULTIMATE Guide](http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html)
 
@@ -273,9 +345,9 @@ http://dev.cdhq.de/eclipse/word-wrap/
 JRebel or Spring Loaded  
 Thymeleaf
 
-Liquibase
+Liquibase 类似于Rails Migration的东西。请见下面的具体章节。
 
-
+Jtwig   这个模板系统很强，而且能在Spring里使用。推荐。
 
 Hotswap Agent project : http://hotswapagent.org/  这个是用DCEVM的，实现的是jvm级的reload，比Spring loaded更强。
 
@@ -288,19 +360,30 @@ Wiremock 用来mock一些api，主要用来测试。
 
 https://yq.aliyun.com/articles/60789
 
+
+
+
+
+
+
 # Logging 
 如何live reload log4j configuration.
 http://stackoverflow.com/a/4599083
 
 
 # Liquibase 数据库变更管理工具
+Liquibase
 Rails的Db Migration的java alternative.
+
+开发过程中，可以使用命令行来migrate，生产环境用servlet listener的来自动运行，这样的缺点是每次启动时都要运行这个，如果不小心修改了changelog文件，可能会有风险。
+
+
 
 # IDEA spring boot & spring Loaded
 首先要设计项目自动编译
 
 设置里：
-Build > Compiler > Build project automatically.
+`Build > Compiler > Build project automatically`.
 
 然后在启动参数里添加
 
@@ -324,4 +407,162 @@ Build > Compiler > Build project automatically.
 </plugin>
 ```
 
+
+
+# Netty 
+
+http://www.infoq.com/cn/articles/netty-high-performance   这里面讲了Reactor主从多线程模型，非常好。
+
+
+
+
+
+# Eclipse
+
+I installed two Java vm on my mac ,one is  oracle java 1.8 and the other is  dcevm.  Today I download the newest eclipse , but i can not startup  with error "Failed to create java virtual machine".  I googled and try all solution , no help.  I specified the dcevm in `eclipse.ini`   it failed too.   Then I changed jvm to oracle jvm , It started up !
+
+
+
+
+
+# Mockito
+
+判断http返回值是2xx。
+
+```java
+this.mvc.perform(post("/api/cliente/pessoafisica/post")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("teste"))
+            .andDo(print())
+            .andExpect(status().is2xxSuccessful());
+```
+
+获取response里的json里的某个字段。
+
+```java
+mockMvc.perform(get("/springmvc/api/getUser/{id}", userId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(userId))
+                .andExpect(jsonPath("name").value(userName))
+                .andExpect(jsonPath("password").value(userPassword));
+```
+
+
+
+有时候我们需要把我们Mock的Service注入到我们要测试的controller里去，下面的链接讲了如何去做这件事。
+
+
+
+https://stackoverflow.com/questions/16170572/unable-to-mock-service-class-in-spring-mvc-controller-tests
+
+
+
+`@Spy` 用来标识那些不mock的属性，比如我们的controller里有一个OrderManager和ProductManager,我们在测试时希望ProductManager用mock的，但是OrderManager我们希望仍然是@Autowired.那我们在测试类里就要把它加上@Spy这个annotation.
+
+```java
+package com.ibm.cloud.fawvw.demo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.cloud.fawvw.demo.controller.OrderController;
+import com.ibm.cloud.fawvw.demo.manager.OrderManager;
+import com.ibm.cloud.fawvw.demo.model.Order;
+import com.ibm.cloud.fawvw.demo.model.Product;
+import com.ibm.cloud.fawvw.demo.service.ProductService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Date;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class OrderTest {
+    @Autowired
+    private MockMvc mvc;
+
+    @InjectMocks
+    OrderController controllerUnderTest;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Mock
+    ProductService productService;
+
+    @Spy
+    @Autowired
+    private OrderManager orderManager;
+
+    @Test
+    public void testPlaceOrder() throws Exception {
+
+//        ProductService productService = mock(ProductService.class);
+
+        Product product = new Product();
+        product.setId(1);
+        product.setName("Apple magic mouse");
+        product.setPrice(348.00f);
+        when(productService.getProductById(1)).thenReturn(product);
+
+
+        Order order = new Order();
+        order.setProductId(1);
+        order.setQuantity(2);
+        order.setUserId(1);
+        order.setCreatedAt(new Date());
+
+        this.mvc.perform(post("/orders", order)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(order))
+        ).andExpect(status().isOk());
+//                .andExpect(content().string("Hello World"));
+
+
+        this.mvc.perform(get("/orders/get/{id}", 8))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(8))
+                .andExpect(jsonPath("quantity").value(2));
+
+    }
+
+
+    @Before
+    public  void setup() {
+        MockitoAnnotations.initMocks(this);
+
+        this.mvc = MockMvcBuilders.standaloneSetup(controllerUnderTest).build();
+    }
+}
+
+```
+
+
+
+如何从MVCMock的jsonPath里返回某个属性的值?
+
+How to retrieve String from  jsonPath in mvcMock? 
+
+https://stackoverflow.com/a/49537158
 

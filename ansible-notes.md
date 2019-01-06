@@ -51,6 +51,10 @@ https://github.com/ansible/ansible/pull/17496
 在/etc/ansible/ansible.cfg里可以禁用。
 
 
+
+https://stackoverflow.com/a/23094433
+
+
 #Become
 有些操作需要root权限，而如果你希望用sudo来做，可以在ansible.cfg里配置一下。
 become: yes

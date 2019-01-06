@@ -20,7 +20,7 @@ https://demos.scotch.io/visual-guide-to-css3-flexbox-flexbox-playground/demos/
 注意如果 
 * `flex-direction`设置为row,如果想让内容vertical居中,需要设置`align-items`:center.
 * `flex-direction`设置为column,如果想让内容水平居中,需要设置`align-items`:center.
-这个理解一下.
+  这个理解一下.
 
 实现vertical middle:
 
@@ -35,13 +35,36 @@ https://demos.scotch.io/visual-guide-to-css3-flexbox-flexbox-playground/demos/
 ```
 
 
-flex-grow这个属性如果设置为1,则会填满父元素.
+`flex-grow` 这个属性如果设置为1,则会填满父元素.
 
 
 
-首行缩进2空格.
-``` css
-text-indent: 2em;
+用flexbox来实现sticky header and footer 
+
+https://codepen.io/anthonyLukes/pen/DLBeE
+
+```css
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  flex: 0 0 auto;
+  background-color: #dcdcdc;
+}
+
+.page-content {
+  flex: 1 1 auto;
+  position: relative;/* need this to position inner content */
+  overflow-y: auto;
+}
+
+.page-footer {
+  flex: 0 0 auto;
+  background-color: #dcdcdc;
+}
 ```
 
 
@@ -54,7 +77,25 @@ text-indent: 2em;
 
 
 
+首行缩进2空格.
+``` css
+text-indent: 2em;
+```
 
+
+
+```css
+white-space: nowrap;
+overflow: hidden;	
+```
+
+
+
+## CSS Grid
+
+据说这东西要替代Flex
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
 
 
 

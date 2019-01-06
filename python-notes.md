@@ -41,7 +41,7 @@ Python 3: Keyword-only arguments: arguments that must be passed by name
 def func(request, *args, **kwargs):
  # *args - Assign extra nonkeyword arguments to *args tuple. 
  # **kwargs - Assign extra keyword arguments to **kwargs dictionary.
- ```
+```
 请参见：Learning Python 5th . Chapter 18. Arguments `Special Argument-Matching Modes`
 
 
@@ -234,11 +234,143 @@ $ sudo python -m pip install grpcio-tools -i https://pypi.douban.com/simple
 
 
 
+# 数据分析
+
+1. NumPy 和 SciPy：用于处理数据数组和科学计算的高效库，是被重点关注并且维护良好的工具。2.
+2. Pandas：一个开源库，可以为 Python 编程语言提供快速简化的初步数据处理和数据分析工具。
+3. Matplotlib ：数据视觉化实用工具。
+4. Seaborn ：提供更多的绘图功能和更专门的绘图。
+5. Scikit ：是一个很好的通用机器学习工具，它为数据挖掘和分析提供了有效的工具，而且有很好的使用介面。
+6. Dask：非常适合处理大型的数据框架库，它还能在多个处理器中并行运算。
+7. TensorFlow、Keras 和 PyTorch：皆适合建立深度学习模型。
+
+matplotlib   画图的library.
+
+
+
+# matplotlib   
+
+下表包含所有默认的快捷键，可以使用`matplotlibrc`（`#keymap.*`）覆盖。
+
+| 命令                       | 快捷键                           |
+| -------------------------- | -------------------------------- |
+| 主页/重置                  | `h`、`r`或`home`                 |
+| 后退                       | `c`、左箭头或`backspace`         |
+| 前进                       | `v`或右箭头                      |
+| 平移/缩放                  | `p`                              |
+| 缩放到矩形                 | `o`                              |
+| 保存                       | `ctrl + s`                       |
+| 切换全屏                   | `ctrl + f`                       |
+| 关闭绘图                   | `ctrl + w`                       |
+| 将平移/缩放限制于`x`轴     | 使用鼠标平移/缩放时按住`x`       |
+| 将平移/缩放限制于`y`轴     | 使用鼠标平移/缩放时按住`y`       |
+| 保留宽高比                 | 使用鼠标平移/缩放时按住`CONTROL` |
+| 切换网格                   | 鼠标在轴域上时按下`g`            |
+| 切换`x`轴刻度（对数/线性） | 鼠标在轴域上时按下`L`或`k`       |
+| 切换`y`轴刻度（对数/线性） | 鼠标在轴域上时按下`l`            |
+
+如果你使用`matplotlib.pyplot`，则会为每个图形自动创建工具栏。 如果你正在编写自己的用户界面代码，则可以将工具栏添加为窗口小部件。 确切的语法取决于你的 UI，但在
+
+
+
+
+
 # 问题及解决
 
-最近发现我们的django的项目,一旦出现问题,比如忘记安装包了,或者数据库没配置了等等,在打开的时候就会卡死.查看后台日志,发现过几分钟后会有一个发邮件的超时.后来我才明白,因为我关闭了debug,所以django在出错时不能直接显示错误,只能给管理员发邮件.而我们又没有配置smtp,导致发邮件超时.这个问题的解决方式很简单,出错的时候打开debug.就不会卡死了.
+* 最近发现我们的django的项目,一旦出现问题,比如忘记安装包了,或者数据库没配置了等等,在打开的时候就会卡死.查看后台日志,发现过几分钟后会有一个发邮件的超时.后来我才明白,因为我关闭了debug,所以django在出错时不能直接显示错误,只能给管理员发邮件.而我们又没有配置smtp,导致发邮件超时.这个问题的解决方式很简单,出错的时候打开debug.就不会卡死了.
+
+* python3 运行非根目录下的文件报错问题的解决:
+
+  参见： https://pyliaorachel.github.io/blog/tech/python/2017/09/15/pythons-import-trap.html
+
+  ```python
+  $ python -m juejin.strategy
+  ```
 
 
+
+
+# Typing
+
+Python 3.5引入了Typing,从此它不再是动态类型的语言了。：）
+
+https://docs.python.org/3/library/typing.html
+
+
+
+这里有built in types. http://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html
+
+
+
+# Pyenv
+
+在mac下安装python 3.6时要加上参数`--enable-framework` ,才能用`matplotlib`。
+
+```
+$ PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.6.5
+```
+
+
+
+# 时间与日期
+
+```python
+import time
+from datetime import timedelta
+import datetime # form python 3.6
+
+# 打印时间差
+start_time = time.monotonic()
+end_time = time.monotonic()
+print(timedelta(seconds=end_time - start_time))
+
+# 从unix timestamp生成datatime.
+from datetime import datetime
+from pytz import timezone
+
+tzchina = timezone('Asia/Chongqing')
+
+local_time = datetime.fromtimestamp(1530185399999/1000, tzchina)
+local_time.strftime("%Y-%m-%d %H:%M:%S")
+
+#to unix time stamp
+datetime.datetime(2012,4,1,0,0).timestamp()
+datetime.datetime.now().timestamp()
+
+# parse datetime from string 
+datetime_object = datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
+
+datetime_object = datetime.strptime('2015-12-25 01:22:33', "%Y-%m-%d %H:%M:%S")
+
+```
+
+# Print
+
+```python
+#打印bool
+print "%r, %r" % (True, False)
+```
+
+
+
+# SQLalchemy
+
+通过表来生成model，参考：https://simpletutorials.com/c/2220/SQLAlchemy+Code+Generation
+
+```
+# pip install sqlalchemy
+# pip install sqlacodegen
+
+$ sqlacodegen "mysql+mysqlconnector://root:mysql@localhost/virtual_exchange?charset=utf8" --outfile models.py 
+```
+
+
+
+# SimpleHTTPServer
+
+```
+python3 -m http.server
+```
 
 
 

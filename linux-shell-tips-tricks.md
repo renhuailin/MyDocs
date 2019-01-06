@@ -103,7 +103,31 @@ $ mytest=(one two three four five)
 
 `;;`  只用在`case`中，相当于`break`.
 
+
+
+###  iterate files in folder
+
+```bash
+for file in Data/*.txt; do
+    [ -e "$file" ] || continue
+    # ... rest of the loop body
+done
+```
+
+
+
+```bash
+for filename in $(find /Data/*.txt 2> /dev/null); do
+    for ((i=0; i<=3; i++)); do
+        ./MyProgram.exe "$filename" "Logs/$(basename "$filename" .txt)_Log$i.txt"
+    done
+done
+```
+
+
+
 ## 
+
 Absolute path this script is in.
 ``` bash
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -115,19 +139,6 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 $ openssl rand -hex 10
 ```
 
-## ubuntu 14.04下查看dns
-```
-$ nm-tool
-```
-
-## ubuntu 14.04禁用dnsmasq
-```sh
-$ sudo gedit /etc/NetworkManager/NetworkManager.conf
-# Comment out the “dns=dnsmasq” line by putting a hash “#” in front it.
-
-$ sudo service network-manager restart
-```
-
 
 
 ## Cent OS监控网卡流量
@@ -135,7 +146,22 @@ $ sudo service network-manager restart
 $ sudo yum install iptraf
 $ sudo iptraf-ng
 ```
+
+
+
+
+查看端口情况，除了`netstat -anpl` 还可以使用下面的命令
+
+```
+ ss -nlp | grep <port_number> 
+```
+
+
+
+
+
 ## 安装指定版本的包
+
 有时候我们不希望安装最近版的某个软件，如docker,我可能希望安装特定版本的。      
 我需要先用下面的命令列出源里所有的docker版本
 
@@ -333,11 +359,24 @@ z	tmux 1.8新特性，最大化当前所在面板
 
 tmux a 或 tmux attach.
 
+
+
+##  tmux 与 iTerm2 整合
+
+```
+$ tmux -CC
+$ tmux -CC attach
+```
+
+
+
+
+
 # 生成自定义的证书
 一条命令就行了。
 $ openssl req \
-       -newkey rsa:2048 -nodes -keyout domain.key \
-       -x509 -days 365 -out domain.crt
+​       -newkey rsa:2048 -nodes -keyout domain.key \
+​       -x509 -days 365 -out domain.crt
 
 请参考：
 http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html
@@ -348,29 +387,7 @@ http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
 debian 安装这个包，可以实现Ubuntu那样的，命令不存在时提示可以哪个包里找到这个命令的功能。
 $ sudo apt-get install command-not-found
 
-# Ubuntu 14.04打开crontab日志
 
-ubuntu 14.04默认是没有打开crontab的日志的，需要手动打开：
-```
-cd /etc/rsyslog.d/
-sudo nano 50-default.conf
-```
-
-Uncoment line:
-```
-#cron.*                         /var/log/cron.log
-```
-
-Save file and restart rsyslog
-```
-sudo service rsyslog restart 
-```
-
-Restart your cron daemon for get it's messages from new file
-```
-sudo service cron restart
-```
-参考：[http://askubuntu.com/a/624785](http://askubuntu.com/a/624785)
 
 
 
@@ -387,9 +404,27 @@ shadowsocks + privoxy
 网上推荐的什么polipo 根本不好使！还是privoxy好使。
 
 # systemd 
-systemctl list-unit-files | grep enabled will list all enabled ones.
+`systemctl list-unit-files | grep enabled` will list all enabled ones.
 
-If you want which ones are currently running, you need systemctl | grep running
+If you want which ones are currently running, you need `systemctl | grep running`
+
+
+
+```
+$ sudo systemctl daemon-reload ; sudo systemctl start docker
+
+$ systemctl show --property=FragmentPath docker
+```
+
+
+
+FragmentPath=/usr/lib/systemd/system/docker.service
+
+
+
+
+
+
 
 
 # letsencrypt.org
@@ -517,9 +552,223 @@ $ iptables -L -n -v --line-number
 
 # 用wget来做压力测试
 
+
+
+```shell
 while true; do wget -q -O- http://9.112.190.95:32758/; done
+```
+
+
+
+# curl
+
+follow redirect.
+
+```
+$ curl -L http://www.google.com
+```
+
+
+
+Add header 
+
+
+
+```
+$ curl -H "X-First-Name: Joe" http://example.com/
+```
+
+
+
+# yum 
+
+
+
+看看哪个包包含ab
+
+```
+$ yum provides /usr/bin/ab
+```
+
+然后下载它：
+
+```
+$ yum install httpd-tools
+```
+
+
+
+# Ubuntu 
+
+## Ubuntu 14.04
+
+###  打开crontab日志
+
+ubuntu 14.04默认是没有打开crontab的日志的，需要手动打开：
+
+```
+cd /etc/rsyslog.d/
+sudo nano 50-default.conf
+```
+
+Uncoment line:
+
+```
+#cron.*                         /var/log/cron.log
+```
+
+Save file and restart rsyslog
+
+```
+sudo service rsyslog restart 
+
+```
+
+Restart your cron daemon for get it's messages from new file
+
+```
+sudo service cron restart
+
+```
+
+参考：[http://askubuntu.com/a/624785](http://askubuntu.com/a/624785)
+
+## ubuntu 14.04下查看dns
+
+```
+$ nm-tool
+```
+
+## ubuntu 14.04禁用dnsmasq
+
+```sh
+$ sudo gedit /etc/NetworkManager/NetworkManager.conf
+# Comment out the “dns=dnsmasq” line by putting a hash “#” in front it.
+
+$ sudo service network-manager restart
+```
+
+## 通用
+
+### 设置timezone 
+
+```bash
+$ timedatectl list-timezones
+$ sudo timedatectl set-timezone Asia/Shanghai
+
+# 直接 timedatectl可以查看是否配置了时间同步。
+$ timedatectl
+```
+
+
+
+# Simple HTTP Server
+
+```
+$ python -m SimpleHTTPServer
+```
+
+
+
+# SSL 证书
+
+
+
+openssl生成自签名的证书，网友在这篇文章里(<http://www.liaoxuefeng.com/article/0014189023237367e8d42829de24b6eaf893ca47df4fb5e000>)[[http://www.liaoxuefeng.com/article/0014189023237367e8d42829de24b6eaf893ca47df4fb5e000\]提供了一个sh](http://www.liaoxuefeng.com/article/0014189023237367e8d42829de24b6eaf893ca47df4fb5e000%5D%E6%8F%90%E4%BE%9B%E4%BA%86%E4%B8%80%E4%B8%AAsh)，可以自动生成一个自签名的证书
+
+用keytool来查看证书的信息
+
+```
+$ keytool -list -v -alias server -keystore keystore_1.jks -storepass password | less
+```
+
+
+
+```
+$ openssl x509 -text -noout -in trtjk.com.cer
+```
+
+
+
+https://docs.aws.amazon.com/zh_cn/elasticbeanstalk/latest/dg/configuring-https-ssl.html
+
+
+
+## 导出PKCS12的格式证书
+
+```
+$ openssl pkcs12 -inkey trtjkserver.key -in trtjk.com.1.cer -export -out certificate.p12  -CAfile CA.cer -chain
+```
+
+
+
+报错：
+
+```
+Error unable to get issuer certificate getting chain.
+```
+
+参考这个URL: https://superuser.com/a/1143743
+
+找台linux来做这件事。
+
+```
+$ openssl verify  allcacerts.crt
+```
+
+
+
+#用户管理
+
+```
+usermod -a -G sudo geek
+usermod geek -G sudo
+```
+
+
+
+
+
+### Alpine
+
+目前Docker镜像越来越倾向于使用Alpine系统作为基础的系统镜像，Docker Hub 官方制作的镜像都在逐步支持Alpine系统。
+
+**下面的修改以 Alpine 3.4 为例：**
+
+```
+# 备份原始文件
+cp /etc/apk/repositories /etc/apk/repositories.bak
+
+# 修改为国内镜像源
+echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
+```
+
+
+
+删除一个包
+
+```
+$ apk del openssh
+```
+
+
+
+# Source 执行另外一个命令的输出bash
+
+```
+$ source <(kubectl completion zsh)
+```
+
+
+
+
 
 # 参考文档
+
 1. 《Linux command line and shell scripting bible》
+
 2. [How To Secure Nginx with Let's Encrypt on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04)
+
 3. [How to speed up X11 forwarding in SSH](http://xmodulo.com/how-to-speed-up-x11-forwarding-in-ssh.html)
+
+4. [CURL常用命令](http://www.cnblogs.com/gbyukg/p/3326825.html)

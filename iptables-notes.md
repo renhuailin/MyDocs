@@ -1,6 +1,13 @@
 IPtables Notes
 -----
 
+## 1. 可视化分析工具
+
+http://www.iptables.info/en/iptables-gui.html
+
+http://jekor.com/gressgraph/
+
+
 
 `MASQUERADE`这个targe和`SNAT` 的区别在：`MASQUERADE`可以使用dhcp出来的IP， `SNAT`只能使用配置好的IP，`MASQUERADE`更灵活些。
 

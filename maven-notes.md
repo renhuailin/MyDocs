@@ -3,7 +3,7 @@ maven备忘
 
 
 【常用maven命令】
-
+```
 $ mvn archetype:generate
 $ mvn archetype:generate -DgroupId=com.chinaops -DartifactId=CloudOps -DarchetypeArtifactId=maven-archetype-gwt
 
@@ -16,6 +16,7 @@ mvn archetype:create -DarchetypeGroupId=com.totsp.gwt \
     -DremoteRepositories=http://gwt-maven.googlecode.com/svn/trunk/mavenrepo \
     -DgroupId=com.chinaops \
     -DartifactId=CloudOps
+```
 
 如果mvn archetype:generate卡住了，增加参数-DarchetypeCatalog=internal后解决卡住问题。
 $ mvn -X archetype:generate -DgroupId=cn.com.xiangcloud -DartifactId=xiangcloud-common -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeCatalog=internal
@@ -79,6 +80,35 @@ mvn dependency:tree
     </configuration>
 </plugin>
 ```
+
+
+
+使用Self-Signed certificate 时，禁用ssl检查
+
+```xml
+$ cat ~/.mavenrc 
+MAVEN_OPTS="-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true"
+```
+
+
+
+[Publishing Archetypes](https://books.sonatype.com/mvnref-book/reference/archetype-sect-publishing.html)   这里面讲到了如何在mvn 命令行里导出`archetype-catalog.xml`
+
+
+
+使用自定义Nexus里的Archetype
+
+
+
+```
+$ mvn archetype:generate -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true 
+```
+
+
+
+
+
+
 
 
 

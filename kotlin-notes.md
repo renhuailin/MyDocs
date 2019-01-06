@@ -1,11 +1,125 @@
-Kotlin notes
+Kotlin notes for java developer.
 --------
+
+
+
+# 1. Control flow
+
+## 1.1 Conditionals
+
+### 1.1.1 if/else
+
+kotlin的if/else 是一个expression叫**conditional expression**,是可以赋值给一个变量的。
+
+```kotlin
+
+    val healthStatus = if (healthPoints == 100) {
+        "is in excellent condition!"
+    } else if (healthPoints >= 90) {
+        "has a few scratches."
+    } else if (healthPoints >= 75) {
+        if (isBlessed) {
+            "has some minor wounds but is healing quite quickly!"
+        } else {
+            "has some minor wounds."
+        }
+    } else if (healthPoints >= 15) {
+        "looks pretty hurt."
+    } else {
+        "is in awful condition!"
+    }
+
+    // Player status
+    println(name + " " + healthStatus)
+```
+
+
+
+而且是可以省略花括号的。
+
+
+
+### 1.1.2 when expression
+
+
+
+```kotlin
+ val healthStatus = when (healthPoints) {
+        100 -> "is in excellent condition!"
+        in 90..99 -> "has a few scratches."
+        in 75..89 -> if (isBlessed) {
+            "has some minor wounds but is healing quite quickly!"
+        } else {
+            "has some minor wounds."
+        }
+        in 15..74 -> "looks pretty hurt."
+        else -> "is in awful condition!"
+    }
+```
+
+
+
+### 1.1.3 String Templates
+
+```kotlin
+fun main(args: Array<String>) {
+    ...
+    // Player status
+    println(name + " " + healthStatus)
+    println("$name $healthStatus")
+}
+```
+
+
+
+# 4.  Functions
+
+
+
+
+
+## 4.1  Default value  
+
+kotlin的函数是可以有默认值的。
+
+```kotlin
+private fun castFireball(numFireballs: Int = 2) {
+    println("A glass of Fireball springs into existence. (x$numFireballs)")
+}
+```
+
+
+
+## 4.2 Single-Expression Functions
+
+这个是java里没有的。
+
+```kotlin
+private fun formatHealthStatus(healthPoints: Int, isBlessed: Boolean) =
+        when (healthPoints) {
+            100 -> "is in excellent condition!"
+            in 90..99 -> "has a few scratches."
+            in 75..89 -> if (isBlessed) {
+                "has some minor wounds, but is healing quite quickly!"
+            } else {
+                "has some minor wounds."
+            }
+            in 15..74 -> "looks pretty hurt."
+            else -> "is in awful condition!"
+        }
+        
+        
+ private fun castFireball(numFireballs: Int = 2) =
+    println("A glass of Fireball springs into existence. (x$numFireballs)")
+```
+
+
 
 
 
 # delegation 跟继承有什么区别呀?
 
-# delegated properties 有什么用? 这个语法糖没看懂.
+delegated properties 有什么用? 这个语法糖没看懂.
 
 lazy(), 这个内置函数可以让一个属性变成lazy的,lazy的属性是只初始化一次.然后再读的时候就都是计算后的值了
 

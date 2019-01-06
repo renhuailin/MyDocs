@@ -1,5 +1,24 @@
+Go lang Notes
+---------------
 
-[Go语言的一本电子书](http://www.golangbootcamp.com/)，主要参考了go tour.
+
+# 1. installation
+
+下载for mac的.tar.gz文件，然后执行下面的命令来安装。
+
+```
+sudo tar -C /usr/local -xzf go1.11rc1.darwin-amd64.tar.gz
+```
+
+
+
+
+
+
+
+
+
+Go语言的一本电子书](http://www.golangbootcamp.com/)，主要参考了go tour.
 
 
 这里面包含一些比较有趣的试验，作者很用心啊。
@@ -17,7 +36,7 @@ https://blog.codeship.com/godep-dependency-management-in-golang/
 
 # 《Learning Go》 笔记     
 
-GOPATH和GOROOT区别
+## GOPATH和GOROOT区别
 
 http://stackoverflow.com/a/10847122
 
@@ -237,10 +256,10 @@ func odd(i int) bool { //← Private function
 以大写字母开头的函数是exported的，相当于public的。小写函数也就是private的了。
 
 * build一个包
-% mkdir $GOPATH/src/even 		← Create top-level directory
-% cp even.go $GOPATH/src/even 	← Copy the package file
-% go build						← Build it
-% go install					← Install it to ../pkg
+	 mkdir $GOPATH/src/even 		← Create top-level directory
+	 cp even.go $GOPATH/src/even 	← Copy the package file
+	 go build						← Build it
+	 go install					← Install it to ../pkg
 
 这样我们就可以在程序里使用even这个包了。
 ```go
@@ -289,7 +308,7 @@ func Printf(format string, a ...interface) (n int, err error)
 ```
 - 为包写单元测试 TODO......
 
-## Chapter 5	Beyond the basics 基础之外
+	# Chapter 5	Beyond the basics 基础之外
 -指针
 go 是有指针的，但是它没有C语言的指针那么复杂的用法。在Go里，当你在调用函数时，参数是传值的方式传递的。如果为了效率，或者，你有可能在函数内修改参数的值，我们有指针。Go里的指针定义和使用起来跟C差不多。
 一个新创建的指针或是未指向任何东西的指针被赋以nil。
@@ -573,5 +592,63 @@ Elem() Type
 
 【Chapter 7 Concurrency 并发】
 
-
 【Chapter 8 Communication 通信】
+
+
+
+## JSon Unmarshal
+
+```go
+// Field appears in JSON as key "myName".
+Field int `json:"myName"`
+
+// Field appears in JSON as key "myName" and
+// the field is omitted from the object if its value is empty,
+// as defined above.
+Field int `json:"myName,omitempty"`
+
+// Field appears in JSON as key "Field" (the default), but
+// the field is skipped if empty.
+// Note the leading comma.
+Field int `json:",omitempty"`
+
+// Field is ignored by this package.
+Field int `json:"-"`
+
+// Field appears in JSON as key "-".
+Field int `json:"-,"`
+```
+
+字段后面的``里面的东西叫 json tag
+
+
+
+# Go Dep
+
+官方的包依赖管理工具已经可以在生产环境中使用了。
+
+```
+$ brew install dep
+```
+
+这会安装golang。
+
+```
+$ dep ensure -add github.com/go-redis/redis
+```
+
+
+
+# 交叉编译
+
+
+
+Mac 下编译 Linux 和 Windows 64位可执行程序
+
+```
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go -o helloworld
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go12
+```
+
+
+

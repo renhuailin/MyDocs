@@ -300,7 +300,10 @@ git checkout tags/<tag_name>
 # 4 分支(branch)
 跟svn的分支不一样，git的分支是指向一个commit的指针。可以说是相当轻量级啊。   
 
+## 4.1 branch基本操作
+
 创建一个分支：
+
 ```
 $git branch message-delivery
 
@@ -374,6 +377,17 @@ $ git branch -r
 ```
 $ git checkout -b remoteb origin/remoteb
 ```
+
+
+
+只显示当前分支，这个一般在和其它工具整合时用到。
+
+```
+$ git rev-parse --abbrev-ref HEAD
+$ git branch | grep \* | cut -d ' ' -f2
+```
+
+还是第一种方案好些
 
 
 
@@ -473,7 +487,7 @@ $ git reflog
 $ git show ca82a6dff817ec66f44342007202690a93763949
 ```
 
-## Windows下cygwin中的git如何保存密码？
+## git如何保存密码？
 
 [参考链接](http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github "")
 ###git 1.7.9或更新版本
@@ -517,6 +531,19 @@ $ man gitcredentials
 
 **Mac下用credential-osxkeychain来保存密码**
 git config --global credential.helper osxkeychain
+
+
+
+Ubuntu 
+
+缓存代码1小时，是放在内存里的。
+
+```
+$ git config --global credential.helper 'cache --timeout 3600'
+```
+
+
+
 # 8 一些问题的解决方法
 
 * git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly

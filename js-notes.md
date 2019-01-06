@@ -20,18 +20,18 @@ Ojbect.create() 这个函数用来创建用一个对象来创建一个新对象�
 
 The strict equality operator === evaluates its operands, and then compares the two values as follows, performing no type conversion: 
 *	If the two values have different types, they are not equal.
-*	If both values are null or both values are undefined, they are equal.
-*	If both values are the boolean value true or both are the boolean value false, they are equal.
-*	If one or both values is NaN, they are not equal. **The NaN value is never equal to any other value, including itself!**  To check whether a value x is NaN, use `x !== x`. **NaN is the only value of x for which this expression will be true**. 
-*	If both values are numbers and have the same value, they are equal. If one value is 0 and the other is -0, they are also equal. 
-*	If both values are strings and contain exactly the same 16-bit values (see the sidebar in §3.2) in the same positions, they are equal. If the strings differ in length or content, they are not equal. Two strings may have the same meaning and the same visual appearance, but still be encoded using different sequences of 16-bit values. JavaScript performs no Unicode normalization, and a pair of strings like this are not considered equal to the === or to the == operators. See String.localeCompare() in Part III for another way to compare strings. 
-*	If both values refer to the same object, array, or function, they are equal. If they refer to different objects they are not equal, even if both objects have identical properties. 
+  *If both values are null or both values are undefined, they are equal.
+  *If both values are the boolean value true or both are the boolean value false, they are equal.
+  *If one or both values is NaN, they are not equal. **The NaN value is never equal to any other value, including itself!**  To check whether a value x is NaN, use `x !== x`. **NaN is the only value of x for which this expression will be true**. 
+  *If both values are numbers and have the same value, they are equal. If one value is 0 and the other is -0, they are also equal. 
+  *If both values are strings and contain exactly the same 16-bit values (see the sidebar in §3.2) in the same positions, they are equal. If the strings differ in length or content, they are not equal. Two strings may have the same meaning and the same visual appearance, but still be encoded using different sequences of 16-bit values. JavaScript performs no Unicode normalization, and a pair of strings like this are not considered equal to the === or to the == operators. See String.localeCompare() in Part III for another way to compare strings. 
+  *If both values refer to the same object, array, or function, they are equal. If they refer to different objects they are not equal, even if both objects have identical properties. 
 
 
 The equality operator == is like the strict equality operator, but it is less strict. If the values of the two operands are not the same type, it attempts some type conversions 
 and tries the comparison again: 
 1.	If the two values have the same type, test them for strict equality as described above. If they are strictly equal, they are equal. If they are not strictly equal, they are not equal. 
-2.	If the two values do not have the same type, the == operator may still consider them equal. Use the following rules and type conversions to check for equality: 
+  2.If the two values do not have the same type, the == operator may still consider them equal. Use the following rules and type conversions to check for equality: 
     *  If one value is null and the other is undefined, they are equal. 
     *  If one value is a number and the other is a string, convert the string to a number and try the comparison again, using the converted value. 
     *  If either value is true, convert it to 1 and try the comparison again. If either value is false, convert it to 0 and try the comparison again. 
@@ -192,7 +192,7 @@ https://facebook.github.io/react/docs/thinking-in-react.html    这个链接讲�
 2. 是不是每个component都要调用`connect`方法?
 
 3. 用什么方法能简单地保证representational components都能使用`store` ?    
-用Provider这个组件。
+  用Provider这个组件。
 
 [深入浅出 - Redux](http://www.w3ctech.com/topic/1561) 这篇文章对于`connect`方法的讲解还是具有参考价值的。
 
@@ -449,7 +449,7 @@ $("#select_id option:last").remove();  //删除Select中索引值最大Option(�
 $("#select_id option[index='0']").remove();  //删除Select中索引值为0的Option(第一个)
 $("#select_id option[value='3']").remove();  //删除Select中Value='3'的Option
 $("#select_id option[text='4']").remove();  //删除Select中Text='4'的Option
-``` 
+```
 
 获得选中的项的index
 
@@ -957,5 +957,34 @@ npm -g config set user root
 
 $ npm install -g cnpm --registry=https://registry.npm.taobao.org
 
+
+
+# Yarn 使用淘宝源
+
+```
+$ yarn config set registry 'https://registry.npm.taobao.org'
+```
+
+
+
+
+
+# CLI 
+
+A simple HTTP Server
+
+```shell
+$ npm install -g http-server
+# To run:
+$ http-server & 
+```
+
+
+
+
+
+
+
 # 参考文档
+
 [Mozilla Javascript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)

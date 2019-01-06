@@ -20,3 +20,39 @@ As you can see innodb_uuid_no_key performs closely to its integer counterparts, 
 [Store UUID in an optimized way](https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/)
 
 关键是Java里要怎么写？
+
+
+
+# 5.7 Full Group By 问题解决 
+
+UAT环境的MySQL 的版本为5.7，开发在测试时发现如下问题：
+
+```
+1.ERROR 1055 (42000): Expression #7 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'postscan.verifyDelayLog.auditor' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+```
+
+
+
+上面的错误说明，应用所使用的SQL与MySQL的配置only_full_group_by不兼容。我们进入MySQL,查看一下当前的sql_mode。
+
+```
+mysql> select @@sql_mode;
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| @@sql_mode |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+```
+
+确认是启用了ONLY_FULL_GROUP_BY，需要把它从sql_mode中移除。
+
+解决方法，修改 /etc/mysql/mysql.conf.d/mysqld.cnf，在[mysqld]这节下面添加下面的行：
+
+```
+sql_mode = "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+
+```
+
+重新启动后，问题解决。
+

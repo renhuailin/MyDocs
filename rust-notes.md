@@ -11,7 +11,7 @@ Rust编程语言学习心得备忘
 赋值语句（Rust术语叫bindings）是Rust的两种Statement里的一种，准确地说是`声明语句`。目前为止，let是我们见到的唯一的`声明语句`，那我们就再多说点。
 
 在大多数的语言里，变量赋值是可以写成Expressions的，如：
-```
+```js
 x = y = 5;
 ```
 
@@ -471,7 +471,7 @@ fn main() {
 你会发现结果是一样的。
 
 在一个scope里，可能多个immutable borrow，但是一旦有mutable borrow就不一样了。immutable borrow和mutable borrow在同一个scope里不能同时存在。也就是官方文档里说的：`but not both at the same time`。
- 
+
 我们再来看上边的例子:
 ``` rust
 let mut x = 5;

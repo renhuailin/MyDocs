@@ -2,8 +2,14 @@ Docker notes
 -------------
 
 # Install
+
+```
 $ curl -fsSL get.docker.com -o get-docker.sh
 $ sudo sh get-docker.sh
+```
+
+
+
 
 # 1 docker run
 
@@ -103,8 +109,6 @@ IO性能不是很好是因为AUFS,网络模式最好是host．
 
 
 # 6 Mesos VS Kubernates
-根据sof这篇文章　[http://stackoverflow.com/a/28725899](http://stackoverflow.com/a/28725899)　来看mesos更成熟．
-
 
 
 # 7 registry
@@ -112,14 +116,14 @@ IO性能不是很好是因为AUFS,网络模式最好是host．
 $ sudo docker run -p 5000:5000 registry:2.0  -e ICESCRUM_EMAIL_DEV=dev@icescrum.org
 
 docker run \
-         -e SETTINGS_FLAVOR=s3 \
-         -e AWS_BUCKET=acme-docker \
-         -e STORAGE_PATH=/registry \
-         -e AWS_KEY=AKIAHSHB43HS3J92MXZ \
-         -e AWS_SECRET=xdDowwlK7TJajV1Y7EoOZrmuPEJlHYcNP2k4j49T \
-         -e SEARCH_BACKEND=sqlalchemy \
-         -p 5000:5000 \
-         registry
+​         -e SETTINGS_FLAVOR=s3 \
+​         -e AWS_BUCKET=acme-docker \
+​         -e STORAGE_PATH=/registry \
+​         -e AWS_KEY=AKIAHSHB43HS3J92MXZ \
+​         -e AWS_SECRET=xdDowwlK7TJajV1Y7EoOZrmuPEJlHYcNP2k4j49T \
+​         -e SEARCH_BACKEND=sqlalchemy \
+​         -p 5000:5000 \
+​         registry
 
 
 当你访问一个非localhost的registry时，docker要求你必须用https加密。否则报下面的错误。
@@ -133,13 +137,13 @@ In the case of HTTPS, if you have access to the registry's CA certificate, no ne
 simply place the CA certificate at /etc/docker/certs.d/myregistrydomain.com:5000/ca.crt
 ```
  $ docker run -d -p 5000:5000 \
-    -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry \
-    -v /myregistrydata:/var/lib/registry \
-    --restart=always --name registry registry:2
+​    -e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry \
+​    -v /myregistrydata:/var/lib/registry \
+​    --restart=always --name registry registry:2
 
 mkdir -p certs && openssl req \
-    -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
-    -x509 -days 365 -out certs/domain.crt
+​    -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \
+​    -x509 -days 365 -out certs/domain.crt
 
 ```    
 $ openssl req  -newkey rsa:4096 -nodes -sha256 -keyout certs/registry_ecloud_com_cn.key -x509 -days 365 -out certs/registry_ecloud_com_cn.crt
@@ -181,7 +185,7 @@ $ docker push localhost:5000/hello-mine:latest
 error parsing HTTP 413 response body: invalid character '<' looking for beginning of value: "<html>\r\n<head><title>413 Request Entity Too Large</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>413 Request Entity Too Large</h1></center>\r\n<hr><center>nginx/1.4.6 (Ubuntu)</center>\r\n</body>\r\n</html>\r\n"
 ```
 
-# 7.1 查看 private registry．
+## 7.1 查看 private registry．
 
 
 **From registry 2.1** 终于可以查询这个registry里有哪些镜像了,2.1添加了一`_catalog`api,可以list出所有的镜像，而且支持分页。
@@ -207,9 +211,70 @@ $ docker pull localhost:5000/hello-mine:latest
 ```
 
 
+
+## 7.2 让Docker 使用insecure registry
+
+`/etc/docker/daemon.json`
+
+```
+{
+    "insecure-registries" : [ "hostname.cloudapp.net:5000" ]
+}
+```
+
+
+
+
+
+https://docs.docker.com/registry/insecure/
+
+
+
+## 7.3 使用docker中国的mirror加速镜像拉取速度
+
+docker已经进中国了，有了官方的hub加速
+
+https://www.docker-cn.com/registry-mirror
+
+
+
+您可以修改 `/etc/docker/daemon.json` 文件并添加上 registry-mirrors 键值。
+
+```
+{
+  "registry-mirrors": ["https://registry.docker-cn.com"]
+}
+```
+
+重启docker服务
+
+```
+# systemctl daemon-reload &&  systemctl restart docker
+# docker info |grep Mirror -C 10
+```
+
+像mac 这样的不好修改docker daemon参数的，可以直接用docker命令行来操作：
+
+```
+docker pull registry.docker-cn.com/library/ubuntu
+docker pull registry.docker-cn.com/library/nginx
+```
+
+如果pull的不是docker官方的image
+
+```
+docker pull registry.docker-cn.com/prom/prometheus:v2.2.0
+```
+
+
+
+
+
+
+
 # 8 Image
 
-# 8.1 导出导入image
+## 8.1 导出导入image
 
 使用`docker save`导出image.默認輸出到STDOUT。輸出的是tar格式的。
 
@@ -229,6 +294,182 @@ $ docker load --input fedora.tar
 ### 通过 docker commit来创建一个image.
 $ sudo docker commit 614122c0aabb rhl/apache2
 
+## 8.2 Dockerfile
+
+### ADD 更高级的复制文件
+
+`ADD` 指令和 `COPY` 的格式和性质基本一致。但是在 `COPY` 基础上增加了一些功能。
+
+比如 `<源路径>` 可以是一个 `URL`，这种情况下，Docker 引擎会试图去下载这个链接的文件放到 `<目标路径>` 去。下载后的文件权限自动设置为 `600`，如果这并不是想要的权限，那么还需要增加额外的一层 `RUN`进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层 `RUN` 指令进行解压缩。所以不如直接使用 `RUN` 指令，然后使用 `wget` 或者 `curl` 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。
+
+如果 `<源路径>` 为一个 `tar` 压缩文件的话，压缩格式为 `gzip`, `bzip2` 以及 `xz` 的情况下，`ADD` 指令将会自动解压缩这个压缩文件到 `<目标路径>` 去。
+
+在某些情况下，这个自动解压缩的功能非常有用，比如官方镜像 `ubuntu` 中：
+
+```
+FROM scratch
+ADD ubuntu-xenial-core-cloudimg-amd64-root.tar.gz /
+...
+
+```
+
+但在某些情况下，如果我们真的是希望复制个压缩文件进去，而不解压缩，这时就不可以使用 `ADD` 命令了。
+
+在 Docker 官方的 [Dockerfile 最佳实践文档](https://yeasy.gitbooks.io/docker_practice/content/appendix/best_practices.html) 中要求，尽可能的使用 `COPY`，因为 `COPY` 的语义很明确，就是复制文件而已，而 `ADD` 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 `ADD` 的场合，就是所提及的需要自动解压缩的场合。
+
+另外需要注意的是，`ADD` 指令会令镜像构建缓存失效，从而可能会令镜像构建变得比较缓慢。
+
+因此在 `COPY` 和 `ADD` 指令中选择的时候，可以遵循这样的原则，所有的文件复制均使用 `COPY` 指令，仅在需要自动解压缩的场合使用 `ADD`。
+
+
+
+### Alpine
+
+目前Docker镜像越来越倾向于使用Alpine系统作为基础的系统镜像，Docker Hub 官方制作的镜像都在逐步支持Alpine系统。
+
+**下面的修改以 Alpine 3.7 为例：**
+
+```
+# 备份原始文件
+cp /etc/apk/repositories /etc/apk/repositories.bak
+
+# 修改为国内镜像源
+echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
+
+```
+
+## 精简Docker image的方法
+
+
+
+https://mp.weixin.qq.com/s?__biz=MzA5OTAyNzQ2OA==&mid=2649698614&idx=1&sn=bef332b5a3781ca09997197b2c83abe8&chksm=88930e55bfe48743f794676c59437576d4ef126ef76ac45935bddff84119a9da81c77e54158a&mpshare=1&scene=24&srcid=09283HaLfU39yAT2FZrcX2HF&key=d281c5c9a9e2ecf1aa3c0ae31abac8d49e970d7ba07691fc1acfa002b0deff074174bf076b00d1e56595382c34ef24b7863b165223d4eb9f249914423eaa87b9f6c3761df9853c93e87d2a5d9dc36b75&ascene=0&uin=NjA5ODc5MDYw&devicetype=iMac+MacBookPro12%2C1+OSX+OSX+10.13.6+build(17G65)&version=12020810&nettype=WIFI&lang=zh_CN&fontScale=100&pass_ticket=sfkgxVc7g%2BbqJRJk%2BejtJroxNELjZT%2FODn7hAQqr8WHlIVvcnNiQmqd%2FvkscNHbf
+
+
+
+
+
+Dockerfile中每条指令都会为镜像增加一个镜像层，并且你需要在移动到下一个镜像层之前清理不需要的组件。实际上，有一个Dockerfile用于开发（其中包含构建应用程序所需的所有内容）以及一个用于生产的瘦客户端，它只包含你的应用程序以及运行它所需的内容。这被称为“建造者模式”。Docker 17.05.0-ce版本以后支持多阶段构建。使用多阶段构建，你可以在Dockerfile中使用多个FROM语句，每条FROM指令可以使用不同的基础镜像，这样您可以选择性地将服务组件从一个阶段COPY到另一个阶段，在最终镜像中只保留需要的内容。
+
+
+
+下面是一个使用COPY --from 和 FROM … AS … 的Dockerfile：
+
+
+
+```
+# Compile
+FROM golang:1.9.0 AS builder
+WORKDIR /go/src/v9.git...com/.../k8s-monitor
+COPY . .
+WORKDIR /go/src/v9.git...com/.../k8s-monitor
+RUN make build
+RUN mv k8s-monitor /root
+
+# Package
+# Use scratch image
+FROM scratch
+WORKDIR /root/
+COPY --from=builder /root .
+EXPOSE 8080
+CMD ["/root/k8s-monitor"]
+```
+
+构建镜像，你会发现生成的镜像只有上面COPY 指令指定的内容，镜像大小只有2M。这样在以前使用两个Dockerfile（一个Dockerfile用于开发和一个用于生产的瘦客户端），现在使用多阶段构建就可以搞定。
+
+# 9  Docker Log
+
+## 9.1 使用JouralD来管理日志
+
+修改docker daemon的启动参数，配置`log-driver`为"journald"
+
+`/etc/docker/daemon.json`
+
+
+```json
+{
+  "log-driver": "journald"
+}
+```
+
+重启docker service.
+
+```
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker.service
+```
+
+
+
+基本上，systemd-journald.service 的配置文件主要参考 /etc/systemd/journald.conf 的内容，详细的参数你可以参考 `man 5 journald.conf` 的数据。
+
+```properties
+[Journal]
+#日志存储到磁盘
+Storage=persistent 
+#压缩日志
+Compress=yes 
+#为日志添加序列号
+Seal=yes 
+#每个用户分别记录日志
+SplitMode=uid 
+#日志同步到磁盘的间隔，高级别的日志，如：CRIT、ALERT、EMERG 三种总是实时同步
+SyncIntervalSec=1m 
+
+#即制日志的最大流量，此处指 30s 内最多记录 100000 条日志，超出的将被丢弃
+RateLimitInterval=30s 
+#与 RateLimitInterval 配合使用
+RateLimitBurst=100000
+
+#限制全部日志文件加在一起最多可以占用多少空间，默认值是10%空间与4G空间两者中的较小者
+SystemMaxUse=64G 
+#默认值是15%空间与4G空间两者中的较大者
+SystemKeepFree=1G 
+
+#单个日志文件的大小限制，超过此限制将触发滚动保存
+SystemMaxFileSize=128M 
+
+#日志滚动的最大时间间隔，若不设置则完全以大小限制为准
+MaxFileSec=1day
+#日志最大保留时间，超过时限的旧日志将被删除
+MaxRetentionSec=100year 
+
+#是否转发符合条件的日志记录到本机的其它日志管理系统，如：rsyslog
+ForwardToSyslog=yes 
+ForwardToKMsg=no
+#是否转发符合条件的日志到所有登陆用户的终端
+ForwardToWall=yes 
+MaxLevelStore=debug 
+MaxLevelSyslog=err 
+MaxLevelWall=emerg 
+ForwardToConsole=no 
+#TTYPath=/dev/console
+#MaxLevelConsole=info
+#MaxLevelKMsg=notice
+```
+
+https://www.cnblogs.com/hadex/p/6837688.html
+
+
+
+
+
+创建目录并分配权限，然后重启journald服务
+
+```
+$ mkdir /var/log/journal
+$ chmod 775 /var/log/journal
+
+$ systemctl restart systemd-journald
+```
+
+
+
+
+
+```
+journalctl --unit=docker.service
+journalctl -u docker
+```
 
 # Docker build
 
@@ -448,6 +689,18 @@ http://stackoverflow.com/questions/12114746/mysqld-service-stops-once-a-day-on-e
 https://github.com/docker-library/mysql/issues/248
 https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-unexpectedly
 
+
+
+## 无法进入容器 executing setns process caused "exit status 15
+
+
+
+https://github.com/moby/moby/issues/34488
+
+
+
+
+
 # 使用supervisord来管理进程
 
 https://docs.docker.com/engine/admin/multi-service_container/
@@ -467,19 +720,42 @@ unable to configure the Docker daemon with file /etc/docker/daemon.json: the fol
 这其实是个bug: https://github.com/moby/moby/issues/22339 
 
 所以只能在systemd的service file里来指定它。
+$$
 
+$$
 docker的systemd的启动文件放在：`/etc/systemd/system/multi-user.target.wants/docker.service`
 
 It is conventional to use port `2375` for un-encrypted, and port `2376` for encrypted communication with the daemon.
 
+# Docker-compose
 
+在Ubuntu 14.04下安装时有时会报这个错误：
 
+```
+docker compose  AttributeError: 'module' object has no attribute 'connection'
+```
 
+通过[这个帖子](https://github.com/docker/docker-py/issues/1054#issuecomment-246917401)解决了，一定要export `PYTHONPATH`  这个环境变量。
 
 
 
 
 请参考：
-[https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
-[左耳朵耗子写的一些关于docker的文章](http://coolshell.cn/tag/docker)
-[https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
+1. [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
+2. [左耳朵耗子写的一些关于docker的文章](http://coolshell.cn/tag/docker)
+3. [https://blog.docker.com/2013/07/how-to-use-your-own-registry/](https://blog.docker.com/2013/07/how-to-use-your-own-registry/)
+
+
+
+# 12.  Swarm
+
+[使用docker-compose.yaml来部署服务到swarm](https://docs.docker.com/engine/swarm/stack-deploy/#test-the-app-with-compose)
+
+
+
+如果设置了health check,那么在swarm里，如果服务Untheathy了，那么会kill掉重启。
+
+https://codeblog.dotsandbrackets.com/docker-health-check/
+
+
+

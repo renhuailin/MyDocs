@@ -152,3 +152,86 @@ sudo apt-get install nodejs
 
 
 
+
+
+# Use VS Code as Ruby IDE
+
+```
+sudo gem install ruby-debug-ide -v 0.6.0
+
+sudo gem install debase -v 0.2.2.beta10
+
+```
+
+
+
+
+
+cmd + shift + p 然后输入launch,选择`Debug:Open launch.json`
+
+请参见： https://github.com/rubyide/vscode-ruby/wiki/2.-Launching-from-VS-Code
+
+
+
+
+
+## Rails Debug
+
+
+
+https://github.com/rubyide/vscode-ruby/wiki/4.-Running-gem-scripts
+
+
+
+转到rails项目的根目录，执行`bin/bundle install --binstubs`  ,  `--binstubs` 的意义请看[这里](https://github.com/rbenv/rbenv/wiki/Understanding-binstubs)。
+
+
+
+`${workspaceRoot}/bin/rails`
+
+
+
+然后安装
+
+```
+$ gem install rubocop
+```
+
+
+
+按`F5`启动debug,报错了: 
+
+
+
+```
+/Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/2.3.0/rubygems/specification.rb:2158:in `method_missing': undefined method `this' for #<Gem::Specification:0x3fea6c491c90 debase-0.2.2.beta11> (NoMethodError)
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/2.3.0/rubygems/specification.rb:1057:in `find_active_stub_by_path'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:64:in `require'
+	from /Users/harley/.rvm/gems/ruby-2.3.0/gems/debase-0.2.2.beta11/lib/debase.rb:4:in `<top (required)>'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:127:in `require'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:127:in `rescue in require'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:40:in `require'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/lib/ruby/gems/2.3.0/gems/ruby-debug-ide-0.6.0/lib/ruby-debug-ide.rb:8:in `<top (required)>'
+	from /Users/harley/.rvm/gems/ruby-2.3.0@global/gems/ruby-debug-ide-0.6.0/bin/rdebug-ide:8:in `require_relative'
+	from /Users/harley/.rvm/gems/ruby-2.3.0@global/gems/ruby-debug-ide-0.6.0/bin/rdebug-ide:8:in `<top (required)>'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/bin/rdebug-ide:23:in `load'
+	from /Users/harley/.rvm/rubies/ruby-2.3.0/bin/rdebug-ide:23:in `<main>'
+	from /Users/harley/.rvm/gems/ruby-2.3.0/bin/ruby_executable_hooks:15:in `eval'
+	from /Users/harley/.rvm/gems/ruby-2.3.0/bin/ruby_executable_hooks:15:in `<main>'
+```
+
+
+
+参考了github上的这个[issue](https://github.com/rubygems/rubygems/issues/1420#issuecomment-256350006),  通过运行`gem update --system`解决此问题。
+
+
+
+10367  gem install rubocop
+10368  gem install rcodetools
+10373  gem install debase -v 0.2.2.beta11
+10377  gem update --system
+10378  gem install reek
+
+
+
+Ruby [Code Smells](https://github.com/troessner/reek/blob/master/docs/Code-Smells.md).

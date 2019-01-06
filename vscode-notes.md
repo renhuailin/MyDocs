@@ -11,6 +11,12 @@ https://github.com/Microsoft/vscode-tips-and-tricks
 
 
 
+`code .` : Open the current folder in a new window
+`code -r .` : Open the current folder in the current window
+`code -a .` : Add the current folder to the current window
+
+
+
 # Golang extension
 
 cmd + shift + p : `Tasks run build task`. 然后它会让你选择 task runner, 我们先`Others`   它会为你创建一个task.json
@@ -92,6 +98,44 @@ settings.json
 }
 ```
 
+
+
+这是我的launch.json，`program`指定了我的程序入口文件。`output`指定debug时的输出文件，这个其实是传给了delve。用这个就行了。
+
+`launch.json`
+
+```json
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Launch",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}/src/main.go",
+            "env": {},
+            "args": [],
+            "showLog": true,
+            "output": "${workspaceRoot}/dist/main"
+        }
+    ]
+}
+```
+
+
+
+
+
+
+
 # hide certain files from the sidebar.
 
 You can configure patterns to hide files and folders from the explorer and searches.
@@ -110,12 +154,61 @@ For example to hide a top level node_modules folder in your workspace:
 
 To hide all files that start with ._ such as ._.DS_Store files found on OSX:
 
-``` json
+​``` json
 "files.exclude": {
     "**/._*": true
 }
 ```
 You also have the ability to change Workspace Settings (Preferences > Workspace Settings). Workspace settings will create a .vscode/settings.json file in your current workspace and will only be applied to that workspace. User Settings will be applied globally to any instance of VS Code you open, but they won't override Workspace Settings if present. Read more on customizing User and Workspace Settings.
 
-
 http://stackoverflow.com/a/30142299
+
+
+
+## 用vscode来编辑远程文件
+
+[用vscode来编辑远程文件](https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4)
+
+
+1. Launch Visual Studio Code, or install it here if you don’t have it yet
+2. Go to the ‘Extensions’ page and search for ‘Remote VSCode’
+
+3. 在linux里安装rmate.
+```
+   $ sudo wget -O /usr/local/bin/rmate https://raw.github.com/aurora/rmate/master/rmate
+   $ sudo chmod a+x /usr/local/bin/rmate
+```
+
+4. Go back to your Visual Studio Code and open up the command palette (CTRL+P for Windows and CMD+P for Mac) then execute the `>Remote: Start Server` command.
+
+5. Once the server is ready, open up a new terminal and connect to your Linux Virtual Machine using the following command:
+
+```
+$ ssh -R 52698:localhost:52698 VIRTUAL_MACHINE_IP_ADDRESS
+```
+
+
+
+
+
+# 设置Proxy
+
+```
+// VSCode: Place your settings in this file to overwrite the default settings
+{
+  "http.proxy": "http://user:pass@proxy.com:8080",
+  "https.proxy": "http://user:pass@proxy.com:8080",
+  "http.proxyStrictSSL": false
+}
+```
+
+
+
+
+
+
+
+
+
+
+
