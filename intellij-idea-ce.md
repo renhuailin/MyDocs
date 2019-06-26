@@ -8,3 +8,5 @@ live templates 跟textmate里的snippets展开是一样的，你可以查看当�
 
 
 查看javadoc  用快捷键 F1.
+
+Add selection for next occurence   [Ctrl + G]

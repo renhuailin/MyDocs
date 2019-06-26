@@ -4,7 +4,7 @@ Linux Shell Tips and Tricks
 
 # bash or dash 
 Ubuntu 6.10 开始用 dash 做为 /bin/sh，而不是bash.  所以，如果脚本是以`#! /bin/sh` 开头的要注意了。可能会出现有些命令不能用的情况。
-所以还是以`#! /bin/bash`
+所以还是以`#! /bin/bash` 
 
 
 # Shell Programming Note
@@ -22,14 +22,26 @@ dollar sign.
 
 可以用$来引用一个变量，也可以用${}来引用变量，后一种方式是为了让变量名更明显。
 
-
 `$[]` $加方括号是用来做算术计算的。
 
 ``` bash
 $[1 + 5]
 ```
 
+
+
+## Bash Shell Find Out If a Variable Is Empty Or Not
+
+Let us see syntax and examples in details. The syntax is as follows for if command:
+
+```bash
+`if [ -z "$var" ] then       echo "\$var is empty" else       echo "\$var is NOT empty" fi`
+```
+
+
+
 ## Parameter Expansion
+
 在阅读kubernetes的部署shell脚本时，看到一个expression,不明白是什么意思
 ``` bash
 ${1#*@}
@@ -126,6 +138,48 @@ done
 
 
 
+```bash
+for id in $(cat ./unused-containers.txt);do
+	docker rm $id
+done
+```
+
+
+
+## sed 
+
+```
+# 替换文件的内容
+$ sed -i 's/deb.debian.org/mirrors.163.com/g' /etc/apt/sources.list 
+```
+
+
+
+
+
+## print pid
+
+```bash
+pid=`aux|grep java|grep wechat|awk {'print $2'}`
+
+if [ -z "$pid" ]
+then
+    echo "\$pid is empty"
+else
+    #echo "\$pid is NOT empty"
+    kill $pid
+    sleep 2
+fi
+```
+
+
+
+
+
+## does a directory exist?
+
+
+
 ## 
 
 Absolute path this script is in.
@@ -137,6 +191,26 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 ```
 $ openssl rand -hex 10
+```
+
+
+
+## Base64 encode and decode
+
+encode 
+
+```
+$ echo -n 'admin' | base64
+```
+
+`-n`  means `Do not print the trailing newline character.`
+
+
+
+decode 
+
+```
+echo 'MWYyZDFlMmU2N2Rm' | base64 --decode
 ```
 
 
@@ -157,6 +231,18 @@ $ sudo iptraf-ng
 ```
 
 
+
+###  HPing3
+
+在一些环境下是禁用ICMP协议的，这时可以使用`hping3`来代替`ping`。
+
+```
+$ sudo hping3 -S -p 22 10.224.40.240
+```
+
+其中的`-S`是TCP sync的选项。
+
+请参考 ：   http://man.linuxde.net/hping3
 
 
 
@@ -215,6 +301,25 @@ $ du -d 1 -h
 ```
 $ grep -v '^$\|^\s*\#'   pdns.conf
 ```
+
+
+
+
+
+## grep命令
+
+```
+#显示搜索结果前后5行
+$ cat test.txt|grep -C 5 hello
+
+#显示搜索结果后5行
+$ cat test.txt|grep -A 5 hello
+
+```
+
+
+
+
 
 
 
@@ -301,10 +406,18 @@ $ ssh -XC -c blowfish-cbc,arcfour xmodulo@remote_host.com
 ### 把远程主机的某个端口映射到本地
 ssh -L <local port>:<remote host>:<remote port> <SSH hostname>
 
+```
+ssh -L 1521:9.111.121.223:1521 root@9.111.121.223
+```
+
+
+
 ### 把本地的某个端口映射到远程主机
 ssh -R <remote port>:<localhost or local IP>:<local port> <SSH hostname>
 
-
+> **Note:**
+>
+> 这样映射的端口只能listen在 127.0.0.1，所以需要通过nginx反向代理才能访问。
 
 # tmux
 
@@ -359,6 +472,10 @@ z	tmux 1.8新特性，最大化当前所在面板
 
 tmux a 或 tmux attach.
 
+```
+$ tmux ls
+```
+
 
 
 ##  tmux 与 iTerm2 整合
@@ -383,9 +500,6 @@ http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html
 http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
 
 
-# command-not-found包
-debian 安装这个包，可以实现Ubuntu那样的，命令不存在时提示可以哪个包里找到这个命令的功能。
-$ sudo apt-get install command-not-found
 
 
 
@@ -403,7 +517,7 @@ $ sudo apt-get install command-not-found
 shadowsocks + privoxy  
 网上推荐的什么polipo 根本不好使！还是privoxy好使。
 
-# systemd 
+# Systemd 
 `systemctl list-unit-files | grep enabled` will list all enabled ones.
 
 If you want which ones are currently running, you need `systemctl | grep running`
@@ -411,9 +525,15 @@ If you want which ones are currently running, you need `systemctl | grep running
 
 
 ```
+
+$ systemctl list-unit-files | grep enabled
+
 $ sudo systemctl daemon-reload ; sudo systemctl start docker
 
 $ systemctl show --property=FragmentPath docker
+
+$ systemctl disable docker
+
 ```
 
 
@@ -532,14 +652,70 @@ $ iptables -L -n -v --line-number
 [root@linux ~]# iptables -D INPUT 3  
 ```
 
-
 -A默认是插入到尾部的，可以-I来插入到指定位置
+
+
+
+下面的是打开20端口。
 
 ```
 [root@linux ~]# iptables -I INPUT 3 -p tcp -m tcp --dport 20 -j ACCEPT
 ```
 
-参考: http://blog.51yip.com/linux/1404.html
+清除规则
+
+```
+$ sudo /sbin/iptables -P INPUT ACCEPT  #一定要先执行这个
+$ sudo iptables -F
+
+```
+
+
+
+
+
+### iptables 端口映射
+
+假设192.168.75.5是一个nginx，我们用它做网关，192.168.75.3是tomcat，运行着一个app.我们要把192.168.75.5:80的映射到192.168.75.3:8080上。
+
+1. 需要先开启linux的数据转发功能
+
+```
+# vi /etc/sysctl.conf，将net.ipv4.ip_forward=0更改为net.ipv4.ip_forward=1
+# sysctl -p  //使数据转发功能生效
+```
+
+2. 更改iptables，使之实现nat映射功能，请注意一定要是两条规则，一个请求包，一个是响应包。如果没有第二条规则，则会有问题的。
+
+3. ```shell
+   # 将外网访问nginx(192.168.75.5)的80端口转发到tomcat(192.168.75.3)的8000端口。
+   iptables -t nat -A PREROUTING -d 192.168.75.5 -p tcp --dport 80 -j DNAT --to-destination 192.168.75.3:8000
+   # 上面是根据包的目的IP，当然也可以根据网卡
+   iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.75.3:8080
+   
+   # 要让包通过FORWARD链
+   iptables -A FORWARD -p tcp -d 192.168.75.3 --dport 8080 -j ACCEPT
+   
+   
+   # 在这一步只所以要做dnat,是因为，如果不做dnat,源IP将是一个外网的IP，不是一个合法连接了。所以这一步要将源ip改为nginx的192.168.75.5，让tomcat把包回到这儿。
+   iptables -t nat -A POSTROUTING -d 192.168.75.3 -p tcp --dport 8000 -j SNAT --to 192.168.75.5
+   ```
+
+我想我们只所以要打开ip forward，回包时，192.168.75.3:8080返回的包的在dest是请求的源IP，不是本机的IP，如果不打开ip forward，就无法实现转发。请见参考2和网卡的混杂模式。
+
+我之前一直没想明白，当tomcat把回给nginx时，src=192.168.75.3,dest=192.168.75.5，这时的目的IP还不是client IP呢，我们为什么没在iptable加一条规则把dest改成client ip呢？后来研究了connect track，才明白。在我们第一条做nat时，kernel会再track table记录下来此连接的信息如client ip:31411 ->  192.168.75:8000,当收到tomcat的回包时，系统会根据track table的这条记录，做一次dnat,把nginx的IP换成client ip，这一步是系统做的，所以我们不用手工添加在iptable的规则里。
+
+Iptables Tutorial 1.2.1  里讲到可以通过 cat  `/proc/net/ip_conntrack`  来查询connection track的信息，这已经是过时的做法，现在通过`conntrack`这个命令来跟踪连接。
+
+
+
+参考: 
+
+1.   http://blog.51yip.com/linux/1404.html
+
+2. https://www.systutorials.com/816/port-forwarding-using-iptables/ 
+3. https://www.digitalocean.com/community/tutorials/how-to-forward-ports-through-a-linux-gateway-with-iptables
+4. [网络地址转换NAT原理及应用-连接跟踪--端口转换](https://blog.csdn.net/tycoon1988/article/details/40782269)
 
 # PowerDNS
 
@@ -598,6 +774,26 @@ $ yum install httpd-tools
 
 
 
+查看某包安装了哪些文件，比如我经常忘记docker在centos下的配置文件在哪里，于是我先查看一下docker是由哪个rpm安装的。
+
+```
+$ rpm -qa|grep docker 
+docker-ce-18.09.1-2.1.rc1.el7.x86_64
+docker-ce-cli-18.09.1-2.1.rc1.el7.x86_64
+```
+
+然后看一下这个包安装哪些文件：
+
+```
+$ rpm -ql docker-ce-18.09.1-2.1.rc1.el7.x86_64
+```
+
+
+
+
+
+
+
 # Ubuntu 
 
 ## Ubuntu 14.04
@@ -647,6 +843,18 @@ $ sudo gedit /etc/NetworkManager/NetworkManager.conf
 
 $ sudo service network-manager restart
 ```
+
+
+
+# command-not-found包
+
+debian 安装这个包，可以实现Ubuntu那样的，命令不存在时提示可以哪个包里找到这个命令的功能。
+
+```
+$ sudo apt-get install command-not-found
+```
+
+
 
 ## 通用
 

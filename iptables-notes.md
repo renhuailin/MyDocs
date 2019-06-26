@@ -44,3 +44,12 @@ $ iptables -L -n -v --line-number
 ```
 [root@linux ~]# iptables -I INPUT 3 -p tcp -m tcp --dport 20 -j ACCEPT
 ```
+
+## Restore rules
+
+```
+$ iptables-restore < /root/working.iptables.rules
+```
+
+
+

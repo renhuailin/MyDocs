@@ -99,7 +99,9 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
 
 
 
+2.使用 vue-cli3.0+vuejs+bootstrap 作为前端架构 
 
+3.使用 axios 进行数据交互，使用 vuex 进行页面间的数据传递; 
 
 
 

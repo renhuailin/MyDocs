@@ -83,6 +83,42 @@ $ kubectl get pods -o wide
 
 
 
+## Forward a local port to a port on the pod
+
+```
+$ kubectl port-forward redis-master-765d459796-258hz 6379:6379 
+```
+
+
+
+### 使用 HostAliases 向 Pod /etc/hosts 文件添加条目
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostaliases-pod
+spec:
+  hostAliases:
+  - ip: "127.0.0.1"
+    hostnames:
+    - "foo.local"
+    - "bar.local"
+  - ip: "10.1.2.3"
+    hostnames:
+    - "foo.remote"
+    - "bar.remote"
+  containers:
+  - name: cat-hosts
+    image: busybox
+    command:
+    - cat
+    args:
+    - "/etc/hosts"
+```
+
+
+
 ## Static Pods
 
 今天在跟陈晖请教如何在ICP安装完后启动audit logs的问题时，知道了这个概念。
@@ -217,6 +253,18 @@ K8s支持2种发现服务的方式:环境变量和DNS,
 SRV Records are created for named ports that are part of normal or [Headless Services](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services). For each named port, the SRV record would have the form `_my-port-name._my-port-protocol.my-svc.my-namespace.svc.cluster.local`. For a regular service, this resolves to the port number and the CNAME: `my-svc.my-namespace.svc.cluster.local`. For a headless service, this resolves to multiple answers, one for each pod that is backing the service, and contains the port number and a CNAME of the pod of the form `auto-generated-name.my-svc.my-namespace.svc.cluster.local`.
 
 
+
+#### 自定义DNS
+
+https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
+
+```
+$ kubectl -n kube-system edit configmap kube-dns
+```
+
+kubectl run -it --image=10.226.57.149:8080/tsf_100000000/ubuntu:16.04 bash
+
+
 ## Exposing the Service
 这个就是把服务暴露给外部使用了.
 支持NodePort和LoadBalancer这两种方式.
@@ -230,6 +278,12 @@ Services without selectors，也就是后端不是Pods。
 * You want to have an external database cluster in production, but in test you use your own databases.
 * You want to point your service to a service in another Namespace or on another cluster.
 * You are migrating your workload to Kubernetes and some of your backends run outside of Kubernetes.
+
+一般我们使用外部服务时，用这种方式。
+
+https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-mapping-external-services
+
+
 
 Q: Proxy-mode: userspace的Service工作原理？
 A: 
@@ -298,11 +352,11 @@ https://blog.csdn.net/zjysource/article/details/52052420
 
   A cluster administrator creates a number of PVs. They carry the details of the real storage which is available for use by cluster users. They exist in the Kubernetes API and are available for consumption.
 
-  ​
+  
 
 * dynamic
 
-  ​
+  
 
 
 
@@ -316,9 +370,32 @@ https://blog.csdn.net/zjysource/article/details/52052420
 
 
 
+# Config Map and Secret
+
+
+
+使用configmap
+
+可以使用kubectl set 的方式把configmap以环境变量的方式注入到容器里。
+
+```
+kubectl set env --from=secret/mysecret deployment/myapp
+```
+
+
+
+`kubectl set` 还可以以文件等方式设置env，请参考kubectl命令。
+
+
+
+
+
+每次你更新Config Map 或 Secret时，使用了此配置的pod都会相应地更新。
+
 
 
 # Namespaces
+
 Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces.
 
 k8s支持物理集群上的多个虚拟集群，这些虚拟集群被称做`namespaces`.
@@ -353,6 +430,31 @@ http://blog.frognew.com/2017/04/kubernetes-ingress.html
 
 
 [DockOne微信分享（一三三）：深入理解Kubernetes网络策略](http://dockone.io/article/2529) 这里面讲到了network policy.
+
+
+
+
+
+##Nginx ingress controller
+
+在baremetal上，因为没有loadbalancer，所以ingress的Address是空的。
+
+要访问ingress需要用ingress controller的NodePort来访问
+
+```
+[root@iaas-tsf-k8s-master1 ingress]# kubectl get svc -n test
+NAME                        TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+demo1                       NodePort   172.16.255.61    <none>        18081:32719/TCP              5d
+ingress-nginx               NodePort   172.16.255.185   <none>        80:30067/TCP,443:32145/TCP   18m
+tima-cdp-api-gateway-test   NodePort   172.16.255.171   <none>        8080:30231/TCP               4d
+tima-cdp-user-test          NodePort   172.16.255.118   <none>        10001:31095/TCP              3h
+```
+
+通过上面的输出我们可以发现， ingress-nginx的NodePort为：  http: 30067,https: 32145。我们可以在所有的Node**节点**上访问这个服务。
+
+
+
+
 
 
 
@@ -475,6 +577,11 @@ $ kubectl delete pod gitlab --grace-period=0 --force
 显示pods的更多信息
 
 ```shell
+# set namespace
+$ kubectl config set-context $(kubectl config current-context) --namespace=<insert-namespace-name-here>
+
+$ kubectl config  view
+
 $ kubectl get pods -o wide
 
 $ kubectl create -f my-nginx.yml
@@ -545,6 +652,16 @@ $ curl http://localhost:8001/version
 
 # Show cluster info.
 $ kubectl cluster-info
+
+
+# kubectl explain
+# Get documentation of various resources. For instance pods, nodes, services, etc.
+
+$ kubectl explain pod
+$ kubectl explain pod.spec.affinity
+
+
+
 ```
 
 
@@ -716,6 +833,53 @@ spec:
 
 
 ```
+
+
+
+
+
+## How to create a service account
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: tke-admin
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tke-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tke-admin
+subjects:
+- kind: ServiceAccount
+  name: tke-admin
+  namespace: kube-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tke-admin
+  namespace: kube-system
+```
+
+
+
+
 
 
 

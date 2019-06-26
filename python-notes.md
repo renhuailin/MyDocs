@@ -23,9 +23,17 @@ $ sudo pip install  python-neutronclient  --ignore-installed six
 namedtuple我感觉很适合做string类型的enum。
 
 ``` python
+from collections import namedtuple
 InstanceStatus = namedtuple("InstanceStatus",['Running','Stopped'])
 status = InstanceStatus('run','stop')
-status.Running
+print(status.Running)
+# run
+
+Animal = namedtuple('Animal', 'name age type')
+big_yellow = Animal(name="big_yellow", age=3, type="dog")
+print(big_yellow.name)
+# output: big_yellow
+
 ```
 
 ##
@@ -53,9 +61,14 @@ pprint(myobj)
 ```
 # pip 自定义豆瓣 pypi 源
 
+```
+python -m pip install -r requirements.txt -i https://pypi.douban.com/simple # for windows
+ 
 sudo pip install -v Flask -i https://pypi.douban.com/simple
 
 pip install  -r requirements.txt -i https://pypi.douban.com/simple
+```
+
 
 Python PIP 使用笔记
 https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
@@ -344,12 +357,93 @@ datetime_object = datetime.strptime('2015-12-25 01:22:33', "%Y-%m-%d %H:%M:%S")
 
 ```
 
-# Print
+# 字符串格式化表达式
 
 ```python
 #打印bool
 print "%r, %r" % (True, False)
+
 ```
+
+
+
+| Conversion | Meaning                                                      |
+| ---------- | ------------------------------------------------------------ |
+| `d`        | Signed integer decimal.                                      |
+| `i`        | Signed integer decimal.                                      |
+| `o`        | Unsigned octal.                                              |
+| `u`        | Obsolete and equivalent to 'd', i.e. signed integer decimal. |
+| `x`        | Unsigned hexadecimal (lowercase).                            |
+| `X`        | Unsigned hexadecimal (uppercase).                            |
+| `e`        | Floating point exponential format (lowercase).               |
+| `E`        | Floating point exponential format (uppercase).               |
+| `f`        | Floating point decimal format.                               |
+| `F`        | Floating point decimal format.                               |
+| `g`        | Same as "`e`" if exponent is greater than -4 or less than precision, "`f`" otherwise. |
+| `G`        | Same as "`E`" if exponent is greater than -4 or less than precision, "`F`" otherwise. |
+| `c`        | Single character (accepts integer or single character string). |
+| `r`        | String (converts any python object using `repr()`).          |
+| `s`        | String (converts any python object using `str()`).           |
+| `%`        | No argument is converted, results in a "`%`" character in the result. |
+
+举例
+
+
+```
+# 最常用的，格式化float
+>>> s = "Price: $ %8.2f"% (356.08977)
+>>> print(s)
+Price: $   356.09
+>>>
+```
+
+
+
+参考文献1，P216
+
+
+
+## List Comprehension
+
+```python
+[ expression for item in list if conditional ]
+```
+
+
+
+## MySQL 
+
+### Named Placeholder in SQL
+
+```python
+select_stmt = "SELECT * FROM employees WHERE emp_no = %(emp_no)s"
+cursor.execute(select_stmt, { 'emp_no': 2 })
+```
+
+
+
+## 把object转成dict
+
+可以直接用`__dict__`,不过推荐用`vars`这个内置函数。
+
+```python
+vars(obj)
+```
+
+
+
+为python对象添加新的字段
+
+```python
+dict = {'newField': 'value'}
+order.__dict__.update(dict)
+```
+
+
+
+
+
+
 
 
 
@@ -369,12 +463,20 @@ $ sqlacodegen "mysql+mysqlconnector://root:mysql@localhost/virtual_exchange?char
 # SimpleHTTPServer
 
 ```
-python3 -m http.server
+
+$ python2.7-m SimpleHTTPServer 8000
+$ python3 -m http.server
 ```
 
 
 
 
+
+
+
+# 参考文献：
+
+1. 《Oreilly.Learning.Python.5th.Edition.June.2013》
 
 
 

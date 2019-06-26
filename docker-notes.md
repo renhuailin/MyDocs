@@ -212,6 +212,23 @@ $ docker pull localhost:5000/hello-mine:latest
 
 
 
+
+
+
+
+```
+AUTH=$(echo -ne "$BASIC_AUTH_USER:$BASIC_AUTH_PASSWORD" | base64 --wrap 0)
+
+curl \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Basic $AUTH" \
+  --request POST \
+  --data  '{"key1":"value1", "key2":"value2"}' \
+  https://example.com/
+```
+
+
+
 ## 7.2 让Docker 使用insecure registry
 
 `/etc/docker/daemon.json`
@@ -290,9 +307,17 @@ $ docker load < busybox.tar
 $ docker load --input fedora.tar
 ```
 
-
 ### 通过 docker commit来创建一个image.
+
+Create a new image from a container’s changes
+
+```
 $ sudo docker commit 614122c0aabb rhl/apache2
+```
+
+
+
+
 
 ## 8.2 Dockerfile
 

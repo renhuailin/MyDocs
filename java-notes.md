@@ -156,6 +156,20 @@ https://hellokoding.com/jpa-one-to-many-relationship-mapping-example-with-spring
 http://stackoverflow.com/a/22307705
 
 
+
+### 当打包成Fat Jar时，如何在配置application.properties
+
+生产环境与开发环境的配置经常是不同的，但是打包成Fat Jar时，我们如何修改配置呢？
+
+根据[spring boot reference](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html)，是可以把配置外部化的。
+
+```
+java -Dspring.config.location=/target/application.properties -jar target/myproject-0.0.1-SNAPSHOT.jar
+```
+
+
+
+
 # Maven
 ###【常用maven命令】
 	mvn archetype:generate
@@ -351,6 +365,10 @@ Jtwig   这个模板系统很强，而且能在Spring里使用。推荐。
 
 Hotswap Agent project : http://hotswapagent.org/  这个是用DCEVM的，实现的是jvm级的reload，比Spring loaded更强。
 
+我现在用的就是Hotswap Agent 的JDK。
+
+
+
 Dynamic Source Lookup plugin for Eclipse : https://github.com/ifedorenko/com.ifedorenko.m2e.sourcelookup
 
 
@@ -412,10 +430,6 @@ Rails的Db Migration的java alternative.
 # Netty 
 
 http://www.infoq.com/cn/articles/netty-high-performance   这里面讲了Reactor主从多线程模型，非常好。
-
-
-
-
 
 # Eclipse
 
