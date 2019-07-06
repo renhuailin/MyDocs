@@ -464,7 +464,7 @@ $ sqlacodegen "mysql+mysqlconnector://root:mysql@localhost/virtual_exchange?char
 
 ```
 
-$ python2.7-m SimpleHTTPServer 8000
+$ python2.7 -m SimpleHTTPServer 8000
 $ python3 -m http.server
 ```
 

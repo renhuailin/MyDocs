@@ -11,3 +11,10 @@ Mac的一些使用技巧
 Turn on "Prefs > Advanced > To drag images or selected text, you must hold ⌘. This prevents accidental drags."
 
 
+
+
+
+发现了一种在keychain中保存密码的方法。思路是用sshpass + SSH_ASKPASS ，可以用它来做一个类似xshell的东西了。：）。
+
+https://superuser.com/a/394826
+
