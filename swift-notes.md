@@ -64,3 +64,20 @@ When you assign a default value to a stored property, or set its initial value w
 
 当你为stored property设置值，或是在initializer里为它设置初始值时，都不会触发任何的observers。
 
+## 调用apple script时报错
+
+```
+2019-07-15 18:49:43.466685+0800 osascript[48896:18363815] skipped scripting addition "/Library/ScriptingAdditions/WebexScriptAddition.osax" because it is not SIP-protected.
+```
+
+网上也有遇到了这个问题： https://www.jessesquires.com/blog/executing-applescript-in-mac-app-on-macos-mojave/
+
+最后也没有解决，我把sandbox给禁用了，然后就可以调用applescript了。不过样应该是不能发布到Mac Store上了，不过也无所谓。
+
+
+
+## OS X程序点击dock图标重新弹出窗口方法
+
+
+
+https://stackoverflow.com/a/43332520

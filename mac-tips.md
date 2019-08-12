@@ -18,3 +18,27 @@ Turn on "Prefs > Advanced > To drag images or selected text, you must hold ⌘. 
 
 https://superuser.com/a/394826
 
+
+
+
+
+access keychain from commandl line: 
+
+https://macromates.com/blog/2006/keychain-access-from-shell/
+
+
+
+iTerm2 apple scripts.
+
+https://www.iterm2.com/documentation-scripting.html
+
+
+
+ NSOutlineView(TreeView) tutorial
+
+https://www.raywenderlich.com/1201-nsoutlineview-on-macos-tutorial
+
+
+
+
+

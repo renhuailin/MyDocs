@@ -116,6 +116,19 @@ $ mytest=(one two three four five)
 
 `;;`  只用在`case`中，相当于`break`.
 
+```bash
+/bin/cat << EOF | /usr/bin/osascript
+#!/usr/bin/osascript
+tell application "iTerm"
+    set cmd to "/Users/harley/.pyenv/shims/python3 /Users/harley/Documents/Workspace/python/python-scripts/expect-ssh.py -s 10.218.128.38 -u ubuntu"
+    tell current window
+        create tab with default profile command cmd
+    end tell
+    activate
+end tell
+EOF
+```
+
 ### iterate files in folder
 
 ```bash
@@ -388,6 +401,8 @@ ssh -R <remote port>:<localhost or local IP>:<local port> <SSH hostname>
 > **Note:**
 > 
 > 这样映射的端口只能listen在 127.0.0.1，所以需要通过nginx反向代理才能访问。
+
+这样做会一直开着一个terminal，如果这个terminal挂了，这个连接就断了，根据[这篇blog](https://mpharrigan.com/2016/05/17/background-ssh.html) ,我们可以添加上参数 `-fNT`, 让这个ssh运行在后台，Now you can't ever close the connection!
 
 # tmux
 
@@ -683,8 +698,6 @@ while true; do wget -q -O- http://9.112.190.95:32758/; done
 
 # curl
 
-
-
 ```
 -f, --fail
               (HTTP) Fail silently (no output at all) on server errors. This is mostly done to better enable scripts etc to better deal with failed attempts. In normal cases when an HTTP server fails to  deliver  a
@@ -703,8 +716,6 @@ while true; do wget -q -O- http://9.112.190.95:32758/; done
               See also -v, --verbose and --stderr.
 ```
 
-
-
 follow redirect.
 
 ```
@@ -722,8 +733,6 @@ $ curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci
 ```
 
 `--create-dirs` 如果目录不存在就创建它。
-
-
 
 # yum
 
@@ -827,8 +836,44 @@ $ timedatectl
 $ python -m SimpleHTTPServer
 
 
-$ python3 -m http.server
+$ python3 -m http.server 8080
 ```
+
+# 什么是公钥、私钥和证书
+
+请看[数字签名是什么](http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
+
+http://www.youdzone.com/signature.html
+
+几种证书的格式有什么区别？http://www.metsky.com/archives/598.html
+
+采用的标准不同，生成的数字证书，包含内容也可能不同。
+
+下面就证书包含/可能包含的内容做个汇总，一般证书特性有：
+
+- 存储格式：二进制还是ASCII
+- 是否包含公钥、私钥
+- 包含一个还是多个证书
+- 是否支持密码保护（针对当前证书）
+
+其中：
+
+- *.der/*.cer/*.crt 以**二进制形式存放证书，只有公钥，不包含私钥。**
+- *.csr 证书请求
+- *.pem 以Base64编码形式存放证书，以"-----BEGIN CERTIFICATE-----" and "-----END CERTIFICATE-----"封装，只有公钥。
+- *.pfx/*.p12也是以二进制形式存放证书，包含公钥、私钥，包含保护密码。pfx和p12存储格式完全相同只是扩展名不同。
+- *.p10 证书请求
+- *.p7r CA对证书请求回复，一般做数字信封
+- *.p7b/*.p7c 证书链，可包含一个或多个证书。
+
+**理解关键点：**
+
+- 凡是包含私钥的，一律必须添加密码保护（加密私钥），因为按照习惯，公钥是可以公开的，私钥必须保护，所以明码证书以及未加保护的证书都不可能包含私钥，只有公钥，不用加密。
+- 上文描述中，*.der均表示证书且有签名，实际使用中，还有DER编码的私钥不用签名，实际上只是个“中间件”。
+
+**另外：**
+
+证书请求一般采用.csr扩展名，但是其格式有可能是PEM也可能是DER格式，但都代表证书请求，只有经过CA签发后才能得到真正的证书。
 
 # SSL 证书
 
@@ -885,6 +930,19 @@ cp /etc/apk/repositories /etc/apk/repositories.bak
 
 # 修改为国内镜像源
 echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
+
+
+$ apk update
+```
+
+####Setup timezone
+
+```
+# echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
+# apk update
+# apk add tzdata
+# cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# echo "Asia/Shangha" >  /etc/timezone
 ```
 
 删除一个包

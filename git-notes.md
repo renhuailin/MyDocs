@@ -77,8 +77,29 @@ git clone -l --no-hardlinks file:///opt/git_repo/MessageCenter
 git clone --depth 1 https://github.com/kubernetes/kubernetes.git
 ```
 
-
 从库里删除文件，比如我在初始导入时，把一些logs文件也添加了进去，后来我把它们加到了.gitignore中，我想把它们从git repo中删除。
+
+
+
+Clone with all branches，这个我验证过了，可用。
+
+```
+git clone --mirror /path/to/original.git
+git remote set-url origin /path/to/new-repo.git
+git push -u origin
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 如果是目录
@@ -446,14 +467,25 @@ Branch sf set up to track remote branch refs/remotes/origin/serverfix.
 Switched to a new branch "sf"
 Now, your local branch sf will automatically push to and pull from origin/serverfix.
 
-## rebase 
+## 4.4 rebase 
 
 [merge和rebase详解](http://chuansong.me/n/377054)
+
+
+
+## 4.5 Git flow
+
+http://www.ruanyifeng.com/blog/2015/12/git-workflow.html
+
+https://nvie.com/posts/a-successful-git-branching-model/
+
+https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/git-flow   这里讲到了最流行的git flow扩展包： [AVH Edition](https://github.com/petervanderdoes/gitflow/) 。
 
 
 # 5 Archive 归档
 Archive The Repository
 First, let’s export our repository into a ZIP archive. Run the following command in your local copy of my-git-repo.
+
 ```
 git archive master --format=zip --output=../website-12-10-2012.zip
 ```
