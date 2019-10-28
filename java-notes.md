@@ -524,28 +524,16 @@ How to retrieve String from  jsonPath in mvcMock?
 
 https://stackoverflow.com/a/49537158
 
-
-
 # Nexus
 
 Nexus里的repo有hosts、proxy、group三种，
 
 hosts就是host在Nexus里的repo，当你运行mvn deploy时，artifact 就会Push到这个repo.
 
-
-
 proxy类型
 
 A *proxy repository* is a repository that is linked to a remote repository. Any request for a component is verified against the local content of the proxy repository. If no local component is found, the request is forwarded to the remote repository. The component is then retrieved and stored locally in the repository manager, which acts as a cache. Any future requests for the same component are fulfilled from the local storage, eliminating network bandwidth and time overhead when retrieving the component from the remote repository again
 
-
-
 Group类型
 
 A *repository group* is a collection of other repositories, where you can combine multiple repositories of the same format into a single item. This represents a powerful feature of Nexus Repository Manager that lets developers rely on a single URL for their configuration needs. For example, if your group has a Maven Central proxy repository and a hosted repository for 3rd party JARs, these can be combined into a group with one URL for builds.
-
-
-
-
-
-

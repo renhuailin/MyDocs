@@ -5,14 +5,14 @@ Linux字體配置
 
 然後我發現chrome在顯示Arial這個字體時，效果特別差，我把ttf-mscorefonts-installer裏的Arial這個字體刪除後，發現用的是Liberation Sans，這個字體顯示效果也不好。於是我開始修改fontconfig來換成Droid Sans.
 
-
 先轉到/etc/fonts/conf.avail下，先看看有哪些配置裏包含Liberation Sans
+
 ```
 $ grep 'Liberation' *
 ```
+
 發現在這個文件裏30-metric-aliases.conf有相關的替換。 我把Liberation Sans註釋掉，加上Droid Sans。
 
-  
         <!-- Microsoft -->
         <alias binding="same">
           <family>Arial</family>
@@ -27,8 +27,6 @@ $ grep 'Liberation' *
 
   刷新緩存`fc-cache -fr`。
 
-
-
 # 2014-07-31  Reinstall Ubuntu 14.04
 
 重新安裝了以後發現，Google chrome 使用的中文字體是 `Droid Sans Fallback`,沒有使用思源黑體。看來要手動修改fontconfig。
@@ -40,9 +38,10 @@ $ grep 'Liberation' *
 $ cd /etc/fonts/conf.d
 $ grep "Arial" *
 ```
+
 然逐一查看這些文件。
 
-``` xml
+```xml
 <alias binding="same">
   <family>Arial</family>
   <accept>
@@ -53,16 +52,3 @@ $ grep "Arial" *
   </accept>
 </alias>
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-

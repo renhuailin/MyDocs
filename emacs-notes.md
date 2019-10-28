@@ -12,9 +12,8 @@
   TAB                制表符键
   ESC                ESC 键
   SPC                空格键
-  Backspace, DEL	   退格键
-  Delete	   	   删除键
-
+  Backspace, DEL       退格键
+  Delete              删除键
 
 如果不知道
   C-x C-c            退出并关闭 Emacs
@@ -37,14 +36,12 @@
   C-g                退出当前命令。如果你不知道Emacs正在干什么呢，多按几次
                      C-g，就会恢复到正常状态
 
-
 在线帮助
   C-h t              TUTORIAL
   C-h i              Online Info
 
   C-h c              给出键序列（简称键）绑定的命令名字
   C-h w              由命令名字给出键的绑定
-
 
 给命令传参数
   C-u                给定参数前缀
@@ -54,7 +51,6 @@
   M-9                参数0...9
 
   M--                负参数
-
 
 光标的移动
   C-a                行首
@@ -67,7 +63,6 @@
 
   M-f                前进一个词
   M-b                后退一个词
-
 
 搜索和替换
   C-s                增量搜索
@@ -97,10 +92,8 @@
   M-x replace-string 替换
   M-x replace-regexp 正则表达式替换
 
-
 区域的拷贝和粘贴
 区域是Mark和Point之间的部分，Point就是光标的左下角，Mark由命令设置。 `Yanking ring'是一个存放文本的地方，从这里你可以拷贝删除(kill)的文本。 `Yanking'表示插入刚刚删除(kill)的文本。 
-
 
   C-SPC              
   C-@                
@@ -127,7 +120,6 @@
 
   C-k                删除（kill）从光标处到行尾
 
-
 基本编辑
   C-q                插入下一个的字符,比如插入字符`^X'用“C-q C-x”
 
@@ -139,7 +131,6 @@
 
   C-v                向下滚动窗口
   M-v                向上滚动窗口
-
 
 多窗口和多缓冲区
   C-x b              转到另一个缓冲区
@@ -155,7 +146,6 @@
 
   C-M-v              向下滚动另一个窗口，给一个负的参数，则向上滚动
 
-
 宏
   C-x (              开始一个宏的定义
   C-x )              结束一个宏的定义
@@ -168,16 +158,15 @@
   M-x insert-kbd-macro
                      在当前文件中插入一个已定义并命名过的宏
 
-
 矩形区域操作
-  * 矩形区域的两端是由 Mark 和 Point 确定的。
 
+* 矩形区域的两端是由 Mark 和 Point 确定的。
+  
   C-x r t            用串填充矩形区域
   C-x r o            插入空白的矩形区域
   C-x r y            插入之前删除的矩形区域
   C-x r k            删除矩形区域
   C-x r c            将当前矩形区域清空
-
 
 #【移动】
 `C-n`   向前移动一行
@@ -196,7 +185,6 @@ C-l     重绘屏幕，并将光标所在行置于屏幕的中央 （注意是 C
 输入 C-x o（“o”指的是“其它（other）”），
    将光标转移到下方的窗格。
 
-
 (add-to-list 'auto-mode-alist '()) 用来关联某种特定的文件和mode.  如rails中的scss
 
 【auto completion】
@@ -205,7 +193,6 @@ auto-complete和yasnippet是Emacs下两款非常强悍的补全插件，那么au
 
 auto complete demo 
 http://cx4a.org/software/auto-complete/demo.html
-
 
 学会看文档
 Emacs的文档非常丰富, 有Elisp自己的自文档, 还有更详细的info. Elisp中的变量, 函数都有文档. 对于大多数情况都够用了.
@@ -218,10 +205,8 @@ C-h f (describe-function)  查看函数的文档
 查看face的文档
 M-x describe-face
 
-
 C-h m (describe-mode) 查看某个mode的文档。从我看来是“查看当前的mode信息”
 刚开始学习某个mode的时候, 可以用C-h m看看当前buffer对应的主mode和副mode的文档, 这个文档一般都会包括mode中的命令和快捷键列表.
-
 
 C-h k (describe-key) 查看某个快捷键对应的命令
 
@@ -253,7 +238,6 @@ M-m   (back-to-indentation)   move cursor to the first word in the line.
 
 ;; Replace every occurrence of STRING with NEWSTRING.
 `M-x replace-string <RET> STRING <RET> NEWSTRING <RET>'
-    
 
 Show current load path:
 ‘C-h v load-path RET’ 
@@ -282,35 +266,29 @@ The following makes outline mode easy to use generally, not just when editing Go
            (lambda ()
              (require 'outline-magic)
              (define-key outline-minor-mode-map [(f10)] 'outline-cycle)))
-             
-             
+
 ## Set default font
 
 Chose the menu 〖Options ▸ Set Default Font…〗, then 〖Options ▸ Save Options〗.
 
 Or:
 
-``` lisp
+```lisp
 ;; set a default font
 (when (member "DejaVu Sans Mono" (font-family-list))
   (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
-
 ```
 
-## Access menu in terminal mode 
+## Access menu in terminal mode
+
 press F10
 
 # BackupDirectory
+
 https://www.emacswiki.org/emacs/BackupDirectory
 
-
 ## emacs lisp 学习
+
 Alternatively, you can call ielm. It will start a interactive elisp command line interface.
 
 http://ergoemacs.org/emacs/elisp.html
-
-
-
-
-
-

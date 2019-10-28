@@ -146,6 +146,8 @@ for filename in $(find /Data/*.txt 2> /dev/null); do
 done
 ```
 
+### iterate lines in a file.
+
 ```bash
 for id in $(cat ./unused-containers.txt);do
     docker rm $id

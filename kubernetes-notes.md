@@ -2,13 +2,14 @@ Kubernetes notes
 -------------
 
 # Kubernetes 架构图
+
 https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture.md
 
 https://github.com/kubernetes/kubernetes/blob/release-1.5/docs/design/architecture.md
 
 # 安装
-kubeadm是用apt安装的，atp支持https_proxy这个系统变量，所以我用 shadowsocks + privoxy 翻墙然后安装了kubeadm.
 
+kubeadm是用apt安装的，atp支持https_proxy这个系统变量，所以我用 shadowsocks + privoxy 翻墙然后安装了kubeadm.
 
 ## 在线体验
 
@@ -16,43 +17,44 @@ You need to have a Kubernetes cluster, and the kubectl command-line tool must be
 [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
 [Play with Kubernetes](http://labs.play-with-k8s.com/)
 
-
-
 ## 多节点部署时的 Bootstrap Docker
+
 https://kubernetes.io/docs/getting-started-guides/docker-multinode/
 
 Bootstrap Docker
 
 This guide uses a pattern of running two instances of the Docker daemon:    
+
 1) A bootstrap Docker instance which is used to start etcd and flanneld, on which the Kubernetes components depend    
 2) A main Docker instance which is used for the Kubernetes infrastructure and user’s scheduled containers
-This pattern is necessary because the flannel daemon is responsible for setting up and managing the network that interconnects all of the Docker containers created by Kubernetes. To achieve this, it must run outside of the main Docker daemon. However, it is still useful to use containers for deployment and management, so we create a simpler bootstrap daemon to achieve this.
+   This pattern is necessary because the flannel daemon is responsible for setting up and managing the network that interconnects all of the Docker containers created by Kubernetes. To achieve this, it must run outside of the main Docker daemon. However, it is still useful to use containers for deployment and management, so we create a simpler bootstrap daemon to achieve this.
 
 因为这个部署方案的flannel是运行在docker里的。 它必须在主docker daemon外运行，所以需要另外一个docker daemon--Bootstrap Docker Daemon.
 那到底什么是 bootstrap docker instance呢？其实它就是另一个docker daemon,这个daemon在启动时指定了一个新的socket文件。
 
-
 ```
 This pattern is necessary because the flannel daemon is responsible for setting up and managing the network that interconnects all of the Docker containers created by Kubernetes. To achieve this, it must run outside of the main Docker daemon. However, it is still useful to use containers for deployment and management, so we create a simpler bootstrap daemon to achieve this.
 ```
 
-``` bash
+```bash
 BOOTSTRAP_DOCKER_SOCK="unix:///var/run/docker-bootstrap.sock"
 ```
+
 在这个daemon下启动的container，用`docker ps`查看的时候必须要加上`-H unix:///var/run/docker-bootstrap.sock`。
 
 ```
 $ docker -H unix:///var/run/docker-bootstrap.sock ps
 ```
 
-
 # Pod
+
 它可以包含一个或多个container，
+
 ```
 in a pre-container world, they would have executed on the same physical or virtual machine.
 ```
-它们应该在一个物理机或虚机上？
 
+它们应该在一个物理机或虚机上？
 
 共享ip和端口？？？能通过localhost相互访问。
 They can also communicate with each other using standard inter-process communications like SystemV semaphores or POSIX shared memory. 
@@ -70,7 +72,6 @@ A: 它们有不同的IP,不能通过IPC沟通
 
 这可得注意了。卷会被删除！！！应该只是跟Pod一样的生命周期的卷。
 
-
 co-location 主机托管
 
 通常用户不应该直接创建pods，而是应该通过controllers。
@@ -81,15 +82,11 @@ co-location 主机托管
 $ kubectl get pods -o wide
 ```
 
-
-
 ## Forward a local port to a port on the pod
 
 ```
 $ kubectl port-forward redis-master-765d459796-258hz 6379:6379 
 ```
-
-
 
 ### 使用 HostAliases 向 Pod /etc/hosts 文件添加条目
 
@@ -117,14 +114,9 @@ spec:
     - "/etc/hosts"
 ```
 
-
-
 ## Static Pods
 
 今天在跟陈晖请教如何在ICP安装完后启动audit logs的问题时，知道了这个概念。
-
-
-
 
 # Label
 
@@ -132,10 +124,9 @@ label的key可以分两段，前缀和名字，用`/`分隔。名字部分不能
 前缀是可选的，但是如果指定，就必须是DNS subdomain。不能超过253字符。
 自动化系统组件，如果(e.g. kube-scheduler, kube-controller-manager, kube-apiserver, kubectl, or other third-party automation) 必须指定prefix.`kubernetes.io/`这个前缀保留给kubernetes核心组件使用。
 
-
 # Replication controller
-Replication controller 可保证Pod的复本数量，多了删除，少了创建。注意是pods级别的。
 
+Replication controller 可保证Pod的复本数量，多了删除，少了创建。注意是pods级别的。
 
 Rolling updates  ,可以通过新建一个Replication controller来实现。新建一个Replication controller，把复本设计为1，原来的Replication controller的复本设置为0，就可以实现平滑升级了。
 
@@ -149,11 +140,7 @@ ReplicaSet 是下一代的 Replication Controlle，支持新的set-based label s
 **DaemonSet**
 如果你的pods要提示机器级别的功能，如：在所有的pods启动之前启动，在机器重启或关闭之前安全关闭。
 
-
-
 # ReplicaSet
-
-
 
 ReplicaSet is the next-generation Replication Controller.  The only difference between a *ReplicaSet* and a [*Replication Controller*](https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/) right now is the selector support. 
 
@@ -166,12 +153,6 @@ ReplicaSet supports the new set-based selector requirements as described in the 
 大部分支持Replication Controller的kubectl命令也支持ReplicaSet，只有[`rolling-update`](https://kubernetes.io/docs/user-guide/kubectl/v1.7/#rolling-update)这个命令例外。
 
 如果你想要支持[`rolling-update`](https://kubernetes.io/docs/user-guide/kubectl/v1.7/#rolling-update) ，请使用*Deployment*。
-
-
-
-
-
-
 
 # Deployment
 
@@ -190,13 +171,9 @@ Later, update that Deployment to recreate the Pods (for example, to use a new im
 Rollback to an earlier Deployment revision if the current Deployment isn’t stable.
 Pause and resume a Deployment.
 
-
-
 **Note:** *You should not manage ReplicaSets owned by a Deployment. All the use cases should be covered by manipulating the Deployment object. Consider opening an issue in the main Kubernetes repository if your use case is not covered below.*
 
 你不要管理由Deployment所创建的ReplicaSets。
-
-
 
 ### 显示部署的历史记录
 
@@ -204,16 +181,11 @@ Pause and resume a Deployment.
 $ kubectl rollout history deployment/nginx-deployment
 ```
 
-
-
 回退到指定的某次部署
 
 ```
 $ kubectl rollout history deployment/nginx-deployment --revision=2
 ```
-
-
-
 
 # Service
 
@@ -226,6 +198,7 @@ Service是一组Pods的逻辑集合和访问它们的相关策略，这些pods�
 它是一个抽象的概念.它并不真正地去启动Pod,启动Pods是通过`Deployment`.
 
 ## Accessing the Service
+
 K8s支持2种发现服务的方式:环境变量和DNS,
  environment variables and DNS
 
@@ -234,10 +207,10 @@ K8s支持2种发现服务的方式:环境变量和DNS,
 如果先创建的pods,然后创建的Service,那么env里不包含服务相关的信息.但是最常用的创建service的方式.
 如果Pods是在Service之后创建的,那么pods里的env里就会包含服务的相关的信息.
 
-
 文档上为了测试pods在服务之后创建,它先把Service的`replicas`减为0,然后再设置为2. 这样pods就在服务之后创建了.
 
 ### DNS
+
 好像这个也是Pods内的,也就是这两种方式都是让其它的pods找到这个service,也就是cluster内部的.
 
 #### A records
@@ -252,8 +225,6 @@ K8s支持2种发现服务的方式:环境变量和DNS,
 
 SRV Records are created for named ports that are part of normal or [Headless Services](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services). For each named port, the SRV record would have the form `_my-port-name._my-port-protocol.my-svc.my-namespace.svc.cluster.local`. For a regular service, this resolves to the port number and the CNAME: `my-svc.my-namespace.svc.cluster.local`. For a headless service, this resolves to multiple answers, one for each pod that is backing the service, and contains the port number and a CNAME of the pod of the form `auto-generated-name.my-svc.my-namespace.svc.cluster.local`.
 
-
-
 #### 自定义DNS
 
 https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
@@ -264,11 +235,10 @@ $ kubectl -n kube-system edit configmap kube-dns
 
 kubectl run -it --image=10.226.57.149:8080/tsf_100000000/ubuntu:16.04 bash
 
-
 ## Exposing the Service
+
 这个就是把服务暴露给外部使用了.
 支持NodePort和LoadBalancer这两种方式.
-
 
 ### Services without selectors
 
@@ -283,23 +253,19 @@ Services without selectors，也就是后端不是Pods。
 
 https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-mapping-external-services
 
-
-
 Q: Proxy-mode: userspace的Service工作原理？
 A: 
 
-
 Q: Proxy-mode: iptables 工作原理？
 
-
 Q: 上述两种模式有什么区别？
-
 
 Headless services      
 如果以后两种模式你都不想要，那你可以定义`Headless services`.    
 you can create “headless” services by specifying "None" for the cluster IP (spec.clusterIP).
 
 ## Publishing Service.
+
 ServiceType
 
 * **ClusterIP：** 只能集群内部访问。 
@@ -307,24 +273,15 @@ ServiceType
 * **LoadBalancer：** 使用云提供的Load Balancer。
 * **externName** : Maps the service to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record with its value. No proxying of any kind is set up. This requires version 1.7 or higher of kube-dns.  这个还没弄明白。
 
-
-
-
 Expose与Publish的区别是什么？
-
-
 
 ## Deployment  ReplicaSet  Service的关系
 
 Deployment负责维护pods的数量，我们可以手动pod，然后通过Service来expose。这种情况，如果我们kill一个pod,系统不会自动启动一个pod.而使用Deployment后系统会自动维护一定数量的replica.这样再expose成Service，Servcie就更稳定。
 
-
-
-## Service Load Balancer 
+## Service Load Balancer
 
 [Service Load Balancer](https://github.com/kubernetes/contrib/tree/master/service-loadbalancer)
-
-
 
 # Network
 
@@ -332,47 +289,31 @@ Deployment负责维护pods的数量，我们可以手动pod，然后通过Servic
 
 https://blog.csdn.net/zjysource/article/details/52052420
 
-
-
 # Volumes
 
 ## hostPath
+
 这个是我们在用docker最常用的模式，但是在k8s里时要注意：
 
 * when Kubernetes adds resource-aware scheduling, as is planned, it will not be able to account for resources used by a hostPath     k8s执行资源调度时，`hostPath`使用的资源（也就是磁盘容量）不会被计算在内！！！
-
-
-
 
 ## Lifecycle of a volume and claim
 
 卷有两种提供方式：
 
 * static
-
-  A cluster administrator creates a number of PVs. They carry the details of the real storage which is available for use by cluster users. They exist in the Kubernetes API and are available for consumption.
-
   
+  A cluster administrator creates a number of PVs. They carry the details of the real storage which is available for use by cluster users. They exist in the Kubernetes API and are available for consumption.
 
 * dynamic
 
-  
-
-
-
-
-
-| 卷类型       | Multi-Writers |      |
-| --------- | ------------- | ---- |
-| NFS       | Yes           |      |
-| GlusterFS | Yes           |      |
-| CephFS    | Yes           |      |
-
-
+| 卷类型       | Multi-Writers |     |
+| --------- | ------------- | --- |
+| NFS       | Yes           |     |
+| GlusterFS | Yes           |     |
+| CephFS    | Yes           |     |
 
 # Config Map and Secret
-
-
 
 使用configmap
 
@@ -382,17 +323,9 @@ https://blog.csdn.net/zjysource/article/details/52052420
 kubectl set env --from=secret/mysecret deployment/myapp
 ```
 
-
-
 `kubectl set` 还可以以文件等方式设置env，请参考kubectl命令。
 
-
-
-
-
 每次你更新Config Map 或 Secret时，使用了此配置的pod都会相应地更新。
-
-
 
 # Namespaces
 
@@ -401,18 +334,19 @@ Kubernetes supports multiple virtual clusters backed by the same physical cluste
 k8s支持物理集群上的多个虚拟集群，这些虚拟集群被称做`namespaces`.
 
 # Service Accounts
+
 A service account provides an identity for processes that run in a Pod.
 service account我称之为服务账号,为运行在Pod里的进程提供了一个身份。
 
 # Daemon Set
+
 A Daemon Set确保所有的节点都运行一个Pod的复本，当一个新的节点加入到集群时，这个pod就自动加入到这个。
 
 典型的应用场景如为所有的节点提供存储的Pod，日志收集，监控。
 
 DaemonSet管理的Pods用的是hostPort，所以能用节点的IP直接访问。
 
-
-#  Ingress Resources
+# Ingress Resources
 
 如果我们用的不GCE，AWS等云主机，是物理机那该如何配置loadbalancer？请参考：
 https://github.com/kubernetes/contrib/tree/master/service-loadbalancer  这是用Haproxy来做负载均衡的项目。
@@ -421,19 +355,11 @@ https://github.com/kubernetes/contrib/tree/master/service-loadbalancer  这是�
 
 集群内的服务可以通过ClusterIP来相互访问，但是这边些服务无法越过Cluster边界被外部的系统访问。Ingress是集群外部访问集群内服务的入口控制器。
 
-
-
 部署一个Ingress
 
 http://blog.frognew.com/2017/04/kubernetes-ingress.html
 
-
-
 [DockOne微信分享（一三三）：深入理解Kubernetes网络策略](http://dockone.io/article/2529) 这里面讲到了network policy.
-
-
-
-
 
 ##Nginx ingress controller
 
@@ -452,17 +378,7 @@ tima-cdp-user-test          NodePort   172.16.255.118   <none>        10001:3109
 
 通过上面的输出我们可以发现， ingress-nginx的NodePort为：  http: 30067,https: 32145。我们可以在所有的Node**节点**上访问这个服务。
 
-
-
-
-
-
-
-
-
-
 # Horizontal Pod Autoscaling
-
 
 目前只能跟deployment绑定。
 
@@ -474,12 +390,9 @@ The cluster has to be started with `ENABLE_CUSTOM_METRICS` environment variable 
 $ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 ```
 
-
-
 # Job
+
 可以执行一次的任务，也可以定时多次执行。
-
-
 
 ### backoffLimit
 
@@ -489,24 +402,21 @@ $ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 There are situations where you want to fail a Job after some amount of retries due to a logical error in configuration etc. To do so, set .spec.backoffLimit to specify the number of retries before considering a Job as failed. The back-off limit is set by default to 6. Failed Pods associated with the Job are recreated by the Job controller with an exponential back-off delay (10s, 20s, 40s …) capped at six minutes, The back-off limit is reset if no new failed Pods appear before the Job’s next status check.
 ```
 
-
-
-
-
 # Pet Set
+
 一组有状态的Pods,有状态的东西都很麻烦。
 A Pet Set, in contrast, is a group of stateful pods that require a stronger notion of identity.
 
 # 源代码分析
+
 http://blog.csdn.net/screscent/article/category/2488081
 
-
-
-
-
 # 概念 CONCEPTS
+
 ## Cluster Administration
+
 ### Cluster Networking
+
 这章一定要好好理解，这是k8s的网络基础。
 
 1. Highly-coupled container-to-container communications: this is solved by pods and localhost communications.
@@ -514,8 +424,8 @@ http://blog.csdn.net/screscent/article/category/2488081
 3. Pod-to-Service communications: this is covered by services.
 4. External-to-Service communications: this is covered by services.
 
-
 Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):
+
 * all containers can communicate with all other containers without NAT
 * all nodes can communicate with all containers (and vice-versa) without NAT
 * the IP that a container sees itself as is the same IP that others see it as
@@ -524,9 +434,9 @@ Kubernetes imposes the following fundamental requirements on any networking impl
 This model is not only less complex overall, but it is principally compatible with the desire for Kubernetes to enable low-friction porting of apps from VMs to containers. If your job previously ran in a VM, your VM had an IP and could talk to other VMs in your project. This is the same basic model.
 
 ## Network Policies
+
 https://kubernetes.io/docs/concepts/services-networking/networkpolicies/
 https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/
-
 
 A network policy is a specification of how groups of pods are allowed to communicate with each other and other network endpoints.
 y default, all traffic is allowed between all pods (and NetworkPolicy resources have no effect).
@@ -542,15 +452,11 @@ Isolation can be configured on a per-namespace basis. Currently, only isolation 
 
 [API 1.7](https://v1-7.docs.kubernetes.io/docs/api-reference/v1.7/)  这里有ymal的具体格式 
 
-
-
 把所有的相关文件放在一个目录里，用一条命令创建。
 
 ```
 $ kubectl apply -f <directory>/
 ```
-
-
 
 zsh下的completion
 
@@ -558,23 +464,17 @@ zsh下的completion
 $ source <(kubectl completion zsh)
 ```
 
-
-
 bash下的completion
 
 ```
 $ source <(kubectl completion bash)
 ```
 
-
-
 强制删除一个pod.
 
 ```
 $ kubectl delete pod gitlab --grace-period=0 --force
 ```
-
-
 
 显示pods的更多信息
 
@@ -664,27 +564,23 @@ $ kubectl explain pod.spec.affinity
 
 
 
+$ kubectl drain <node name>
+# 这时节点的状态是不能调度的。
+10.218.132.42    Ready,SchedulingDisabled   <none>    13d       1.8.13-qcloud
+
+# 要变成可调度的要用uncordon这个命令。
+$ kubectl uncordon <node name>
 ```
 
-
-
 http://deployment-msa-demo.default.svc.cluster.local:8082
-
-
 
 ## Helm and Charts
 
 https://github.com/kubernetes/helm/blob/master/docs/charts.md
 
-
-
-
-
 https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts/
 
 ## Autoscaling
-
-
 
 为了实现autoscaling,必须对容器所使用的资源进行限制,参考 [kubernetes 资源限制](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/) 。
 
@@ -692,8 +588,6 @@ resources下面有两个属性： requests ,limits
 
 * `requests` 是在pod调试时用的，schedular用它来计算应该在哪个节点启动容器。
 * `limits` 是在运行时判断的，如果运行的容器的CPU超过了这个限制，容器会被杀掉。
-
-
 
 下面是json格式的Deployment的创建文件：限制了cpu和内存。
 
@@ -764,8 +658,6 @@ resources下面有两个属性： requests ,limits
 }
 ```
 
-
-
 下面是autoscaling的相关命令。
 
 ```shell
@@ -775,15 +667,11 @@ $ kubectl get hpa
 $ kubectl delete horizontalpodautoscalers deployment-msa-demo
 ```
 
-
-
 用wget来做压力测试：
 
 ```shell
 while true; do wget -q -O- http://9.112.190.95:32758/; done
 ```
-
-
 
 ab的压力测试
 
@@ -799,8 +687,8 @@ $ ab -n 100000 -c 100 http://9.112.190.95:32758/
 $ ab -n 10000000 -c 100 http://9.112.190.95:32758/
 ```
 
-
 ## Kompose
+
 https://github.com/kubernetes/kompose
 
 这个工具可以把`docker-compose.yaml`转成kubernetes的资源。
@@ -832,13 +720,7 @@ spec:
           date >> /html/index.html;
           sleep 1;
         done
-
-
 ```
-
-
-
-
 
 ## How to create a service account
 
@@ -879,21 +761,9 @@ metadata:
   namespace: kube-system
 ```
 
-
-
-
-
-
-
-
-
-##  PersistentVolumeClaimResize 
+## PersistentVolumeClaimResize
 
 1.8 支持PV的resize,但是要开启 [feature gate](https://kubernetes.io/docs/reference/feature-gates/) `ExpandPersistentVolumes`  同时最好要开启`PersistentVolumeClaimResize` admission controller。
-
-
-
-
 
 # Helm & Charts
 
@@ -901,23 +771,12 @@ For more information about Helm, see [https://github.com/kubernetes/helm/tree/ma
 
 Helm 参考：https://docs.helm.sh/using_helm/#quickstart
 
-
-
-
-
 ```
 $ helm init --client-only --skip-refresh
 $ helm repo add https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts
 $ helm search -l
 $ 
-
-
-
 ```
-
-
-
-
 
 # 监控
 
@@ -925,27 +784,13 @@ kubernetes不再用 `model API`提供的api来实现监控了，而是用 [metri
 
 Grafana service by default requests for a LoadBalancer. If that is not available in your cluster, consider changing that to NodePort. Use the external IP assigned to the Grafana service, to access Grafana. The default user name and password is 'admin'. Once you login to Grafana, add a datasource that is InfluxDB. The URL for InfluxDB will be `http://INFLUXDB_HOST:INFLUXDB_PORT`. Database name is 'k8s'. Default user name and password is 'root'. Grafana documentation for InfluxDB [here](http://docs.grafana.org/datasources/influxdb/).
 
-
-
-
-
-
-
-
-
 # 开发环境
 
-
-
 https://www.ibm.com/developerworks/cn/opensource/os-kubernetes-developer-guide/index.html
-
-
 
 # 案例分享
 
 [DockOne微信分享（一四二）：容器云在万达的落地经验](http://dockone.io/article/2730)    这里有不少的干货，包含kubemaster的高可用，Etcd的高可用，存储的方案，ceph的使用。网络的Open VSwitch的开发是基于`OpenShift SDN` .
-
-
 
 请参考：
 [https://github.com/docker/distribution/blob/master/docs/deploying.md](https://github.com/docker/distribution/blob/master/docs/deploying.md)
@@ -956,16 +801,8 @@ https://www.ibm.com/developerworks/cn/opensource/os-kubernetes-developer-guide/i
 
 [Kubernetes 有状态集群服务部署与管理](http://dockone.io/article/2016)    这里有不少干货，不错。 [这里是infoQ上的视频](http://www.infoq.com/cn/presentations/kubernetes-stateful-cluster-service-deployment-and-management)
 
-
 https://www.safaribooksonline.com/library/view/kubernetes-cookbook/9781785880063/
-
 
 [基于Jenkins和Kubernetes的CI工作流](http://dockone.io/article/2114)
 
 [使用JENKINS实现CI/CD【ZOUES](http://www.zoues.com/2017/03/19/%E4%BD%BF%E7%94%A8kubernetes-jenkins%E5%AE%9E%E7%8E%B0cicd%E3%80%90zoues-com%E3%80%91/)
-
-
-
-
-
-
