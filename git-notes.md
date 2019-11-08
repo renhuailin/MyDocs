@@ -428,6 +428,22 @@ $ git branch | grep \* | cut -d ' ' -f2
 这篇文章里讲的merge和回滚还是挺参考价值的
 http://guibin.iteye.com/blog/1014369
 
+### 如何merge single file?
+
+最常用的场景是我们在生产环境发现了一个bug,然后我们在master分支上hotfix了这个bug，接下来我们把这个修改merge到develop分支上，以保证下发布时bug不用重现。
+
+https://stackoverflow.com/a/11593308
+
+```
+$ git checkout develop
+
+$ git checkout --patch master main.java
+```
+
+
+
+
+
 ### 4.2.1 Fast Forward
 
 什么是fast forward呢，如果你从master创建了一个分支develop,并在develop分支上开发。
@@ -648,12 +664,14 @@ In its default mode, git pull is shorthand for git fetch followed by git merge F
 More precisely, git pull runs git fetch with the given parameters and calls git merge to merge the retrieved branch heads into the current branch. With --rebase, it runs git rebase instead of git merge.
 ```
 
-##待解决的问题
+## 待解决的问题
+
 git reset是做什么的？
 
 how to merge binary file ?
 
-###参考文献    
+### 参考文献
+
 A successful Git branching model http://nvie.com/posts/a-successful-git-branching-model/   
 Useful Git Tips for Beginners http://sixrevisions.com/web-development/git-tips/     
 [Progit](https://github.com/progit/progit "progit")

@@ -277,7 +277,45 @@ Create a new image from a container’s changes
 $ sudo docker commit 614122c0aabb rhl/apache2
 ```
 
-## 8.2 Dockerfile
+
+
+
+
+## 8.2 Docker image 存储地址
+
+https://stackoverflow.com/a/25978888
+
+
+
+The contents of the `/var/lib/docker` directory vary depending on the [driver Docker is using for storage](https://github.com/docker/docker/blob/990a3e30fa66e7bd3df3c78c873c97c5b1310486/daemon/graphdriver/driver.go#L37-L43).
+
+By default this will be `aufs` but can fall back to `overlay`, `overlay2`, `btrfs`, `devicemapper` or `zfs` depending on your kernel support. In most places this will be `aufs` but the [RedHats went with `devicemapper`](http://developerblog.redhat.com/2014/09/30/overview-storage-scalability-docker/).
+
+You can manually set the storage driver with the [`-s` or `--storage-driver=`](https://docs.docker.com/engine/reference/commandline/dockerd/#/daemon-storage-driver-option) option to the [Docker daemon](https://docs.docker.com/engine/reference/commandline/dockerd/).
+
+- `/var/lib/docker/{driver-name}` will contain the driver specific storage for contents of the images.
+- `/var/lib/docker/graph/<id>` now only contains metadata about the image, in the `json` and `layersize` files.
+
+In the case of `aufs`:
+
+- `/var/lib/docker/aufs/diff/<id>` has the file contents of the images.
+- `/var/lib/docker/repositories-aufs` is a JSON file containing local image information. This can be viewed with the command `docker images`.
+
+In the case of `devicemapper`:
+
+- `/var/lib/docker/devicemapper/devicemapper/data` stores the images
+- `/var/lib/docker/devicemapper/devicemapper/metadata` the metadata
+- Note these files are thin provisioned "sparse" files so aren't as big as they seem.
+
+
+
+
+
+
+
+
+
+## 8.3 Dockerfile
 
 ### ADD 更高级的复制文件
 

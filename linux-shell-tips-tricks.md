@@ -736,6 +736,21 @@ $ curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci
 
 `--create-dirs` 如果目录不存在就创建它。
 
+```
+$ curl -X GET \
+'http://service-lv63z1gn-1256532032.ap-beijing.apigateway.myqcloud.com/release/internal/v1/violationQueryjh?appkey=2738501135&digitalSign=1&signTimestamp=1&nonce=1&plateNumber=%E5%90%89ALS105&vin=WAUACC8P0BA126688&engineNo=CDA195206' \
+  -H 'Accept: */*' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Host: service-lv63z1gn-1256532032.ap-beijing.apigateway.myqcloud.com' \
+  -H 'Postman-Token: d46789b5-ddec-4019-b801-140fa0611220,a0a2cab4-1cc0-4b7e-b7b8-21eb94445d1f' \
+  -H 'User-Agent: PostmanRuntime/7.15.2' \
+  -H 'cache-control: no-cache' \
+  -H 'x-microservice-name: violation' \
+  -H 'x-namespace-code: cdp-uat'
+```
+
 # yum
 
 看看哪个包包含ab
