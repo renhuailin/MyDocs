@@ -327,6 +327,169 @@ kubectl set env --from=secret/mysecret deployment/myapp
 
 每次你更新Config Map 或 Secret时，使用了此配置的pod都会相应地更新。
 
+## Create Config Map
+
+```
+# Create the configmap
+$ kubectl create configmap game-config --from-file=configure-pod-container/configmap/
+```
+
+`configure-pod-container/configmap/`  is a directory contains properties file.
+
+```
+game.properties
+ui.properties
+```
+
+```
+$ kubectl describe configmaps game-config
+Name:           game-config
+Namespace:      default
+Labels:         <none>
+Annotations:    <none>
+
+Data
+====
+game.properties:        158 bytes
+ui.properties:          83 bytes
+```
+
+You can use `kubectl create configmap` to create a ConfigMap from an individual file, or from multiple files.
+
+For example,
+
+```shell
+kubectl create configmap game-config-2 --from-file=configure-pod-container/configmap/game.properties
+```
+
+would produce the following ConfigMap:
+
+```shell
+kubectl describe configmaps game-config-2
+```
+
+where the output is similar to this:
+
+```
+Name:           game-config-2Namespace:      defaultLabels:         <none>Annotations:    <none>Data====game.properties:        158 bytes
+```
+
+You can pass in the `--from-file` argument multiple times to create a ConfigMap from multiple data sources.
+
+```shell
+kubectl create configmap game-config-3 --from-file=<my-key-name>=<path-to-file>
+```
+
+where `<my-key-name>` is the key you want to use in the ConfigMap and `<path-to-file>` is the location of the data source file you want the key to represent.
+
+For example:
+
+```shell
+kubectl create configmap game-config-3 --from-file=game-special-key=configure-pod-container/configmap/game.properties
+```
+
+### Create a ConfigMap from generator
+
+`kubectl` supports `kustomization.yaml` since 1.14. You can also create a ConfigMap from generators and then apply it to create the object on the Apiserver. The generators should be specified in a `kustomization.yaml` inside a directory.
+
+#### Generate ConfigMaps from files
+
+For example, to generate a ConfigMap from files `configure-pod-container/configmap/game.properties`
+
+```shell
+# Create a kustomization.yaml file with ConfigMapGenerator
+cat <<EOF >./kustomization.yaml
+configMapGenerator:
+- name: game-config-4
+  files:
+  - configure-pod-container/configmap/game.properties
+EOF
+```
+
+Apply the kustomization directory to create the ConfigMap object.
+
+```shell
+kubectl apply -k .configmap/game-config-4-m9dm2f92bt created
+```
+
+You can check that the ConfigMap was created like this:
+
+```shell
+kubectl get configmapNAME                       DATA   AGEgame-config-4-m9dm2f92bt   1      37skubectl describe configmaps/game-config-4-m9dm2f92btName:         game-config-4-m9dm2f92btNamespace:    defaultLabels:       <none>Annotations:  kubectl.kubernetes.io/last-applied-configuration:                {"apiVersion":"v1","data":{"game.properties":"enemies=aliens\nlives=3\nenemies.cheat=true\nenemies.cheat.level=noGoodRotten\nsecret.code.p...
+
+Data
+====
+game.properties:
+----
+enemies=aliens
+lives=3
+enemies.cheat=true
+enemies.cheat.level=noGoodRotten
+secret.code.passphrase=UUDDLRLRBABAS
+secret.code.allowed=true
+secret.code.lives=30
+Events:  <none>
+```
+
+Note that the generated ConfigMap name has a suffix appended by hashing the contents. This ensures that a new ConfigMap is generated each time the content is modified.
+
+#### Define the key to use when generating a ConfigMap from a file
+
+You can define a key other than the file name to use in the ConfigMap generator. For example, to generate a ConfigMap from files `configure-pod-container/configmap/game.properties` with the key `game-special-key`
+
+```shell
+# Create a kustomization.yaml file with ConfigMapGenerator
+cat <<EOF >./kustomization.yaml
+configMapGenerator:
+- name: game-config-5
+  files:
+  - game-special-key=configure-pod-container/configmap/game.properties
+EOF
+```
+
+Apply the kustomization directory to create the ConfigMap object.
+
+```shell
+kubectl apply -k .configmap/game-config-5-m67dt67794 created
+```
+
+#### Generate ConfigMaps from Literals
+
+To generate a ConfigMap from literals `special.type=charm` and `special.how=very`, you can specify the ConfigMap generator in `kustomization.yaml` as
+
+```shell
+# Create a kustomization.yaml file with ConfigMapGenerator
+cat <<EOF >./kustomization.yaml
+configMapGenerator:
+- name: special-config-2
+  literals:
+  - special.how=very
+  - special.type=charm
+EOF
+```
+
+Apply the kustomization directory to create the ConfigMap object.
+
+```shell
+kubectl apply -k .configmap/special-config-2-c92b5mmcf2 created
+```
+
+## Config Map as volume
+
+```yaml
+volumeMounts:
+        - mountPath: /app/config
+          name: cm-bootstrap-yml
+volumes:
+      - hostPath:
+          path: /var/lib/docker/containers
+          type: ""
+      - configMap:
+          defaultMode: 420
+          name: yonyou-cdp-activity-bootstrap-yaml
+        name: cm-bootstrap-yml
+```
+
 # Namespaces
 
 Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces.
@@ -479,6 +642,19 @@ $ kubectl delete pod gitlab --grace-period=0 --force
 显示pods的更多信息
 
 ```shell
+# Config kubectl for ICP
+$ kubectl config set-cluster mycluster.icp --server=https://10.8.152.111:8001 --insecure-skip-tls-verify=true
+$ kubectl config set-context mycluster.icp-context --cluster=mycluster.icp
+$ kubectl config set-credentials admin --token=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF0X2hhc2giOiJyU3hWc0tQbUpwR2gtdXJPdlJFamxnIiwiaXNzIjoiaHR0cHM6Ly9teWNsdXN0ZXIuaWNwOjk0NDMvb2lkYy9lbmRwb2ludC9PUCIsImF1ZCI6Ijk3MTEwODc4N2E5ODQwNTA5OTQ2YTRmMGM4MzIwZjEzIiwiZXhwIjoxNTE1MDczNDA3LCJpYXQiOjE1MTUwMzAyMDd9.nwH86HUBrKea1eTWPzIbRPK8cR08CJUb_qQKMMZ4C8oi8olnWkUaN8Ucptb1iuD05Hki5qi4ZLwQC7VcTKMWaXCd-d1xvAaNipwGn8jNYMhpmhQ6sZs2y4Tl1X68rWa7a8UT_7lew7OxmF-85UEFhj8xVq1O5OP4KUFEZElVNDo1ZuMfx-lukCAEHBHPmmCnYOWsUQlgp3AVfrNk6R7DQYjuJaVrEeFFFfMDLgela4MUsNhYSjBdH_XeZOxE7TpF-Nhm6MCDi0xBTed3bpCijfdLsThOl2MSgUgT7GGHEjhY0DySG53F4LmbHR75WmRgE1E5iprFwHbq6A-qAHvoHw
+$ kubectl config set-context mycluster.icp-context --user=admin --namespace=default
+$ kubectl config use-context mycluster.icp-context
+
+# Config kubectl for Kubernetes
+# kubectl config set-credentials default-admin --username=admin --password=6666o9oIB2gHD88882quIfLMy6666
+# kubectl config set-cluster default-cluster --server=https://cls-66668888.ccs.tencent-cloud.com --certificate-authority=/etc/kubernetes/cluster-ca.crt
+# kubectl config set-context default-system --cluster=default-cluster --user=default-admin
+# kubectl config use-context default-system
+
 # set namespace
 $ kubectl config set-context $(kubectl config current-context) --namespace=<insert-namespace-name-here>
 
@@ -489,6 +665,8 @@ $ kubectl get pods -o wide
 $ kubectl create -f my-nginx.yml
 
 $ kubectl describe deployment my-nginx
+
+$ kubectl get jobs --watch
 
 $ kubectl expose   deployment/my-nginx
 
@@ -570,6 +748,12 @@ $ kubectl drain <node name>
 
 # 要变成可调度的要用uncordon这个命令。
 $ kubectl uncordon <node name>
+
+
+# You can call kubectl get pod with the -o go-template=... option to fetch the status of previously terminated Containers:
+
+$ kubectl get pod -o go-template='{{range.status.containerStatuses}}{{"Container Name: "}}{{.name}}{{"\r\nLastState: "}}{{.lastState}}{{end}}'  simmemleak-hra99
+
 ```
 
 http://deployment-msa-demo.default.svc.cluster.local:8082
@@ -777,6 +961,47 @@ $ helm repo add https://aliacs-app-catalog.oss-cn-hangzhou.aliyuncs.com/charts
 $ helm search -l
 $ 
 ```
+
+# # Pod资源限制
+
+根据[kubernetes的文档]([https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#how-pods-with-resource-requests-are-scheduled](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#how-pods-with-resource-requests-are-scheduled)，对Pod的资源限制主要是下面的4个选项来决定。
+
+* spec.containers[].resources.limits.cpu
+
+* spec.containers[].resources.limits.memory
+
+* spec.containers[].resources.requests.cpu
+
+* spec.containers[].resources.requests.memory
+
+## 有resource requests的Pod是如何被调度的？
+
+The scheduler ensures that, for each resource type, the sum of the **resource requests** of the scheduled Containers is less than the capacity of the node. Note that although actual memory or CPU resource usage on nodes is very low, the scheduler still refuses to place a Pod on a node if the capacity check fails.
+
+也就是在调度时，用的是resources.requests。
+
+
+When using Docker:
+
+- The `spec.containers[].resources.requests.cpu` is converted to its core value, which is potentially fractional, and multiplied by 1024. The greater of this number or 2 is used as the value of the [`--cpu-shares`](https://docs.docker.com/engine/reference/run/#cpu-share-constraint) flag in the `docker run` command.
+
+- The `spec.containers[].resources.limits.cpu` is converted to its millicore value and multiplied by 100. The resulting value is the total amount of CPU time that a container can use every 100ms. A container cannot use more than its share of CPU time during this interval.
+
+
+
+注意上面的这句话：The greater of this number or 2 is used as the value of the [`--cpu-shares`](https://docs.docker.com/engine/reference/run/#cpu-share-constraint) flag in the `docker run` command. 它的意思是如果这个数小于2，就用2做为参数传给 `--cpu-shares`。要注意理解Docker  `--cpu-shares` 这个参数的含义，它是把一台宿主机上所有容器的 `--cpu-shares`的值都加起来，然后计算每个容器所占的比例来分配CPU的。这个值越大，分配的可以会越大，只是可能。
+
+
+
+
+
+
+
+所以，**基本上request是在调度时使用，而limit是在运行时生效**。
+
+
+
+
 
 # 监控
 

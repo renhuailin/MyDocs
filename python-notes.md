@@ -272,6 +272,21 @@ $ sudo python -m pip install grpcio-tools -i https://pypi.douban.com/simple
 
 matplotlib   画图的library.
 
+## Numpy
+
+Check if two arrays are equal
+
+```
+>>> np.array_equal([1, 2], [1, 2])
+True
+>>> np.array_equal(np.array([1, 2]), np.array([1, 2]))
+True
+>>> np.array_equal([1, 2], [1, 2, 3])
+False
+>>> np.array_equal([1, 2], [1, 4])
+False
+```
+
 # matplotlib
 
 下表包含所有默认的快捷键，可以使用`matplotlibrc`（`#keymap.*`）覆盖。

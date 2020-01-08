@@ -11,8 +11,6 @@ libgmp-dev
 
 https://mirrors.ustc.edu.cn/alpine/
 
-
-
 目前Docker镜像越来越倾向于使用Alpine系统作为基础的系统镜像，Docker Hub 官方制作的镜像都在逐步支持Alpine系统。
 
 **下面的修改以 Alpine 3.4 为例：**
@@ -24,7 +22,7 @@ $ echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
 $ apk update
 ```
 
-####Setup timezone
+#### Setup timezone
 
 ```
 # echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
@@ -45,5 +43,3 @@ Install `telnet`
 ```
 $ apk add busybox-extras
 ```
-
-

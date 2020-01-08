@@ -440,10 +440,6 @@ $ git checkout develop
 $ git checkout --patch master main.java
 ```
 
-
-
-
-
 ### 4.2.1 Fast Forward
 
 什么是fast forward呢，如果你从master创建了一个分支develop,并在develop分支上开发。

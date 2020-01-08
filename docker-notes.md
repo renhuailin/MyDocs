@@ -277,15 +277,9 @@ Create a new image from a container’s changes
 $ sudo docker commit 614122c0aabb rhl/apache2
 ```
 
-
-
-
-
 ## 8.2 Docker image 存储地址
 
 https://stackoverflow.com/a/25978888
-
-
 
 The contents of the `/var/lib/docker` directory vary depending on the [driver Docker is using for storage](https://github.com/docker/docker/blob/990a3e30fa66e7bd3df3c78c873c97c5b1310486/daemon/graphdriver/driver.go#L37-L43).
 
@@ -306,14 +300,6 @@ In the case of `devicemapper`:
 - `/var/lib/docker/devicemapper/devicemapper/data` stores the images
 - `/var/lib/docker/devicemapper/devicemapper/metadata` the metadata
 - Note these files are thin provisioned "sparse" files so aren't as big as they seem.
-
-
-
-
-
-
-
-
 
 ## 8.3 Dockerfile
 
@@ -576,7 +562,7 @@ tomcat在容器里假死在下面这里，我是真心不知道为什么了，�
 [INFO] 19:51:56 [ContextLoader][301]: Root WebApplicationContext: initialization completed in 698 ms
 ```
 
-后来看了http://stackoverflow.com/a/27613367,解决了，感谢大牛，泪流满面。
+后来看了 [http://stackoverflow.com/a/27613367](http://stackoverflow.com/a/27613367)  ,解决了，感谢大牛，泪流满面。
 
 ```
 apt-get install haveged -y

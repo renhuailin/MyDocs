@@ -154,6 +154,14 @@ for id in $(cat ./unused-containers.txt);do
 done
 ```
 
+### 批量删除k8s jobs
+
+```bash
+for job in $(kubectl get job|grep gitlab-confluence-backup-cronjob|awk {'print $1'});do
+    kubectl delete job $job
+done
+```
+
 ## sed
 
 ```
@@ -752,6 +760,15 @@ $ curl -X GET \
 ```
 
 # yum
+
+```
+$ yum list installed
+
+```
+
+[yum cheatsheet](https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf)
+
+
 
 看看哪个包包含ab
 
