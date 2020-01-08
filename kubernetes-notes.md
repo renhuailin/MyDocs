@@ -980,6 +980,7 @@ The scheduler ensures that, for each resource type, the sum of the **resource re
 
 也就是在调度时，用的是resources.requests。
 
+## 有resource limits的Pod是如何运行的？
 
 When using Docker:
 
