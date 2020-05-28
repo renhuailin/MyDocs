@@ -86,8 +86,6 @@ $ gem search jekyll
 安装指定版本的包
 $ gem install jekyll -v 1.8
 
-
-
 ## 使用国内的源
 
 ```
@@ -96,10 +94,6 @@ $ gem sources -l
 https://gems.ruby-china.com
 # 确保只有 gems.ruby-china.com
 ```
-
-
-
-
 
 # Active Record
 

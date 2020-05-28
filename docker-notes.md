@@ -219,6 +219,21 @@ https://docs.docker.com/registry/insecure/
 
 ## 7.3 使用docker中国的mirror加速镜像拉取速度
 
+
+
+| 镜像加速器                                                                                                                          | 镜像加速器地址                                                                            | 专属加速器[？](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6# "需登录后获取平台分配的专属加速器") | 其它加速[？](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6# "支持哪些镜像来源的镜像加速")                                       |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+|                                                                                                                                |                                                                                    |                                                                                                |                                                                                                                                  |
+| [DaoCloud 镜像站](https://daocloud.io/mirror)                                                                                     | `http://f1361db2.m.daocloud.io`                                                    | 可登录，系统分配                                                                                       | Docker Hub                                                                                                                       |
+| [Azure 中国镜像](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md#22-container-registry-proxy) | `https://dockerhub.azk8s.cn`                                                       |                                                                                                | Docker Hub、GCR、Quay                                                                                                              |
+| [科大镜像站](https://mirrors.ustc.edu.cn/help/dockerhub.html)                                                                       | `https://docker.mirrors.ustc.edu.cn`                                               |                                                                                                | Docker Hub、[GCR](https://github.com/ustclug/mirrorrequest/issues/91)、[Quay](https://github.com/ustclug/mirrorrequest/issues/135) |
+| [阿里云](https://cr.console.aliyun.com/)                                                                                          | `https://<your_code>.mirror.aliyuncs.com`http://registry.cn-hangzhou.aliyuncs.com/ | 需登录，系统分配                                                                                       | Docker Hub                                                                                                                       |
+| [七牛云](https://kirk-enterprise.github.io/hub-docs/#/user-guide/mirror)                                                          | `https://reg-mirror.qiniu.com`                                                     |                                                                                                | Docker Hub、GCR、Quay                                                                                                              |
+| [网易云](https://c.163yun.com/hub)                                                                                                | `https://hub-mirror.c.163.com`                                                     |                                                                                                | Docker Hub                                                                                                                       |
+| [腾讯云](https://cloud.tencent.com/document/product/457/9113)                                                                     | `https://mirror.ccs.tencentyun.com`                                                |                                                                                                | Docker Hub                                                                                                                       |
+
+
+
 docker已经进中国了，有了官方的hub加速
 
 https://www.docker-cn.com/registry-mirror
@@ -806,3 +821,61 @@ $ docker config rm site.conf
 ```
 
 ## 12.2 Service
+
+# 13.  源代码分析
+
+## 13.1 restartPolicy
+
+我一直不明白，docker是如何监控容器中的主进程退出的，只有监控到这个事件，restart才能是实时的。经过查找，我发现了在1.2的源代码里，在daemon目录下有个叫monitor.go的就文件跟这个有关。
+
+通过下面的代码分析，我们可以推断出来，docker是通过go channel来实现监控容器的状态的。
+
+```go
+//daemon/state.go
+
+
+
+// WaitStop waits until state is stopped. If state already stopped it returns
+// immediatly. If you want wait forever you must supply negative timeout.
+// Returns exit code, that was passed to SetStopped
+func (s *State) WaitStop(timeout time.Duration) (int, error) {
+    s.RLock()
+    if !s.Running {
+        exitCode := s.ExitCode
+        s.RUnlock()
+        return exitCode, nil
+    }
+    waitChan := s.waitChan
+    s.RUnlock()
+    if err := wait(waitChan, timeout); err != nil {
+        return -1, err
+    }
+    return s.GetExitCode(), nil
+}
+```
+
+### 监控子进程状态
+
+在 Linux 应用中，父进程需要监控其创建的所有子进程的退出状态，可以通过如下几个系统调用来实现。
+
+- **pid_t wait(int * statua)**
+
+一直阻塞地等待任意一个子进程退出，返回值为退出的子进程的 ID，status 中包含子进程设置的退出标志。
+
+- **pid_t waitpid(pid_t pid, int * status, int options)**
+
+可以用 pid 参数指定要等待的进程或进程组的 ID，options 可以控制是否阻塞，以及是否监控因信号而停止的子进程等。
+
+- **int waittid(idtype_t idtype, id_t id, siginfo_t *infop, int options)**
+
+提供比 waitpid 更加精细的控制选项来监控指定子进程的运行状态。
+
+- wait3() 和 wait4() 系统调用
+
+可以在子进程退出时，获取到子进程的资源使用数据。
+
+更详细的信息请参考帮助手册。
+
+**于是我明白了！**
+
+在Linux中父进程可以通过调用函数来监控子进程的退出的。这就可以理解docker是如何实现自动重启的了。因为容器里的主进程为daemon的子进程，子进程在退出时主进程是能知道的。在docker里，state.go，monitor.go就实现了这些功能。然后根据restart policy来重新启动container就行了。

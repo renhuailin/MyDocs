@@ -26,10 +26,6 @@ https://www.iterm2.com/documentation-scripting.html
 
 https://www.raywenderlich.com/1201-nsoutlineview-on-macos-tutorial
 
-
-
-
-
 如何直接下载xode，app store里下载实在是太慢了。
 
 [https://dev.to/jahirfiquitiva/direct-download-any-xcode-385o](https://dev.to/jahirfiquitiva/direct-download-any-xcode-385o)

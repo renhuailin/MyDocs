@@ -297,6 +297,50 @@ https://blog.csdn.net/zjysource/article/details/52052420
 
 * when Kubernetes adds resource-aware scheduling, as is planned, it will not be able to account for resources used by a hostPath     k8s执行资源调度时，`hostPath`使用的资源（也就是磁盘容量）不会被计算在内！！！
 
+
+
+
+
+## 让PVC claim指定的PV
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-gitlab-pv
+  labels:
+    pvname: pv-nfs-gitlab
+spec:
+  capacity:
+    storage: 400Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 172.21.16.49
+    path: "/gitlab-backup"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-gitlab-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  selector:
+    matchLabels:
+      pvname: pv-nfs-gitlab
+  resources:
+    requests:
+      storage: 400Gi
+```
+
+
+
+
+
+
+
 ## Lifecycle of a volume and claim
 
 卷有两种提供方式：
@@ -565,6 +609,11 @@ $ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 There are situations where you want to fail a Job after some amount of retries due to a logical error in configuration etc. To do so, set .spec.backoffLimit to specify the number of retries before considering a Job as failed. The back-off limit is set by default to 6. Failed Pods associated with the Job are recreated by the Job controller with an exponential back-off delay (10s, 20s, 40s …) capped at six minutes, The back-off limit is reset if no new failed Pods appear before the Job’s next status check.
 ```
 
+```bash
+# 批量删除一些jobs
+for job in $(kubectl get job|grep gitlab-confluence-backup-cronjob|awk {'print $1'});do  kubectl delete job $job; done
+```
+
 # Pet Set
 
 一组有状态的Pods,有状态的东西都很麻烦。
@@ -753,7 +802,6 @@ $ kubectl uncordon <node name>
 # You can call kubectl get pod with the -o go-template=... option to fetch the status of previously terminated Containers:
 
 $ kubectl get pod -o go-template='{{range.status.containerStatuses}}{{"Container Name: "}}{{.name}}{{"\r\nLastState: "}}{{.lastState}}{{end}}'  simmemleak-hra99
-
 ```
 
 http://deployment-msa-demo.default.svc.cluster.local:8082
@@ -988,21 +1036,9 @@ When using Docker:
 
 - The `spec.containers[].resources.limits.cpu` is converted to its millicore value and multiplied by 100. The resulting value is the total amount of CPU time that a container can use every 100ms. A container cannot use more than its share of CPU time during this interval.
 
-
-
 注意上面的这句话：The greater of this number or 2 is used as the value of the [`--cpu-shares`](https://docs.docker.com/engine/reference/run/#cpu-share-constraint) flag in the `docker run` command. 它的意思是如果这个数小于2，就用2做为参数传给 `--cpu-shares`。要注意理解Docker  `--cpu-shares` 这个参数的含义，它是把一台宿主机上所有容器的 `--cpu-shares`的值都加起来，然后计算每个容器所占的比例来分配CPU的。这个值越大，分配的可以会越大，只是可能。
 
-
-
-
-
-
-
 所以，**基本上request是在调度时使用，而limit是在运行时生效**。
-
-
-
-
 
 # 监控
 

@@ -505,6 +505,25 @@ https://nvie.com/posts/a-successful-git-branching-model/
 
 https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/git-flow   这里讲到了最流行的git flow扩展包： [AVH Edition](https://github.com/petervanderdoes/gitflow/) 。
 
+# 
+
+# Submodule
+
+
+
+```
+$ git submodule add http://202.38.164.237/mep-vue/mep-vue-system.git system
+
+$ git submodule init
+Submodule 'DbConnector' (https://github.com/chaconinc/DbConnector) registered for path 'DbConnector'
+
+
+$ git submodule update
+Cloning into 'DbConnector'...
+```
+
+
+
 # 5 Archive 归档
 
 Archive The Repository

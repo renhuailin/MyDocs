@@ -129,6 +129,15 @@ end tell
 EOF
 ```
 
+### cat 多行文本到一个文件
+
+```
+$ cat > "$FILE" <<EOM
+Line 1.
+Line 2.
+EOM
+```
+
 ### iterate files in folder
 
 ```bash
@@ -167,6 +176,15 @@ done
 ```
 # 替换文件的内容
 $ sed -i 's/deb.debian.org/mirrors.163.com/g' /etc/apt/sources.list 
+```
+
+## 用uniq去重
+
+```
+# You might want to look at the uniq and sort applications.
+
+$ ./yourscript.ksh | sort | uniq
+(FYI, yes, the sort is necessary in this command line, uniq only strips duplicate lines that are immediately after each other)
 ```
 
 ## print pid
@@ -222,6 +240,10 @@ echo 'MWYyZDFlMmU2N2Rm' | base64 --decode
 $ sudo yum install iptraf
 $ sudo iptraf-ng
 ```
+
+## How to Install Iptables on CentOS 7
+
+[https://linuxize.com/post/how-to-install-iptables-on-centos-7/](https://linuxize.com/post/how-to-install-iptables-on-centos-7/)
 
 查看端口情况，除了`netstat -anpl` 还可以使用下面的命令
 
@@ -763,12 +785,9 @@ $ curl -X GET \
 
 ```
 $ yum list installed
-
 ```
 
 [yum cheatsheet](https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf)
-
-
 
 看看哪个包包含ab
 
@@ -908,6 +927,80 @@ http://www.youdzone.com/signature.html
 **另外：**
 
 证书请求一般采用.csr扩展名，但是其格式有可能是PEM也可能是DER格式，但都代表证书请求，只有经过CA签发后才能得到真正的证书。
+
+# Crontab
+
+实例1：每1分钟执行一次myCommand
+
+```
+* * * * * myCommand
+```
+
+实例2：每小时的第3和第15分钟执行
+
+```
+3,15 * * * * myCommand
+```
+
+实例3：在上午8点到11点的第3和第15分钟执行
+
+```
+3,15 8-11 * * * myCommand
+```
+
+实例4：每隔两天的上午8点到11点的第3和第15分钟执行
+
+```
+3,15 8-11 */2  *  * myCommand
+```
+
+实例5：每周一上午8点到11点的第3和第15分钟执行
+
+```
+3,15 8-11 * * 1 myCommand
+```
+
+实例6：每晚的21:30重启smb
+
+```
+30 21 * * * /etc/init.d/smb restart
+```
+
+实例7：每月1、10、22日的4 : 45重启smb
+
+```
+45 4 1,10,22 * * /etc/init.d/smb restart
+```
+
+实例8：每周六、周日的1 : 10重启smb
+
+```
+10 1 * * 6,0 /etc/init.d/smb restart
+```
+
+实例9：每天18 : 00至23 : 00之间每隔30分钟重启smb
+
+```
+0,30 18-23 * * * /etc/init.d/smb restart
+```
+
+实例10：每星期六的晚上11 : 00 pm重启smb
+
+```
+0 23 * * 6 /etc/init.d/smb restart
+```
+
+实例11：每一小时重启smb
+
+```
+* */1 * * * /etc/init.d/smb restart
+```
+
+实例12：晚上11点到早上7点之间，每隔一小时重启smb
+
+```
+0 23-7 * * * /etc/init.d/smb restart
+```
 
 # SSL 证书
 

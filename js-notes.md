@@ -246,6 +246,12 @@ const store = createStore(rootReducer, initialState, enhancer);
 
 这时生成的state里有个属性就叫todos1。这是非常诡异的，我是调试了好久才发现的，要好好看看createStore的源代码。
 
+# NodeJS
+
+## @符号的含义
+
+[https://docs.npmjs.com/using-npm/scope.html](https://docs.npmjs.com/using-npm/scope.html)
+
 # ES6
 
 ## Generator
@@ -946,7 +952,16 @@ npm -g config set user root
 
 # npm 使用国内的源
 
+```
 $ npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+# 列出全局安装的包
+$ npm list -g --depth=0
+```
+
+
+
+
 
 # Yarn 使用淘宝源
 
@@ -967,3 +982,5 @@ $ http-server &
 # 参考文档
 
 [Mozilla Javascript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
+
+

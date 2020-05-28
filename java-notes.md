@@ -206,6 +206,20 @@ mvn install
 mvn archetype:generate -DarchetypeCatalog=local
 ```
 
+## checksum
+
+我最近在整合tsf和seata，发现一个奇怪的现象，可能是好久没有做java的开发了，发现一个类死活编译不成功，明明依赖已经加上了，就是编译不成功。后来在左侧的outline tree里我发现我引用的jar包无法展开，也就是无法查看其内容，于是我在Finder里打开一看，是0字节的jar，我晕。Maven在下载jar包时，是同时下载了checksum的文件的。难道不应该校验一下，如果这种包就提示失败吗？
+
+后来我发现maven有一个命令行的选项 `-C, --strict-checksums`就是用来做这个的。加入这个选项后，如果jar没有通过校验，build会直接出错。
+
+
+
+
+
+
+
+
+
 # 工具备注
 
 ##### Java性能总览
@@ -245,6 +259,8 @@ optimized to execute Truffle languages
 ahead-of-time compiled using Graal
 integrating with native development tools.
 ```
+
+Drool是java的规则引擎。
 
 ### 【What's new in Java 7 & 8 】
 

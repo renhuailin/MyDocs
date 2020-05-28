@@ -76,11 +76,17 @@ pprint(myobj)
 ```
 python -m pip install -r requirements.txt -i https://pypi.douban.com/simple # for windows
 
+# use aliyun mirror
+pip install tqsdk -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
+
 sudo pip install -v Flask -i https://pypi.douban.com/simple
 
 pip install  -r requirements.txt -i https://pypi.douban.com/simple
 
 sudo pip install [package_name] --upgrade
+
+# list all installed packages.
+pip list 
 ```
 
 Python PIP 使用笔记
@@ -501,6 +507,20 @@ $ sqlacodegen "mysql+mysqlconnector://root:mysql@localhost/virtual_exchange?char
 $ python2.7 -m SimpleHTTPServer 8000
 $ python3 -m http.server
 ```
+
+
+
+# Get python installed path
+
+```
+import sys
+print sys.executable
+print sys.exec_prefix
+```
+
+
+
+
 
 # 参考文献：
 
