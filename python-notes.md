@@ -51,6 +51,156 @@ print(big_yellow.name)
 list comprehension和普通的for loop还是有区别的,因为它产生一个list!!! 所以你不能用它来只做赋值用.
 http://stackoverflow.com/a/10292038
 
+# Cython
+
+**Cython**
+
+我一直担心我的策略源代码问题，因为python是源代码形式分发的。
+
+最初我是想用.net重写，因为.net有混淆器，还是有.net native.
+
+结果我发现.net native并不是把c#生成的.exe编译成本机的.exe，而是用cache的方式来加快.exe的启动，不能起到防反编译的效果。后来又看了混淆器，感觉还行。在看混淆器器的时候，我突然意识到，我最终的目的是保护我的源代码，跟语言是无关的。所以我应该再看看python的混淆器，结果我就看到了，这篇文章：[https://zhuanlan.zhihu.com/p/54296517](https://zhuanlan.zhihu.com/p/54296517) ，
+
+里面提到可以用cypthon来保护源代码。我看了cython的文档，看来是挺好的，准备用它来试试。
+
+可以试试这Cython这个东西，有点意思。
+
+[https://zhuanlan.zhihu.com/p/54296517](https://zhuanlan.zhihu.com/p/54296517)
+
+Using Cython to protect a Python codebase
+
+[https://bucharjan.cz/blog/using-cython-to-protect-a-python-codebase.html](https://bucharjan.cz/blog/using-cython-to-protect-a-python-codebase.html)
+
+这篇文章里还讲到了如何打包成whl格式，并用pip安装。
+
+Cython on windows
+
+我使用的是MinGW编译的时候报错：
+
+File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37\lib\distutils\cygwinccompiler.py", line 86, in get_msvcr
+
+ raise ValueError("Unknown MS Compiler version %s " % msc_ver)
+
+ValueError: Unknown MS Compiler version 1900
+
+[https://stackoverflow.com/questions/34135280/valueerror-unknown-ms-compiler-version-1900](https://stackoverflow.com/questions/34135280/valueerror-unknown-ms-compiler-version-1900)
+
+然后我手动下载了vcruntime140.dll。放在了：C:\Users\Administrator\AppData\Local\Programs\Python\Python37\libs
+
+这时可以编译了，但是报错：
+
+c:/mingw/bin/../lib/gcc/mingw32/9.2.0/../../../../mingw32/bin/ld.exe: build\temp.win-amd64-3.7\Release\build\facai\__init__.o:__init__.c:(.text+0xb7b): undefined reference to `_imp__PyModuleDef_Init'
+
+collect2.exe: error: ld returned 1 exit status
+
+最后我放弃了用MinGW,我安装了**vs2019 community** ,安装了Python相关的工具，然后就可以build了。
+
+python setup.py build_ext
+
+python setup.py build_ext --inplace
+
+这里讲了如何创建一个树形的module
+
+[https://github.com/cython/cython/wiki/PackageHierarchy](https://github.com/cython/cython/wiki/PackageHierarchy)
+
+* 报错： cython windows LINK : error LNK2001: 无法解析的外部符号 PyInit___init__
+
+Cython是无法编译__init__的，可能在3.0能解决这个问题，所以我在搜索目录时把这个文件给排除了。
+
+这要求我们的`__init__.py`这个文件时不要包含任何代码，反正我的项目里就是这样的。
+
+```
+def scandir(dir, files=[]):
+
+    for file in os.listdir(dir):
+
+        path = os.path.join(dir, file)
+
+        if os.path.isfile(path) and path.endswith(".py") and not file.startswith("__init__"):
+
+            files.append(path.replace(os.path.sep, ".")[:-3])
+
+        elif os.path.isdir(path):
+
+            scandir(path, files)
+
+    return files
+```
+
+现在能编译了，不过有个问题，产生的.c文件在python目录下，这个有点烦人了。
+
+解决方法是：
+
+https://stackoverflow.com/a/34424255
+
+You can pass the option build_dir="directory name" to Cythonize
+
+```
+extensions = [makeExtension(name) for name in extNames]
+
+
+
+for ex in extensions:
+
+    ex.cython_c_in_temp = True
+```
+
+python -m pip install -i https://pypi.douban.com/simple wheel
+
+我安装了wheel后，运行 python setup.py bdist_wheel
+
+还是报错，
+
+usage: setup.py [global_opts] cmd1 [cmd1_opts] [cmd2 [cmd2_opts] ...]
+
+ or: setup.py --help [cmd1 cmd2 ...]
+
+ or: setup.py --help-commands
+
+ or: setup.py cmd --help
+
+error: invalid command 'bdist_wheel'
+
+看了这个帖子[https://stackoverflow.com/a/50314071](https://stackoverflow.com/a/50314071)，我知道，原来必须引入setuptools,我原来引入的是distutils.core。下面是我修改后的代码
+
+```
+# from distutils.core import setup
+
+from setuptools import setup
+```
+
+安装whl
+
+```
+pip install some-package.whl
+```
+
+但是生成的.whl里面是包含.py源代码的。我要想办法把这些源代码从.whl中删除。strip Python source code from .egg archives
+
+后来我发现怎么都不能把源代码从这个包里删除，于是我想用两步构建的方式来解决，第一步，先构建出pyd,然后再用一个构建脚本，把它打包成whl.
+
+后来发现这也不行，我只能在安装完后，用脚本来把.py文件删除了。
+
+但是我在安装了这个包后，发现有个问题。在使用类时报错
+
+```
+ File "facai\utils\messager.py", line 15, in init facai.utils.messager
+
+ File "facai\models\enum.py", line 3, in init facai.models.enum
+
+
+
+ImportError: cannot import name Enum
+```
+
+因为Enum是python3以后才支持的。所以可能跟这有关。
+
+我看了网上的帖子，我怀疑是cython language level的原因，我把它设置为3，再重新编译，就可以了。
+
+Note: 目前版本的Cython-0.29.17还不支持dataclass，所以要把这些类全部改成原来的。
+
+我不得不承认，python的生态真的很成熟！
+
 # Functions
 
 Python 3 允许指定参数必须用参数名的方式传入。
@@ -71,7 +221,9 @@ from pprint import pprint
 pprint(myobj)
 ```
 
-# pip 自定义豆瓣 pypi 源
+# PIP
+
+## pip 自定义豆瓣 pypi 源
 
 ```
 python -m pip install -r requirements.txt -i https://pypi.douban.com/simple # for windows
@@ -87,6 +239,14 @@ sudo pip install [package_name] --upgrade
 
 # list all installed packages.
 pip list 
+
+# 查询某个包的所有可安装版本。
+# For pip >= 9.0 use
+$ pip install pylibmc==
+#For pip < 9.0 use
+
+$ pip install pylibmc==blork
+# where blork can be any string that is not a valid version number.
 ```
 
 Python PIP 使用笔记
@@ -103,19 +263,27 @@ http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/co
 $ python manage.py startapp admin
 注意 startproject和startapp这两个命令的区别。 https://docs.djangoproject.com/en/1.10/intro/tutorial01/
 
+
+
+```
+$ python manage.py sqlmigrate  website 0001_initial
+
+$ python manage.py showmigrations
+
+$ python manage.py migrate
+
+
 $ python manage.py makemigrations
 
 $ python manage.py makemigrations --name changed_my_model your_app_label
 
-python manage.py sqlmigrate
+$python manage.py sqlmigrate
 
+
+$ python manage.py runserver 0.0.0.0:8000
 ```
-$ python manage.py sqlmigrate  website 0001_initial
-```
 
-python manage.py showmigrations
 
-python manage.py migrate
 
 ## view
 
@@ -142,7 +310,9 @@ http://stackoverflow.com/a/6015706
 
 https://docs.djangoproject.com/en/1.11/howto/custom-template-tags/
 
-## Form
+# Form
+
+[Django使用django-simple-captcha做验证码_xiao-CSDN博客_django-simple-captcha](https://blog.csdn.net/zsx1314lovezyf/article/details/93487254)
 
 ### Create model from a from.
 
@@ -503,12 +673,9 @@ $ sqlacodegen "mysql+mysqlconnector://root:mysql@localhost/virtual_exchange?char
 # SimpleHTTPServer
 
 ```
-
 $ python2.7 -m SimpleHTTPServer 8000
 $ python3 -m http.server
 ```
-
-
 
 # Get python installed path
 
@@ -517,10 +684,6 @@ import sys
 print sys.executable
 print sys.exec_prefix
 ```
-
-
-
-
 
 # 参考文献：
 

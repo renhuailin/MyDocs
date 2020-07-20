@@ -118,7 +118,7 @@ $ mytest=(one two three four five)
 
 ```bash
 /bin/cat << EOF | /usr/bin/osascript
-#!/usr/bin/osascript
+#!/usr/bin/osascrip
 tell application "iTerm"
     set cmd to "/Users/harley/.pyenv/shims/python3 /Users/harley/Documents/Workspace/python/python-scripts/expect-ssh.py -s 10.218.128.38 -u ubuntu"
     tell current window
@@ -533,7 +533,6 @@ shadowsocks + privoxy
 If you want which ones are currently running, you need `systemctl | grep running`
 
 ```
-
 $ systemctl list-unit-files | grep enabled
 
 $ sudo systemctl daemon-reload ; sudo systemctl start docker
@@ -692,7 +691,6 @@ $ sudo iptables -F
    iptables -t nat -A POSTROUTING -d 192.168.75.3 -p tcp --dport 8000 -j SNAT --to 192.168.75.5
 
 ```
-
 我想我们只所以要打开ip forward，回包时，192.168.75.3:8080返回的包的在dest是请求的源IP，不是本机的IP，如果不打开ip forward，就无法实现转发。请见参考2和网卡的混杂模式。
 
 我之前一直没想明白，当tomcat把回给nginx时，src=192.168.75.3,dest=192.168.75.5，这时的目的IP还不是client IP呢，我们为什么没在iptable加一条规则把dest改成client ip呢？后来研究了connect track，才明白。在我们第一条做nat时，kernel会再track table记录下来此连接的信息如client ip:31411 ->  192.168.75:8000,当收到tomcat的回包时，系统会根据track table的这条记录，做一次dnat,把nginx的IP换成client ip，这一步是系统做的，所以我们不用手工添加在iptable的规则里。
@@ -718,8 +716,6 @@ Iptables Tutorial 1.2.1  里讲到可以通过 cat  `/proc/net/ip_conntrack`  �
 # service pdns monitor
 
 ```
-
-
 # 用wget来做压力测试
 
 

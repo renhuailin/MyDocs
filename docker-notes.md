@@ -219,8 +219,6 @@ https://docs.docker.com/registry/insecure/
 
 ## 7.3 使用docker中国的mirror加速镜像拉取速度
 
-
-
 | 镜像加速器                                                                                                                          | 镜像加速器地址                                                                            | 专属加速器[？](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6# "需登录后获取平台分配的专属加速器") | 其它加速[？](https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6# "支持哪些镜像来源的镜像加速")                                       |
 | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 |                                                                                                                                |                                                                                    |                                                                                                |                                                                                                                                  |
@@ -231,8 +229,6 @@ https://docs.docker.com/registry/insecure/
 | [七牛云](https://kirk-enterprise.github.io/hub-docs/#/user-guide/mirror)                                                          | `https://reg-mirror.qiniu.com`                                                     |                                                                                                | Docker Hub、GCR、Quay                                                                                                              |
 | [网易云](https://c.163yun.com/hub)                                                                                                | `https://hub-mirror.c.163.com`                                                     |                                                                                                | Docker Hub                                                                                                                       |
 | [腾讯云](https://cloud.tencent.com/document/product/457/9113)                                                                     | `https://mirror.ccs.tencentyun.com`                                                |                                                                                                | Docker Hub                                                                                                                       |
-
-
 
 docker已经进中国了，有了官方的hub加速
 

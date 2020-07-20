@@ -297,10 +297,6 @@ https://blog.csdn.net/zjysource/article/details/52052420
 
 * when Kubernetes adds resource-aware scheduling, as is planned, it will not be able to account for resources used by a hostPath     k8s执行资源调度时，`hostPath`使用的资源（也就是磁盘容量）不会被计算在内！！！
 
-
-
-
-
 ## 让PVC claim指定的PV
 
 ```yaml
@@ -334,12 +330,6 @@ spec:
     requests:
       storage: 400Gi
 ```
-
-
-
-
-
-
 
 ## Lifecycle of a volume and claim
 
@@ -926,7 +916,6 @@ https://github.com/kubernetes/kompose
 这个工具可以把`docker-compose.yaml`转成kubernetes的资源。
 
 ```yaml
-
 apiVersion: v1
 kind: Pod
 metadata:

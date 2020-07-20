@@ -509,8 +509,6 @@ https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/git-fl
 
 # Submodule
 
-
-
 ```
 $ git submodule add http://202.38.164.237/mep-vue/mep-vue-system.git system
 
@@ -521,8 +519,6 @@ Submodule 'DbConnector' (https://github.com/chaconinc/DbConnector) registered fo
 $ git submodule update
 Cloning into 'DbConnector'...
 ```
-
-
 
 # 5 Archive 归档
 

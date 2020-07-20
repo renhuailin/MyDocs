@@ -252,6 +252,22 @@ const store = createStore(rootReducer, initialState, enhancer);
 
 [https://docs.npmjs.com/using-npm/scope.html](https://docs.npmjs.com/using-npm/scope.html)
 
+# 
+
+# Selector
+
+## xpath selector
+
+在chrome中测试
+
+**chrome console**
+
+F12->
+
+```
+$x(“//title”)
+```
+
 # ES6
 
 ## Generator
@@ -959,10 +975,6 @@ $ npm install -g cnpm --registry=https://registry.npm.taobao.org
 $ npm list -g --depth=0
 ```
 
-
-
-
-
 # Yarn 使用淘宝源
 
 ```
@@ -979,8 +991,8 @@ $ npm install -g http-server
 $ http-server & 
 ```
 
+# 
+
 # 参考文档
 
 [Mozilla Javascript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
-
-
