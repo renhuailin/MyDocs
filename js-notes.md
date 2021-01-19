@@ -152,7 +152,6 @@ ECMAScript 5加入了對屬性的控制，從此我們可以控制屬性是否�
 要獲得指定對象的屬性描述符,需要調用`Object.getOwnPropertyDescriptor()`方法。
 
 ```js
-
 // Returns {value: 1, writable:true, enumerable:true, configurable:true}
 Object.getOwnPropertyDescriptor({x:1}, "x");
 
@@ -965,6 +964,18 @@ npm ERR!     /Users/harley/.npm/_logs/2017-08-31T06_52_00_690Z-debug.log
 ```
 npm -g config set user root
 ```
+
+
+
+# Vue.js
+
+Vscode debugging 
+
+[在 VS Code 中调试 — Vue.js](https://cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
+
+
+
+
 
 # npm 使用国内的源
 

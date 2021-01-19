@@ -263,8 +263,6 @@ http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/co
 $ python manage.py startapp admin
 注意 startproject和startapp这两个命令的区别。 https://docs.djangoproject.com/en/1.10/intro/tutorial01/
 
-
-
 ```
 $ python manage.py sqlmigrate  website 0001_initial
 
@@ -282,8 +280,6 @@ $python manage.py sqlmigrate
 
 $ python manage.py runserver 0.0.0.0:8000
 ```
-
-
 
 ## view
 
@@ -486,17 +482,11 @@ False
 
 如果你使用`matplotlib.pyplot`，则会为每个图形自动创建工具栏。 如果你正在编写自己的用户界面代码，则可以将工具栏添加为窗口小部件。 确切的语法取决于你的 UI，但在
 
-# 问题及解决
+# 
 
-* 最近发现我们的django的项目,一旦出现问题,比如忘记安装包了,或者数据库没配置了等等,在打开的时候就会卡死.查看后台日志,发现过几分钟后会有一个发邮件的超时.后来我才明白,因为我关闭了debug,所以django在出错时不能直接显示错误,只能给管理员发邮件.而我们又没有配置smtp,导致发邮件超时.这个问题的解决方式很简单,出错的时候打开debug.就不会卡死了.
 
-* python3 运行非根目录下的文件报错问题的解决:
-  
-  参见： https://pyliaorachel.github.io/blog/tech/python/2017/09/15/pythons-import-trap.html
-  
-  ```python
-  $ python -m juejin.strategy
-  ```
+
+
 
 # Typing
 
@@ -684,6 +674,30 @@ import sys
 print sys.executable
 print sys.exec_prefix
 ```
+
+# 
+
+# 问题及解决
+
+- 最近发现我们的django的项目,一旦出现问题,比如忘记安装包了,或者数据库没配置了等等,在打开的时候就会卡死.查看后台日志,发现过几分钟后会有一个发邮件的超时.后来我才明白,因为我关闭了debug,所以django在出错时不能直接显示错误,只能给管理员发邮件.而我们又没有配置smtp,导致发邮件超时.这个问题的解决方式很简单,出错的时候打开debug.就不会卡死了.
+
+- python3 运行非根目录下的文件报错问题的解决:
+  
+  参见： [Python的import陷阱](https://pyliaorachel.github.io/blog/tech/python/2017/09/15/pythons-import-trap.html)
+  
+  ```python
+  $ python -m juejin.strategy
+  ```
+
+## UnicodeEncodeError: 'ascii' codec can't encode characters in position 27-29: ordinal not in range(128)
+
+这个问题很奇怪，明明我已经在代码的前面加上了`# -*- coding: utf-8 -*-`,而且文件的编码也绝对是UTF-8的，为什么还有这个问题呢？
+
+https://stackoverflow.com/a/20334767/3012163
+
+我看了这个帖子后，解决了。
+
+
 
 # 参考文献：
 

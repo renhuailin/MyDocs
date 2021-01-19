@@ -507,7 +507,7 @@ https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/git-fl
 
 # 
 
-# Submodule
+# 5. Submodule
 
 ```
 $ git submodule add http://202.38.164.237/mep-vue/mep-vue-system.git system
@@ -518,6 +518,9 @@ Submodule 'DbConnector' (https://github.com/chaconinc/DbConnector) registered fo
 
 $ git submodule update
 Cloning into 'DbConnector'...
+
+# 
+$ git submodule foreach 'git checkout -f dev && git pull'
 ```
 
 # 5 Archive 归档
@@ -623,7 +626,22 @@ Ubuntu
 $ git config --global credential.helper 'cache --timeout 3600'
 ```
 
-# 8 一些问题的解决方法
+# 8.  Gitlab
+
+最近项目组反映Jenkins在构建时一直报403的错误，可是我们通过Web上可以访问，在我本地也是可以clone的。原来是Gitlab是有防暴力破解机制的，如果一个IP地址多次登录失败，就会被禁止登录。
+
+[gitlab 403 forbidden 报错解决 - ShengLeQi - 博客园](https://www.cnblogs.com/sheng-247/p/11163590.html)
+
+[Rack Attack initializer | GitLab](https://docs.gitlab.com/ee/security/rack_attack.html)
+
+```
+$ redis-cli keys "*" | grep 'rack::attack' | xargs redis-cli  DEL
+$ redis-cli keys "*" | grep 'rack::attack'
+```
+
+我在删除了这些keys后，真的可以访问了。
+
+# 9 一些问题的解决方法
 
 * git error: RPC failed; result=22, HTTP code = 411 fatal: The remote end hung up unexpectedly
 

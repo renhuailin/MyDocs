@@ -731,6 +731,22 @@ docker compose  AttributeError: 'module' object has no attribute 'connection'
 $ docker update --restart=no  influxdb_influxdb_1
 ```
 
+
+
+## docker compose version
+
+Version 1 is supported by **Compose up to 1.6.x**. It will be deprecated in a future Compose release.
+
+Version 2 files are supported by **Compose 1.6.0+** and require a Docker Engine of version **1.10.0+**.
+
+
+
+
+
+具体的版本详情请参见：[Compose file versions and upgrading | Docker Documentation](https://docs.docker.com/compose/compose-file/compose-versioning/)
+
+
+
 # 12.  Swarm
 
 可以在[这个网站]([https://labs.play-with-docker.com/](https://labs.play-with-docker.com/)实验swarm：https://labs.play-with-docker.com/

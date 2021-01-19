@@ -8,7 +8,15 @@ Ubuntu 6.10 开始用 dash 做为 /bin/sh，而不是bash.  所以，如果脚�
 
 # Shell Programming Note
 
-`$#` 参数的个数.  ${$#}输出的就是最后一个参数。
+## initialize variable when not set
+
+```bash
+FOO=${VARIABLE:-default} 
+```
+
+`$#` 参数的个数.  
+
+`${$#}`输出的就是最后一个参数。
 
 `$*`是把参数当成一行来看的.
 
@@ -80,6 +88,28 @@ Remove matching suffix pattern. The word is expanded to produce a pattern just a
 **请注意**  pattern match的部分要从源字符串里删除掉，this expression的evaluation的结果是剩下的部分：192.168.56.102。
 
 第二个expression：`${SERVICE_CLUSTER_IP_RANGE%.*}`，根据文档这是一个"Remove matching suffix pattern"。我们先看`%`右边的部分:`.*`,match圆点及其后面的所有内容。`SERVICE_CLUSTER_IP_RANGE`的内容是`192.168.3.0/24`,expression evaluation的结果是`192.168.3`.与上一个expression明显的不同是它是从后往前开始match的，而且不是greedy match，所以`.*`match了`.0/24`，把它从源字符串中删除，然后把剩下的部分做为求值结果返回了。`%%`就是`greedy mode`的了，文档里叫`longest matching pattern`。`${SERVICE_CLUSTER_IP_RANGE%%.*}`的求值结果是:`192`.
+
+### Trim whitespaces with parameter expansion
+
+  我们可以用parameter expansion来trim whitespaces in a string.
+
+```bash
+var="    abc    "
+# remove leading whitespace characters
+var="${var#"${var%%[![:space:]]*}"}"
+# remove trailing whitespace characters
+var="${var%"${var##*[![:space:]]}"}"   
+printf '%s' "===$var==="
+
+trim() {
+    local var="$*"
+    # remove leading whitespace characters
+    var="${var#"${var%%[![:space:]]*}"}"
+    # remove trailing whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"   
+    printf '%s' "$var"
+}
+```
 
 ## Arrays
 
@@ -652,8 +682,12 @@ $ iptables -L -n -v --line-number
 
 下面的是打开20端口。
 
-```
-[root@linux ~]# iptables -I INPUT 3 -p tcp -m tcp --dport 20 -j ACCEPT
+```bash
+# iptables -I INPUT 3 -p tcp -m tcp --dport 20 -j ACCEPT
+
+
+# 允许连接UDP 4000端口。
+iptables -I INPUT 3 -p udp -m udp --dport 4000 -j ACCEPT
 ```
 
 清除规则
@@ -676,57 +710,52 @@ $ sudo iptables -F
 
 2. 更改iptables，使之实现nat映射功能，请注意一定要是两条规则，一个请求包，一个是响应包。如果没有第二条规则，则会有问题的。
 
-3. ```shell
-   # 将外网访问nginx(192.168.75.5)的80端口转发到tomcat(192.168.75.3)的8000端口。
-   iptables -t nat -A PREROUTING -d 192.168.75.5 -p tcp --dport 80 -j DNAT --to-destination 192.168.75.3:8000
-   # 上面是根据包的目的IP，当然也可以根据网卡
-   iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.75.3:8080
-   
-   # 要让包通过FORWARD链
-   iptables -A FORWARD -p tcp -d 192.168.75.3 --dport 8080 -j ACCEPT
-   ```
+```bash
+# 将外网访问nginx(192.168.75.5)的80端口转发到tomcat(192.168.75.3)的8000端口。
+iptables -t nat -A PREROUTING -d 192.168.75.5 -p tcp --dport 80 -j DNAT --to-destination 192.168.75.3:8000
+# 上面是根据包的目的IP，当然也可以根据网卡
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.75.3:8080
+# 要让包通过FORWARD链
+iptables -A FORWARD -p tcp -d 192.168.75.3 --dport 8080 -j ACCEPT
 
 # 在这一步只所以要做dnat,是因为，如果不做dnat,源IP将是一个外网的IP，不是一个合法连接了。所以这一步要将源ip改为nginx的192.168.75.5，让tomcat把包回到这儿。
 
-   iptables -t nat -A POSTROUTING -d 192.168.75.3 -p tcp --dport 8000 -j SNAT --to 192.168.75.5
-
+iptables -t nat -A POSTROUTING -d 192.168.75.3 -p tcp --dport 8000 -j SNAT --to 192.168.75.5
 ```
-我想我们只所以要打开ip forward，回包时，192.168.75.3:8080返回的包的在dest是请求的源IP，不是本机的IP，如果不打开ip forward，就无法实现转发。请见参考2和网卡的混杂模式。
+
+   我想我们只所以要打开ip forward，回包时，192.168.75.3:8080返回的包的在dest是请求的源IP，不是本机的IP，如果不打开ip forward，就无法实现转发。请见参考2和网卡的混杂模式。
 
 我之前一直没想明白，当tomcat把回给nginx时，src=192.168.75.3,dest=192.168.75.5，这时的目的IP还不是client IP呢，我们为什么没在iptable加一条规则把dest改成client ip呢？后来研究了connect track，才明白。在我们第一条做nat时，kernel会再track table记录下来此连接的信息如client ip:31411 ->  192.168.75:8000,当收到tomcat的回包时，系统会根据track table的这条记录，做一次dnat,把nginx的IP换成client ip，这一步是系统做的，所以我们不用手工添加在iptable的规则里。
 
 Iptables Tutorial 1.2.1  里讲到可以通过 cat  `/proc/net/ip_conntrack`  来查询connection track的信息，这已经是过时的做法，现在通过`conntrack`这个命令来跟踪连接。
 
-
-
 参考: 
 
-1.   http://blog.51yip.com/linux/1404.html
+1. http://blog.51yip.com/linux/1404.html
 
 2. https://www.systutorials.com/816/port-forwarding-using-iptables/ 
+
 3. https://www.digitalocean.com/community/tutorials/how-to-forward-ports-through-a-linux-gateway-with-iptables
+
 4. [网络地址转换NAT原理及应用-连接跟踪--端口转换](https://blog.csdn.net/tycoon1988/article/details/40782269)
 
 # PowerDNS
 
-
 用monitor mode启动.
-```
 
+```
 # service pdns monitor
-
 ```
+
 # 用wget来做压力测试
-
-
 
 ​```shell
 while true; do wget -q -O- http://9.112.190.95:32758/; done
-```
 
+```
 # curl
-
 ```
+
 -f, --fail
               (HTTP) Fail silently (no output at all) on server errors. This is mostly done to better enable scripts etc to better deal with failed attempts. In normal cases when an HTTP server fails to  deliver  a
               document, it returns an HTML document stating so (which often also describes why and more). This flag will prevent curl from outputting that and return error 22.
@@ -740,29 +769,27 @@ while true; do wget -q -O- http://9.112.190.95:32758/; done
               Silent or quiet mode. Don't show progress meter or error messages.  Makes Curl mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.
 
               Use -S, --show-error in addition to this option to disable progress meter but still show error messages.
-
+    
               See also -v, --verbose and --stderr.
-```
 
+```
 follow redirect.
-
 ```
+
 $ curl -L http://www.google.com
-```
 
+```
 Add header 
-
 ```
+
 $ curl -H "X-First-Name: Joe" http://example.com/
 
-
-
 $ curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar
-```
 
+```
 `--create-dirs` 如果目录不存在就创建它。
-
 ```
+
 $ curl -X GET \
 'http://service-lv63z1gn-1256532032.ap-beijing.apigateway.myqcloud.com/release/internal/v1/violationQueryjh?appkey=2738501135&digitalSign=1&signTimestamp=1&nonce=1&plateNumber=%E5%90%89ALS105&vin=WAUACC8P0BA126688&engineNo=CDA195206' \
   -H 'Accept: */*' \
@@ -775,42 +802,42 @@ $ curl -X GET \
   -H 'cache-control: no-cache' \
   -H 'x-microservice-name: violation' \
   -H 'x-namespace-code: cdp-uat'
-```
 
+```
 # yum
-
 ```
+
 $ yum list installed
-```
 
+```
 [yum cheatsheet](https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf)
 
 看看哪个包包含ab
-
 ```
+
 $ yum provides /usr/bin/ab
-```
 
+```
 然后下载它：
-
 ```
+
 $ yum install httpd-tools
-```
 
+```
 查看某包安装了哪些文件，比如我经常忘记docker在centos下的配置文件在哪里，于是我先查看一下docker是由哪个rpm安装的。
-
 ```
+
 $ rpm -qa|grep docker 
 docker-ce-18.09.1-2.1.rc1.el7.x86_64
 docker-ce-cli-18.09.1-2.1.rc1.el7.x86_64
-```
 
+```
 然后看一下这个包安装哪些文件：
-
 ```
+
 $ rpm -ql docker-ce-18.09.1-2.1.rc1.el7.x86_64
-```
 
+```
 # Ubuntu
 
 ## Ubuntu 14.04
@@ -818,38 +845,38 @@ $ rpm -ql docker-ce-18.09.1-2.1.rc1.el7.x86_64
 ### 打开crontab日志
 
 ubuntu 14.04默认是没有打开crontab的日志的，需要手动打开：
-
 ```
+
 cd /etc/rsyslog.d/
 sudo nano 50-default.conf
-```
 
+```
 Uncoment line:
-
 ```
+
 #cron.*                         /var/log/cron.log
-```
 
+```
 Save file and restart rsyslog
-
 ```
+
 sudo service rsyslog restart 
-```
 
+```
 Restart your cron daemon for get it's messages from new file
-
 ```
+
 sudo service cron restart
-```
 
+```
 参考：[http://askubuntu.com/a/624785](http://askubuntu.com/a/624785)
 
 ## ubuntu 14.04下查看dns
-
 ```
+
 $ nm-tool
-```
 
+```
 ## ubuntu 14.04禁用dnsmasq
 
 ```sh

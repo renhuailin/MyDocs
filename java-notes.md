@@ -326,6 +326,26 @@ List<Person> filtered =
 The Java Persistence Query Language
 http://docs.oracle.com/javaee/6/tutorial/doc/bnbtg.html
 
+
+
+
+
+# Java Template
+
+
+
+## Freemarker
+
+[Freemarker template inheritance - Implementation Specific](https://nickfun.github.io/posts/2014/freemarker-template-inheritance.html)
+
+
+
+
+
+
+
+
+
 # Others
 
 eclipse 换行插件

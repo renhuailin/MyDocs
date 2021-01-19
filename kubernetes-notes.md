@@ -260,6 +260,21 @@ Q: Proxy-mode: iptables 工作原理？
 
 Q: 上述两种模式有什么区别？
 
+### [IPVS proxy mode]([Service | Kubernetes](https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-ipvs))
+
+这里讲的是当一个服务后台有N个pod时的负载均衡策略。默认的是round-robin。
+
+IPVS可以支持更多负载均衡策略
+
+IPVS provides more options for balancing traffic to backend Pods; these are:
+
+- `rr`: round-robin
+- `lc`: least connection (smallest number of open connections)
+- `dh`: destination hashing
+- `sh`: source hashing
+- `sed`: shortest expected delay
+- `nq`: never queue
+
 Headless services      
 如果以后两种模式你都不想要，那你可以定义`Headless services`.    
 you can create “headless” services by specifying "None" for the cluster IP (spec.clusterIP).
@@ -282,6 +297,31 @@ Deployment负责维护pods的数量，我们可以手动pod，然后通过Servic
 ## Service Load Balancer
 
 [Service Load Balancer](https://github.com/kubernetes/contrib/tree/master/service-loadbalancer)
+
+## 腾讯云上让服务使用内网的负载均衡
+
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  # Unique key of the Service instance
+  name: jcyd-admin-backend-service
+  annotations:
+    service.kubernetes.io/qcloud-loadbalancer-internal-subnetid: subnet-3ce2fphz
+spec:
+  ports:
+  - name: http
+      # The port that will be exposed by this service.
+    port: 80
+    # The port that pod exposed.
+    targetPort: 8081
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector
+    app: jcyd-admin-backend
+  #type: NodePort
+  type: LoadBalancer
+```
 
 # Network
 
@@ -443,13 +483,15 @@ EOF
 Apply the kustomization directory to create the ConfigMap object.
 
 ```shell
-kubectl apply -k .configmap/game-config-4-m9dm2f92bt created
+kubectl apply -k .
+configmap/game-config-4-m9dm2f92bt created
 ```
 
 You can check that the ConfigMap was created like this:
 
 ```shell
-kubectl get configmapNAME                       DATA   AGEgame-config-4-m9dm2f92bt   1      37skubectl describe configmaps/game-config-4-m9dm2f92btName:         game-config-4-m9dm2f92btNamespace:    defaultLabels:       <none>Annotations:  kubectl.kubernetes.io/last-applied-configuration:                {"apiVersion":"v1","data":{"game.properties":"enemies=aliens\nlives=3\nenemies.cheat=true\nenemies.cheat.level=noGoodRotten\nsecret.code.p...
+kubectl get configmap
+NAME                       DATA   AGEgame-config-4-m9dm2f92bt   1      37skubectl describe configmaps/game-config-4-m9dm2f92btName:         game-config-4-m9dm2f92btNamespace:    defaultLabels:       <none>Annotations:  kubectl.kubernetes.io/last-applied-configuration:                {"apiVersion":"v1","data":{"game.properties":"enemies=aliens\nlives=3\nenemies.cheat=true\nenemies.cheat.level=noGoodRotten\nsecret.code.p...
 
 Data
 ====
@@ -558,7 +600,7 @@ http://blog.frognew.com/2017/04/kubernetes-ingress.html
 
 [DockOne微信分享（一三三）：深入理解Kubernetes网络策略](http://dockone.io/article/2529) 这里面讲到了network policy.
 
-##Nginx ingress controller
+## Nginx ingress controller
 
 在baremetal上，因为没有loadbalancer，所以ingress的Address是空的。
 
