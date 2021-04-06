@@ -213,6 +213,16 @@ $ git log --graph
 $ git log --oneline --graph --decorate --all
 ```
 
+
+
+有一次我没有切到master分支上开发，然后就commit，结果发现切到master分支后，找不到我的提交了。我吓坏了。去网上找了一下，发现下面这个命令。把我的提交找了回来。
+
+> git log HEAD@{1}
+
+
+
+
+
 # 3 Tag
 
 tag就我的理解就是给某个revision起个别名，以一种好记方式来表示revision。因为我们要记sha1那个标识也太难了，所以当想做个标记，如发布一个更新版，你就可以用tag.

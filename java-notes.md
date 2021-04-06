@@ -271,7 +271,7 @@ What's New in Java 8 [https://leanpub.com/whatsnewinjava8/read#leanpub-auto-opti
 
 [What’s New in Java 8: Lambdas](http://radar.oreilly.com/2014/04/whats-new-in-java-8-lambdas.html)  这个作者的[其它文章](http://radar.oreilly.com/madhusudhank)也很好。
 
-# java 日期
+# Java 日期
 
 Joda-Time 在java 8之前是java 8之前事实上的data time标准库？（靠，我居然没用过）。Java 8的New Date Time API受其严重启发而生。
 
@@ -326,25 +326,33 @@ List<Person> filtered =
 The Java Persistence Query Language
 http://docs.oracle.com/javaee/6/tutorial/doc/bnbtg.html
 
+# Java web framework
+
+## Play web framework
+
+
+
+Play居然可以实现hot reload而且不需要任何外部工具， 这才是我想要的呀！虽然只能是stateless的
+
+[Play, Anatomy of a web framework: Hot redeploy.](https://jto.github.io/articles/play_anatomy_part2_sbt/)
+
+```
+it's only possible because Play is stateless,
+```
+
+
+
+
+
 
 
 
 
 # Java Template
 
-
-
 ## Freemarker
 
 [Freemarker template inheritance - Implementation Specific](https://nickfun.github.io/posts/2014/freemarker-template-inheritance.html)
-
-
-
-
-
-
-
-
 
 # Others
 

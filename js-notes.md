@@ -251,7 +251,31 @@ const store = createStore(rootReducer, initialState, enhancer);
 
 [https://docs.npmjs.com/using-npm/scope.html](https://docs.npmjs.com/using-npm/scope.html)
 
-# 
+## npm 命令
+
+```
+# 使用国内的源
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+# 安全并保存到package.json的dependencies
+$ npm install --save hbs
+
+# 安全并保存到package.json的devDependencies
+$ npm i -D @types/express-session
+或使用--save-dev
+$ npm i ---save-dev @types/express-session
+
+
+
+# 列出全局安装的包
+$ npm list -g --depth=0
+```
+
+
+
+
+
+
 
 # Selector
 
@@ -965,26 +989,11 @@ npm ERR!     /Users/harley/.npm/_logs/2017-08-31T06_52_00_690Z-debug.log
 npm -g config set user root
 ```
 
-
-
 # Vue.js
 
 Vscode debugging 
 
 [在 VS Code 中调试 — Vue.js](https://cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
-
-
-
-
-
-# npm 使用国内的源
-
-```
-$ npm install -g cnpm --registry=https://registry.npm.taobao.org
-
-# 列出全局安装的包
-$ npm list -g --depth=0
-```
 
 # Yarn 使用淘宝源
 

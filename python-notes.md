@@ -226,7 +226,7 @@ pprint(myobj)
 ## pip 自定义豆瓣 pypi 源
 
 ```
-python -m pip install -r requirements.txt -i https://pypi.douban.com/simple # for windows
+python -m pip install -r requirements.txt -i https://pypi.douban.com/simple 
 
 # use aliyun mirror
 pip install tqsdk -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
@@ -459,7 +459,45 @@ False
 False
 ```
 
-# matplotlib
+## Pandas
+
+https://pandas.pydata.org/pandas-docs/version/0.15/10min.html#min
+
+iterate rows in df:
+
+```
+for index, row in df.iterrows():
+    print(row["c1"], row["c2"])
+
+
+
+for row in df.itertuples(index=True, name='Pandas'):
+    print(row.c1, row.c2)
+```
+
+根据[这个回复](https://stackoverflow.com/a/55557758/3012163),不推荐使用`df.iterrows()`,`itertuples()`性能可以会更好些.
+
+## TA-lib
+
+mac下安装
+
+```
+ $ brew install ta-lib
+
+ $ pip3.7 install TA-Lib -i https://pypi.douban.com/simple
+```
+
+windows下安装
+
+```
+
+```
+
+
+
+
+
+## matplotlib
 
 下表包含所有默认的快捷键，可以使用`matplotlibrc`（`#keymap.*`）覆盖。
 
@@ -483,10 +521,6 @@ False
 如果你使用`matplotlib.pyplot`，则会为每个图形自动创建工具栏。 如果你正在编写自己的用户界面代码，则可以将工具栏添加为窗口小部件。 确切的语法取决于你的 UI，但在
 
 # 
-
-
-
-
 
 # Typing
 
@@ -696,8 +730,6 @@ print sys.exec_prefix
 https://stackoverflow.com/a/20334767/3012163
 
 我看了这个帖子后，解决了。
-
-
 
 # 参考文献：
 

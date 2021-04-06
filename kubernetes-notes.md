@@ -329,6 +329,16 @@ spec:
 
 https://blog.csdn.net/zjysource/article/details/52052420
 
+
+
+## iptables vs ipvs
+
+我们知道，默认，k8s的service的实现依赖iptables，但是当集群变大，服务数量增多时，会在节点上生成很多iptables的规则，这时节点会消耗很多的CPU来执行IPTables的规则的处理，服务路由的性能也会显著地下降。
+
+一句话： iptables不适合大规模集群。
+
+IPVS就不一样，它是基于LVS的。具体的请参见kubernetes blog:  [IPVS-Based In-Cluster Load Balancing Deep Dive]([IPVS-Based In-Cluster Load Balancing Deep Dive | Kubernetes](https://kubernetes.io/zh/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/)) 和  [ 华为云在 K8S 大规模场景下的 Service 性能优化实践](https://zhuanlan.zhihu.com/p/37230013)
+
 # Volumes
 
 ## hostPath

@@ -48,3 +48,34 @@ sql_mode = "STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_
 ```
 
 重新启动后，问题解决。
+
+
+
+
+
+
+
+# Grant
+
+MySQL 8.0之前：
+
+```
+grant all privileges on dayiguoyi.* to rails@'%' identified by '1q2w3e4r' with grant option;
+```
+
+
+
+
+
+
+
+
+
+`MySQL 8.0以后：`
+
+```
+CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL ON db1.* TO 'jeffrey'@'localhost';
+GRANT SELECT ON db2.invoice TO 'jeffrey'@'localhost';
+ALTER USER 'jeffrey'@'localhost' WITH MAX_QUERIES_PER_HOUR 90;
+```
