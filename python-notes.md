@@ -27,6 +27,31 @@ six这个包受系统保护不能删除，还好Pip是可以忽略依赖的包�
 $ sudo pip install  python-neutronclient  --ignore-installed six
 ```
 
+# 
+
+# 内部命令
+
+## type
+
+```python
+s = "fdsfds"
+type(s)
+```
+
+## dir
+
+```python
+import datetime
+dir(datetime.datetime)
+```
+
+## help
+
+```python
+import datetime
+help(datetime.datetime)
+```
+
 # Collections
 
 ## namedtuple
@@ -221,6 +246,21 @@ from pprint import pprint
 pprint(myobj)
 ```
 
+
+
+## Argument unpacking
+
+
+
+```python
+bar = [1,2,3,4]
+foo(*bar)
+```
+
+
+
+
+
 # PIP
 
 ## pip 自定义豆瓣 pypi 源
@@ -260,6 +300,17 @@ http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/co
 
 # django
 
+## Shell
+
+我们在使用`python manage.py shell`开启shell时，通常会在修改代码后，需要reload。如果在shell里自动reload呢？看了[sof上的方案](https://stackoverflow.com/a/41146209)，是可以通过IPython来实现的。
+
+```
+./manage.py shell
+
+In [1]: %load_ext autoreload
+In [2]: %autoreload 2
+```
+
 $ python manage.py startapp admin
 注意 startproject和startapp这两个命令的区别。 https://docs.djangoproject.com/en/1.10/intro/tutorial01/
 
@@ -294,6 +345,16 @@ https://docs.djangoproject.com/en/1.10/howto/static-files/
 注意`STATIC_ROOT`的意义
 http://stackoverflow.com/a/6015706
 
+ 根据[django的文档](https://docs.djangoproject.com/en/3.2/howto/static-files/#deployment)，`STATIC_ROOT`是在部署的时候用的，当我们运行
+
+```
+ $ python manage.py collectstatic
+```
+
+时，会把分散在各个`STATICFILES_DIRS`目录中的静态文件都搜集到`STATIC_ROOT`中。
+
+`MEDIA_ROOT`是用来保存用户上传的文件的。
+
 ## templates
 
 在include其它页面时指定页面里的变量：
@@ -306,7 +367,7 @@ http://stackoverflow.com/a/6015706
 
 https://docs.djangoproject.com/en/1.11/howto/custom-template-tags/
 
-# Form
+## Form
 
 [Django使用django-simple-captcha做验证码_xiao-CSDN博客_django-simple-captcha](https://blog.csdn.net/zsx1314lovezyf/article/details/93487254)
 
@@ -477,6 +538,25 @@ for row in df.itertuples(index=True, name='Pandas'):
 
 根据[这个回复](https://stackoverflow.com/a/55557758/3012163),不推荐使用`df.iterrows()`,`itertuples()`性能可以会更好些.
 
+### Create a  dafaframe from series.
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+author = ['Jitender', 'Purnima', 'Arpit', 'Jyoti']
+article = [210, 211, 114, 178]
+
+auth_series = pd.Series(author)
+article_series = pd.Series(article)
+
+frame = { 'Author': auth_series, 'Article': article_series }
+
+result = pd.DataFrame(frame)
+
+print(result)
+```
+
 ## TA-lib
 
 mac下安装
@@ -492,10 +572,6 @@ windows下安装
 ```
 
 ```
-
-
-
-
 
 ## matplotlib
 
@@ -530,7 +606,7 @@ https://docs.python.org/3/library/typing.html
 
 这里有built in types. http://mypy.readthedocs.io/en/latest/cheat_sheet_py3.html
 
-## [Class and instance variable annotations](https://www.python.org/dev/peps/pep-0526/#id9)
+[Class and instance variable annotations](https://www.python.org/dev/peps/pep-0526/#id9)
 
 ```python
 class BasicStarship:

@@ -464,6 +464,39 @@ journalctl --unit=docker.service
 journalctl -u docker
 ```
 
+
+
+# 11. Volume
+
+
+
+```
+$ docker volume create --driver local \
+      --opt type=none \
+      --opt device=/home/user/test \
+      --opt o=bind \
+      test_vol
+
+```
+
+
+
+use it in docker-compose.yaml
+
+```yaml
+version: "3.9"
+services:
+  frontend:
+    image: node:lts
+    volumes:
+      - test_vol:/home/node/app
+volumes:
+  test_vol:
+    external: true
+```
+
+
+
 # Docker build
 
 **Dockerfile**
@@ -731,21 +764,13 @@ docker compose  AttributeError: 'module' object has no attribute 'connection'
 $ docker update --restart=no  influxdb_influxdb_1
 ```
 
-
-
 ## docker compose version
 
 Version 1 is supported by **Compose up to 1.6.x**. It will be deprecated in a future Compose release.
 
 Version 2 files are supported by **Compose 1.6.0+** and require a Docker Engine of version **1.10.0+**.
 
-
-
-
-
 具体的版本详情请参见：[Compose file versions and upgrading | Docker Documentation](https://docs.docker.com/compose/compose-file/compose-versioning/)
-
-
 
 # 12.  Swarm
 

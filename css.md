@@ -14,7 +14,7 @@ http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html  可以看一下他在�
 [A Visual Guide to CSS3 Flexbox Properties](https://scotch.io/tutorials/a-visual-guide-to-css3-flexbox-properties)
 
 这里有个在线的demo也非常好:
-[https://demos.scotch.io/visual-guide-to-css3-flexbox-flexbox-playground/demos/](https://demos.scotch.io/visual-guide-to-css3-flexbox-flexbox-playground/demos/)
+[CodePen - Flexbox Properties Demonstration](https://codepen.io/justd/full/yydezN/)
 
 注意如果 
 

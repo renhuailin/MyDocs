@@ -1,7 +1,16 @@
 Rust编程语言学习心得备忘
 ----------------
 
+
+
+
+
+[The Rust Programming Language - The Rust Programming Language](https://doc.rust-lang.org/book/index.html)
+
+
+
 ## 5.1 Expressions vs. Statements
+
 从根本上来说，rust是基于expression的一门语言。它只有两种类型的statement，其它的全是expression。
 
 那 Expressions和Statements有什么区别？ Expressions有返回值而Statements没有。
@@ -11,11 +20,13 @@ Rust编程语言学习心得备忘
 赋值语句（Rust术语叫bindings）是Rust的两种Statement里的一种，准确地说是`声明语句`。目前为止，let是我们见到的唯一的`声明语句`，那我们就再多说点。
 
 在大多数的语言里，变量赋值是可以写成Expressions的，如：
+
 ```js
 x = y = 5;
 ```
 
 在Rust语言里，用let赋值的语句是Statement，下面的代码会产生一个编译错误：
+
 ```rust
 let x = (let y = 5i); // expected identifier, found keyword `let`
 ```
@@ -33,14 +44,17 @@ let x = 5i;
 
 let y: int = if x == 5i { 10i } else { 15i };
 ```
+
 我声明y为int类型，我期望它会被赋个int。
 
 这样写结果就不一样了，无法编译了：
+
 ```rust
 let x = 5i;
 
 let y: int = if x == 5i { 10i; } else { 15i; };
 ```
+
 请注意，我们在10和15后面加了一个分号`;`，Rust会给我们报下面的错误：
 
 ```
@@ -50,39 +64,36 @@ error: mismatched types: expected `int` but found `()` (expected int but found (
 我们想要一个Int，却发现一个`()`,`()`读做`unit`，是Rust的一种特殊类型。因为是不同的类型，所以上面的代码会报错。
 还记得我们是怎么说的吗？Statement不能返回值？`unit`就是用来处理这种情况的。分号`;`把Expression的求值的结果抛弃掉，返回`unit类型，这样就实现了把任何的Expression转成了Statement。
 
+# 5.2 Function
 
-# 5.2 Function 
 需要注意的是rust有一种叫`Diverging functions`的函数，它不返回值。
 
-``` rust
+```rust
 fn diverges() -> ! {
     panic!("This function never returns!");
 }
-
 ```
+
 因为这个函数会引发一个crash，所以它永远不会返回，所以它的返回值只是摆设了，Rust给它一个标识`!`。`Diverging functions`可以用于任何类型，这个设计真奇怪。
 
-
-``` rust
+```rust
 let x: i32 = diverges();
 let x: String = diverges();
 ```
 
-
-
 ## 5.12 Struct
+
 跟其它语言的没有什么太大区别，有两个地方要注意`Tuple structs`和`Unit-like structs`
 
 **Tuple structs**
 
 一种混杂了tuple和struct的数据结构。先看看定义吧
 
-``` rust
+```rust
 struct Color(i32, i32, i32);
 struct Point(i32, i32, i32);
 
 struct Point1 { x:i32, y:i32};
-
 ```
 
 跟tuple比，它是有名字的。跟struct比，它没有field,而且是用圆括号()不是用花括号{}来定义body。
@@ -90,7 +101,7 @@ struct Point1 { x:i32, y:i32};
 有种情况下它非常有用，那tuple struct只有一个field的时候。我们管它叫`新类型`模式。
 效果相当于C语言里的typedef或宏,其它语言里的type alias.
 
-```  rust
+```rust
 struct Inches(i32);
 
 let length = Inches(10);
@@ -99,21 +110,20 @@ let Inches(integer_length) = length;
 println!("length is {} inches", integer_length);
 ```
 
-
 还有一种特殊的struct叫`Unit-like structs`,它就是只有名字，没有任何field的struct.
 
-``` rust
+```rust
 struct Electron;
 ```
+
 它定义了一个新类型。什么情况下会用到它呢？
 有些library会要求创建一个struct，然后实现xxx,yyy等trait。如果你的struct里没有什么数据可存的，就可以定义一个这样的struct.
-
 
 ## 5.13 enum
 
 Rust的enum跟其它语言不太一样。它的每一个变体都可以关联数据，它的变体的定义语法非常像struct的定义语法。
 
-``` rust
+```rust
 enum Message {
     Quit,                            // 像unit-like struct
     ChangeColor(i32, i32, i32),      // 像tuple struct
@@ -126,14 +136,13 @@ enum Message {
 
 主要用在match语句中比较多。
 
-
 其它没什么了。
 
 ## 5.14 Match
 
 Rust没有switch，它用了match来代替switch。当然match的功能要比switch强大多了。
 
-``` rust
+```rust
 let x = 5;
 
 match x {
@@ -150,16 +159,13 @@ match x {
 
 如果我们把上面代码里的`_`这个分支去掉，就会报错，Rust会认为你没有考虑所有的可能性。
 
-
-
 ## 5.23 Trait Objects
-
 
 Rust里区分`static dispatch`和`dynamic dispatch`.
 
 `static dispatch` 相当于用类来调用方法，而`dynamic dispatch`相当于通过接口来调用方法。
 
-``` rust
+```rust
 trait Foo {
     fn method(&self) -> String;
 }
@@ -173,10 +179,12 @@ impl Foo for String {
     fn method(&self) -> String { format!("string: {}", *self) }
 }
 ```
+
 Foo是一个trait，u8和String 相当于是实现了这个trait的类。
 
 先来看`static dispatch` 。
-``` rust
+
+```rust
 //注意参数不是&或Box<T>
 fn do_something<T: Foo>(x: T) {
     x.method();
@@ -191,10 +199,9 @@ fn main() {
 }
 ```
 
-
 **dynamic dispatch**
 
-``` rust
+```rust
 fn do_something(x: &Foo) {
     x.method();
 }
@@ -204,9 +211,10 @@ fn main() {
     do_something(&x as &Foo);
 }
 ```
+
 or by coercing:
 
-``` rust
+```rust
 fn do_something(x: &Foo) {
     x.method();
 }
@@ -216,18 +224,16 @@ fn main() {
     do_something(&x);
 }
 ```
+
 上面函数do_something的参数是&Foo,是一个引用。这很关键，这就会使用dynamic dispatch。
 
 具体实现区别涉及到指针和vtable等,请看官方文档。（有时间补充上）
 
-
 ## 5.24 Closures 闭包
-
 
 有一种是stack closure,是在栈上的closure。
 
-
-``` rust
+```rust
 fn factory() -> (Fn(i32) -> Vec<i32>) {
     let vec = vec![1, 2, 3];
 
@@ -238,39 +244,41 @@ let f = factory();
 
 let answer = f(4);
 assert_eq!(vec![1, 2, 3, 4], answer);
-
 ```
 
-
 ## Borrow 和 AsRef
+
 Choose Borrow when you want to abstract over different kinds of borrowing, or when you’re building a datastructure that treats owned and borrowed values in equivalent ways, such as hashing and comparison.
 当你想`owned`和`borrowed`的值同样对待时，比如在设计你的函数参数时，你就要用Borrow.
 
 Choose AsRef when you want to convert something to a reference directly, and you’re writing generic code.
 
-
 ## 5.8 Ownership
+
 rust的ownership系统是它区别与其它语言的最主要的特征。只有理解了ownership系统，才能真正算是入门。
 
 Variable bindings have a property in Rust: they ‘have ownership’ of what they’re bound to. This means that when a binding goes out of scope, the resource that they’re bound to are freed. For 
 
 Rust的绑定变量有一个属性：获得它所绑定资源的所有权。这意味着当绑定变量超出作用域时，它所绑定资源的资源就会释放。
-``` rust
+
+```rust
 fn foo() {
     let v = vec![1, 2, 3];
 }
 ```
+
 绑定变量v的作用域是函数foo的函数体，创建v时，先会在栈上分配空间来保存v这个变量 ，然后会在堆上分配空间以保存它的3个元素。当v超出作用域时，Rust会清除栈和堆上这些资源。
 
 有一点要注意：**Rust确保有且只有一个变量绑定到给定的资源**。
 
-``` rust
+```rust
 let v = vec![1, 2, 3];  //创建一个vector,并绑定到一个变量
 
 let v2 = v;   //把它赋给另一个变量。
 
 println!("v[0] is: {}", v[0]);   //使用原来的那个绑定变量。
 ```
+
 运行上面的代码会报错。
 
 ```
@@ -281,17 +289,19 @@ println!("v[0] is: {}", v[0]);
 ```
 let v2= v;
 ```
+
 这行代码是把v赋给v2,它们都指向同一个vector，这违反了Rust安全承诺。所以在这个赋值后Rust不允许再使用变量v。在编译器优化时，可以会把它释放掉。看起来就像v的所有都转移(move)到v2了。
 
-
 下面我们再看一个例子，这回我们把类型从vector换成i32.
-``` rust
+
+```rust
 let v  = 1;
 
 let v2 = v;
 
 println!("v is: {}", v);
 ```
+
  这个代码就可以运行，为什么？因为这个例子里v的类型是i32，它实现了`Copy` trait，所以`let v2 = v;`这行代码执行时，rust会把v的值深度copy一份，然后给v2，所以v在赋值后可以用的。
  v2和v拥有不同的资源，分别是各自资源的owner。
 
@@ -299,17 +309,17 @@ println!("v is: {}", v);
 
 当一个局部变量用做右值时，它可能会被move或copy，取决于它的类型，如果它实现了`Copy`这个trait，那它就会被copied，否则就会被moved. 
 
-``` rust
+```rust
 let v = vec![1, 2, 3];
 
 let v2 = v;
 ```
-vector没有实现`Copy` trait，所以在赋值后`v`就不可以用了。
 
+vector没有实现`Copy` trait，所以在赋值后`v`就不可以用了。
 
 如果我们写了一个函数，以vector为参数，为了能让函数调用后原来的变量能正常使用，我们必须手动归还这个ownership。
 
-``` rust
+```rust
 fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
     // do stuff with v1 and v2
 
@@ -322,6 +332,7 @@ let v2 = vec![1, 2, 3];
 
 let (v1, v2, answer) = foo(v1, v2); //调用并归还
 ```
+
 这简直太变态，无法接受啊！     
 
 所以rust引入了`borrowing` 来解决这个问题。
@@ -332,7 +343,7 @@ let (v1, v2, answer) = foo(v1, v2); //调用并归还
 
 Rust使用`reference` 来解决这个问题。这是reference版本的。
 
-``` rust
+```rust
 fn foo(v1: &Vec<i32>, v2: &Vec<i32>) -> i32 {
     // do stuff with v1 and v2
 
@@ -353,12 +364,13 @@ reference是什么？官方文档是这样解释的。
 ```
 We call the &T type a ‘reference’, and rather than owning the resource, it borrows ownership.
 ```
+
 borrow,借，也就是所有权是没变的。我借你的书看，书还是你的（所有权归你），但是我现在在用它。
 引用也是这个意思,引用可以使用资源，但是不拥有所有权。
 
 默认的References不可变的，跟绑定一样.
 
-``` rust
+```rust
 fn foo(v: &Vec<i32>) {
      v.push(5);
 }
@@ -366,8 +378,8 @@ fn foo(v: &Vec<i32>) {
 let v = vec![];
 
 foo(&v);
-
 ```
+
 会报错：
 
 ```
@@ -375,17 +387,18 @@ error: cannot borrow immutable borrowed content `*v` as mutable
 v.push(5);
 ^
 ```
+
 不可变的引用，不能修改资源的内容。如果要修改资源的内容，我们先取得`可变引用`。
 
-``` rust
+```rust
 let mut x = 5;
 {
     let y = &mut x;
     *y += 1;
 }
 println!("{}", x);
-
 ```
+
 x的值被修改了。你会奇怪，我们为什么要把修改的代码放在{}块里。如果我们把这两个花括号去掉会报错。
 
 ```
@@ -405,9 +418,9 @@ fn main() {
 为什么？
 我们先来说说Rust对references规定吧。
 
-1.  所有的引用的作用域必须小于所有者(owner)的作用域。
-2.  你可以有多个不可变的引用(&T)，但
-3.  同时只能有一个可变的引用(&mut T)
+1. 所有的引用的作用域必须小于所有者(owner)的作用域。
+2. 你可以有多个不可变的引用(&T)，但
+3. 同时只能有一个可变的引用(&mut T)
 
 Here’s the rules about borrowing in Rust:
 
@@ -422,49 +435,50 @@ Second, you may have one or the other of these two kinds of borrows, but not bot
 
 第一种情况，两个 immutable reference.
 
-
-``` rust 
+```rust
 fn main() {
     let x = 5;
-    
-    
+
+
     let z = & x;
     let y = & x;
     println!("y: {},z:{}",y,z);
-    
+
 }
 ```
+
 这种情况是OK的。
 
 一个 immutable reference和mutable reference的情况。
 
-
-``` rust
+```rust
 fn main() {
     let mut x = 5;
-    
-    
+
+
     let z = & x;
     let y = &mut x;
     println!("y: {},z:{}",y,z);
-    
+
 }
 ```
+
 会报错：
+
 ```
 cannot borrow `x` as mutable because it is also borrowed as immutable,the immutable borrow prevents subsequent moves or mutable borrows of `x` until the borrow ends.
 ```
 
 我们先borrow一个mutable reference然后再borrow一个immutable的可以吗？
 
-``` rust
+```rust
 fn main() {
     let mut x = 5;
-    
+
     let y = &mut x;
     let z = & x;
     println!("y: {},z:{}",y,z);
-    
+
 }
 ```
 
@@ -473,7 +487,8 @@ fn main() {
 在一个scope里，可能多个immutable borrow，但是一旦有mutable borrow就不一样了。immutable borrow和mutable borrow在同一个scope里不能同时存在。也就是官方文档里说的：`but not both at the same time`。
 
 我们再来看上边的例子:
-``` rust
+
+```rust
 let mut x = 5;
 
 let y = &mut x;    // -+ 可变引用 y 开始生效
@@ -483,8 +498,8 @@ let y = &mut x;    // -+ 可变引用 y 开始生效
 println!("{}", x); // -+ - 试图使用原来的可变绑定
                    // -+ 可变引用 y 离开作用域
 ```
-我们无法在可变引用y的作用域里使用x. 因为它违反了同时只能有一个可变引用的这条规则。
 
+我们无法在可变引用y的作用域里使用x. 因为它违反了同时只能有一个可变引用的这条规则。
 
 了解了引用我们下面再来学习Liftetime.
 
@@ -495,17 +510,16 @@ Lifetime是刚接触rust时特别容易产生迷惑的一个概念，所以我�
 在上一节里我们讲了引用和借用
 把资源的引用借给他人使用其结果可能会很复杂。假如：
 
-1.   我有一个资源
-2.   我把这个资源的引用借给你
-3.   我释放这个资源(我不关心你那儿还有一个引用，因为我是这个资源的owner,我有权释放它)。然后
-4.   你要使用这个引用。
+1. 我有一个资源
+2. 我把这个资源的引用借给你
+3. 我释放这个资源(我不关心你那儿还有一个引用，因为我是这个资源的owner,我有权释放它)。然后
+4. 你要使用这个引用。
 
 第4步，当你使用引用时，它所指向的资源已经不在了！这将导致不可预知的问题。
 
 如何避免上述情况的发生？
 
 一种解决方案就是: 当还有一个指向资源的引用存在时，资源就不能被释放。 没有指向资源的引用时，才能释放它。
-
 
 这个方案下第3步就不会释放资源,第4步就是安全的。
 
@@ -519,7 +533,7 @@ Rust使用某种机制来保证第4步不会发生！
 
 你会说怎么不会发生？ 我代码就要这样写，那当然会发生啊，比如：
 
-``` rust
+```rust
 struct Foo {
     f:Box<i32>,
 }
@@ -536,7 +550,6 @@ fn main() {
     println!("{}",y.f);                      // 这相当于第4步。 通过reference来使用资源。
 
 }
-
 ```
 
 好像第4步发生了呀。 不好意思，这段代码无法成功编译。Rust compiler会检查引用的lifetime和
@@ -553,25 +566,20 @@ owner的lifetime。它发现引用的生命期比资源的owner的长时，它�
 
 3  我释放这个资源。
 
-
 上述的代码如果用java或swift来实现肯定可以编译通过。 我们已经习惯写这样的代码了，我们理所当然
 地认为这样的代码可以运行。但是在rust里，你不能这样写代码，因为rust不允许你这样写。
 
 如何保证第4步发生在第3步之前呢？rust是通过**保证资源owner活得比它的任何一个引用更长来实现的。**
 
-
 Rust的ownership系统通过叫`lifetime`的概念来实现。
-
 
 ```
 The ownership system in Rust does this through a concept called lifetimes, which describe the scope that a reference is valid for.
 ```
 
-
 下面我们举些例子来说明lifetime,在这之前，请记住：**有引用才有lifetime,lifetime是跟引用关联的**.
 
-
-``` rust
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -598,7 +606,7 @@ fn main() {
 
 好，我们现在给它加上lifetime。
 
-``` rust
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -639,7 +647,7 @@ OK,可以编译通过了。
 
 下面我们看一个struct包含多个引用时的情况,这时`带名生命期`的作用就更容易理解。
 
-``` rust
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -672,11 +680,14 @@ fn main() {
 所以bar的寿命只能是block1。
 
 如果我们把block1的最后一行改成:
-``` rust
+
+```rust
 d = bar.doo;
 ```
+
 就会无法编译:
-``` rust
+
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -705,10 +716,9 @@ fn main() {
 }
 ```
 
-
 好，接下来我们看看lifetime和函数的关系。
 
-``` rust
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -732,7 +742,7 @@ fn main() {
 
 我们修改代码，让函数返回一个引用，我们先不给它加lifetime，看看编译器提示什么．
 
-``` rust
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -751,6 +761,7 @@ fn main() {
     test(&a,&b);
 }
 ```
+
 ```
 <anon>:5:31: 5:35 error: missing lifetime specifier [E0106]
 <anon>:5 fn test(a : &Foo,b : &Foo) -> &Foo {
@@ -762,7 +773,7 @@ playpen: application terminated with error code 101
 
 我们的函数返回了一个引用，px 有两引用类参数，编译器不知道返回的引用是从哪个参数借来的．所以时我们必须显式指定lifetime．
 
-``` rust
+```rust
 fn test<'a> (a : &Foo,b : &'a Foo) -> &'a Foo {
     println!("a : {} - b : {}",a.f,b.f);
     b
@@ -771,14 +782,14 @@ fn test<'a> (a : &Foo,b : &'a Foo) -> &'a Foo {
 
 可不可以返回值的lifetime与参数的不相关呢？
 
-``` rust
+```rust
 fn test<'a,'b> (a : &Foo,b : &'a Foo) -> &'b Foo ;
 ```
 
 上面的函数可能实现吗？如何从函数里面返回一个带新的lifetime的引用？在函数里新创建一个Foo?这样它就有了一个新的lifetime？
 问题是函数体内创建的实例会在函数返回时销毁，引用就会失效．
 
-``` rust
+```rust
 fn test<'a,'b> (a : &Foo,b : &'a Foo) -> &'b Foo {
     println!("a : {} - b : {}",a.f,b.f);
     &Foo{f : Box::new(12)}
@@ -791,7 +802,7 @@ fn test<'a,'b> (a : &Foo,b : &'a Foo) -> &'b Foo {
 
 没有返回值的函数也能延长引用的生命期．
 
-``` rust
+```rust
 struct Foo {
     f : Box<i32>,
 }
@@ -817,11 +828,10 @@ fn main() {
 }
 ```
 
-
 Rust的Borrow和Lifetime虽然有一点难理解，但请相信，一旦弄懂并开始coding,你会爱上它，：D。
 
-
 # 5.23 Trait Object
+
 Trait Object其实是Trait指针。  有了多态就要动态dispatch,所以有了Trait Object.
 
 Trait objects, like &Foo or Box<Foo>.
@@ -829,10 +839,11 @@ Trait objects, like &Foo or Box<Foo>.
 ```
 A trait object can be obtained from a pointer to a concrete type that implements the trait by casting it (e.g. &x as &Foo) or coercing it (e.g. using &x as an argument to a function that takes &Foo).
 ```
+
 其实它就是Trait指针嘛
 
+## 一些参考资料
 
-## 一些参考资料 
 [1] [RFC: rename `lifetime` to `scope` ](https://github.com/rust-lang/rfcs/pull/431)
 
 [Rust Borrow and Lifetimes](http://arthurtw.github.io/2014/11/30/rust-borrow-lifetimes.html)
@@ -843,18 +854,12 @@ A trait object can be obtained from a pointer to a concrete type that implements
 
 [Error Handling in Rust](http://blog.burntsushi.net/rust-error-handling/) 对rust错误处理讲得比较详细
 
-
-
 # Rust 宏
 
 Kleene star 克林星号
 
-
-
 unwrap
 Rc<T> and Arc<T>
-
-
 
 # unsafe
 
@@ -864,54 +869,28 @@ Code using unsafe has less restrictions than normal code does.
 
 **1 标识函数为unsafe**
 
-``` rust
+```rust
 unsafe fn danger_will_robinson() {
     // scary stuff 
 }
-
 ```
+
 All functions called from FFI must be marked as unsafe, for example.
 
 **2 unsafe块**   
-``` rust
+
+```rust
 unsafe {
     // scary stuff
 }
-
 ```
 
-
 In both unsafe functions and unsafe blocks, Rust will let you do three things that you normally can not do. Just three. Here they are:
+
 1. Access or update a static mutable variable.
 2. Dereference a raw pointer.
 3. Call unsafe functions. This is the most powerful ability.
 
-
-
-
-
-# 错误处理   
+# 错误处理
 
 Option,Result,Some,None.这些是要了解的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
