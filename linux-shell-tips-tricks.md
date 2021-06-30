@@ -460,9 +460,9 @@ ssh -L 1521:9.111.121.223:1521 root@9.111.121.223
 
 ssh -R <remote port>:<localhost or local IP>:<local port> <SSH hostname>
 
-> **Note:**
-> 
-> 这样映射的端口只能listen在 127.0.0.1，所以需要通过nginx反向代理才能访问。
+**Note:**
+
+这样映射的端口只能listen在 127.0.0.1，所以需要通过nginx反向代理才能访问。
 
 这样做会一直开着一个terminal，如果这个terminal挂了，这个连接就断了，根据[这篇blog](https://mpharrigan.com/2016/05/17/background-ssh.html) ,我们可以添加上参数 `-fNT`, 让这个ssh运行在后台，Now you can't ever close the connection!
 
@@ -749,13 +749,13 @@ Iptables Tutorial 1.2.1  里讲到可以通过 cat  `/proc/net/ip_conntrack`  �
 
 # 用wget来做压力测试
 
-​```shell
+```shell
 while true; do wget -q -O- http://9.112.190.95:32758/; done
-
 ```
+
 # curl
-```
 
+```
 -f, --fail
               (HTTP) Fail silently (no output at all) on server errors. This is mostly done to better enable scripts etc to better deal with failed attempts. In normal cases when an HTTP server fails to  deliver  a
               document, it returns an HTML document stating so (which often also describes why and more). This flag will prevent curl from outputting that and return error 22.
@@ -769,27 +769,27 @@ while true; do wget -q -O- http://9.112.190.95:32758/; done
               Silent or quiet mode. Don't show progress meter or error messages.  Makes Curl mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.
 
               Use -S, --show-error in addition to this option to disable progress meter but still show error messages.
-    
+
               See also -v, --verbose and --stderr.
-
 ```
+
 follow redirect.
-```
 
+```
 $ curl -L http://www.google.com
-
 ```
+
 Add header 
-```
 
+```
 $ curl -H "X-First-Name: Joe" http://example.com/
 
 $ curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar
-
 ```
+
 `--create-dirs` 如果目录不存在就创建它。
-```
 
+```
 $ curl -X GET \
 'http://service-lv63z1gn-1256532032.ap-beijing.apigateway.myqcloud.com/release/internal/v1/violationQueryjh?appkey=2738501135&digitalSign=1&signTimestamp=1&nonce=1&plateNumber=%E5%90%89ALS105&vin=WAUACC8P0BA126688&engineNo=CDA195206' \
   -H 'Accept: */*' \
@@ -802,42 +802,52 @@ $ curl -X GET \
   -H 'cache-control: no-cache' \
   -H 'x-microservice-name: violation' \
   -H 'x-namespace-code: cdp-uat'
+```
+
+查询本地IP
 
 ```
+$ curl cip.cc
+```
+
+
+
+
+
 # yum
-```
 
+```
 $ yum list installed
-
 ```
+
 [yum cheatsheet](https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf)
 
 看看哪个包包含ab
-```
 
+```
 $ yum provides /usr/bin/ab
-
 ```
+
 然后下载它：
-```
 
+```
 $ yum install httpd-tools
-
 ```
+
 查看某包安装了哪些文件，比如我经常忘记docker在centos下的配置文件在哪里，于是我先查看一下docker是由哪个rpm安装的。
-```
 
+```
 $ rpm -qa|grep docker 
 docker-ce-18.09.1-2.1.rc1.el7.x86_64
 docker-ce-cli-18.09.1-2.1.rc1.el7.x86_64
-
 ```
+
 然后看一下这个包安装哪些文件：
-```
 
+```
 $ rpm -ql docker-ce-18.09.1-2.1.rc1.el7.x86_64
-
 ```
+
 # Ubuntu
 
 ## Ubuntu 14.04
@@ -845,38 +855,38 @@ $ rpm -ql docker-ce-18.09.1-2.1.rc1.el7.x86_64
 ### 打开crontab日志
 
 ubuntu 14.04默认是没有打开crontab的日志的，需要手动打开：
-```
 
+```
 cd /etc/rsyslog.d/
 sudo nano 50-default.conf
-
 ```
+
 Uncoment line:
-```
 
+```
 #cron.*                         /var/log/cron.log
-
 ```
+
 Save file and restart rsyslog
-```
 
+```
 sudo service rsyslog restart 
-
 ```
+
 Restart your cron daemon for get it's messages from new file
-```
 
+```
 sudo service cron restart
-
 ```
+
 参考：[http://askubuntu.com/a/624785](http://askubuntu.com/a/624785)
 
 ## ubuntu 14.04下查看dns
-```
 
+```
 $ nm-tool
-
 ```
+
 ## ubuntu 14.04禁用dnsmasq
 
 ```sh

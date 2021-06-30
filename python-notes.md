@@ -246,20 +246,12 @@ from pprint import pprint
 pprint(myobj)
 ```
 
-
-
 ## Argument unpacking
-
-
 
 ```python
 bar = [1,2,3,4]
 foo(*bar)
 ```
-
-
-
-
 
 # PIP
 

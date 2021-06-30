@@ -271,12 +271,6 @@ $ npm i ---save-dev @types/express-session
 $ npm list -g --depth=0
 ```
 
-
-
-
-
-
-
 # Selector
 
 ## xpath selector

@@ -59,6 +59,10 @@ Magnum是OpenStack的新项目，也就是Container as a Service.
 `--privileged` 
 https://blog.docker.com/2013/09/docker-can-now-run-within-docker/
 
+```
+docker update --restart unless-stopped redis
+```
+
 # 2 进入容器的bash
 
 可以用docker attach,但是docker attach是共享窗口的。
@@ -464,11 +468,7 @@ journalctl --unit=docker.service
 journalctl -u docker
 ```
 
-
-
 # 11. Volume
-
-
 
 ```
 $ docker volume create --driver local \
@@ -476,10 +476,7 @@ $ docker volume create --driver local \
       --opt device=/home/user/test \
       --opt o=bind \
       test_vol
-
 ```
-
-
 
 use it in docker-compose.yaml
 
@@ -494,8 +491,6 @@ volumes:
   test_vol:
     external: true
 ```
-
-
 
 # Docker build
 

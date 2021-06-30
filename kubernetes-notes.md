@@ -46,6 +46,40 @@ BOOTSTRAP_DOCKER_SOCK="unix:///var/run/docker-bootstrap.sock"
 $ docker -H unix:///var/run/docker-bootstrap.sock ps
 ```
 
+# 
+
+## minikube
+
+Start minikube on mac
+
+```
+$ minikube start
+```
+
+Access the Kubernetes dashboard running within the minikube cluster:
+
+```shell
+minikube dashboard
+```
+
+Stop your local cluster:
+
+```shell
+minikube stop
+```
+
+Delete your local cluster:
+
+```shell
+minikube delete
+```
+
+Delete all local clusters and profiles
+
+```shell
+minikube delete --all
+```
+
 # Pod
 
 它可以包含一个或多个container，
@@ -328,8 +362,6 @@ spec:
 解析k8s网络  http://dockone.io/article/3211
 
 https://blog.csdn.net/zjysource/article/details/52052420
-
-
 
 ## iptables vs ipvs
 
@@ -844,6 +876,16 @@ $ kubectl uncordon <node name>
 # You can call kubectl get pod with the -o go-template=... option to fetch the status of previously terminated Containers:
 
 $ kubectl get pod -o go-template='{{range.status.containerStatuses}}{{"Container Name: "}}{{.name}}{{"\r\nLastState: "}}{{.lastState}}{{end}}'  simmemleak-hra99
+
+# 如果查询当前kubernetes所支持的 deployment的apiVersion
+$ kubectl explain deployment.apiVersion
+
+
+
+
+
+
+
 ```
 
 http://deployment-msa-demo.default.svc.cluster.local:8082
