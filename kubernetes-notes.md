@@ -741,6 +741,7 @@ Isolation can be configured on a per-namespace basis. Currently, only isolation 
 把所有的相关文件放在一个目录里，用一条命令创建。
 
 ```
+$ kubectl version --client
 $ kubectl apply -f <directory>/
 ```
 
@@ -879,13 +880,6 @@ $ kubectl get pod -o go-template='{{range.status.containerStatuses}}{{"Container
 
 # 如果查询当前kubernetes所支持的 deployment的apiVersion
 $ kubectl explain deployment.apiVersion
-
-
-
-
-
-
-
 ```
 
 http://deployment-msa-demo.default.svc.cluster.local:8082

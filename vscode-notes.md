@@ -184,8 +184,6 @@ $ ssh -R 52698:localhost:52698 VIRTUAL_MACHINE_IP_ADDRESS
 }
 ```
 
-
-
 **How to add more indentation in the explorer file tree structure?**
 
 Workbench › Tree: Indent
@@ -193,3 +191,13 @@ Workbench › Tree: Indent
 Controls tree indentation in pixels.
 
 "workbench.tree.indent": 10
+
+### LineHeight
+
+In VS Code, `editor.lineHeight` is an absolute value, so setting it to `1.2` does not work. The line height is in [“…in CSS pixels of the amount of space used for lines vertically.”](https://github.com/microsoft/vscode/issues/33968#issuecomment-328780081).
+
+There’s currently an [open issue to allow the user to set line spacing as a relative value](https://github.com/microsoft/vscode/issues/115960), but the feature is not implemented yet.
+
+It looks like the [default line spacing defaults to 1.35 relative to the font size](https://github.com/microsoft/vscode/issues/115960#issuecomment-840530402).
+
+For a font size of `13`, setting the value in `editor.lineHeight` to `22` has the same effect as keeping the default (1.35 relative?). I’ve manually bumped it down to `21`.

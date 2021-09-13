@@ -1,14 +1,18 @@
 Docker notes
 -------------
 
-# Install
+# 0. Install
 
 ```
 $ curl -fsSL get.docker.com -o get-docker.sh
 $ sudo sh get-docker.sh
 ```
 
-# 1 docker run
+**离线安装**：
+
+[CentOS]([Index of linux/centos/](https://download.docker.com/linux/centos/)) :  choose your version of CentOS. Then browse to `x86_64/stable/Packages/` and download the `.rpm` file for the Docker version you want to install.
+
+# 1. docker run
 
 为了让非root用户使用docker，需要把她加到docker这个组里
 
@@ -61,6 +65,14 @@ https://blog.docker.com/2013/09/docker-can-now-run-within-docker/
 
 ```
 docker update --restart unless-stopped redis
+```
+
+## Run a ubuntu container
+
+有时候我就是想启动一个ubuntu的容器，我也不想运行里的任何命令，但是如果我不指定命令它在启动后就会马上停止。可以用下面的命令来启动它
+
+```
+$ docker run -i -d ubuntu:18.04
 ```
 
 # 2 进入容器的bash
@@ -712,6 +724,20 @@ https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-une
 ## 无法进入容器 executing setns process caused "exit status 15
 
 https://github.com/moby/moby/issues/34488
+
+
+
+Mac docker desktop alternative.
+
+[Docker Desktop 收费之后，神网友弄了个替代方案-InfoQ](https://www.infoq.cn/article/J2V2gakOTKgQOrjZEUrO?utm_source=rss&utm_medium=article)
+
+
+
+
+
+
+
+
 
 # 使用supervisord来管理进程
 

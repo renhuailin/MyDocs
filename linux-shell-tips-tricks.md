@@ -810,10 +810,6 @@ $ curl -X GET \
 $ curl cip.cc
 ```
 
-
-
-
-
 # yum
 
 ```

@@ -253,6 +253,15 @@ bar = [1,2,3,4]
 foo(*bar)
 ```
 
+### joins
+
+Join URL
+
+```python
+from urllib.parse import urljoin
+urljoin("https://www.renhl.com/","/article/1.html")
+```
+
 # PIP
 
 ## pip 自定义豆瓣 pypi 源
@@ -284,13 +293,13 @@ $ pip install pylibmc==blork
 Python PIP 使用笔记
 https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
 
-# Google python style guide
+## Google python style guide
 
 http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/contents/
 
-# Python setup
 
-# django
+
+# Django
 
 ## Shell
 
@@ -303,10 +312,13 @@ In [1]: %load_ext autoreload
 In [2]: %autoreload 2
 ```
 
-$ python manage.py startapp admin
 注意 startproject和startapp这两个命令的区别。 https://docs.djangoproject.com/en/1.10/intro/tutorial01/
 
 ```
+$ django-admin startproject <your_project>
+
+$ python manage.py startapp <your_app>
+
 $ python manage.py sqlmigrate  website 0001_initial
 
 $ python manage.py showmigrations
@@ -487,7 +499,7 @@ $ sudo python -m pip install grpcio-tools -i https://pypi.douban.com/simple
 
 # 数据分析
 
-1. NumPy 和 SciPy：用于处理数据数组和科学计算的高效库，是被重点关注并且维护良好的工具。2.
+1. NumPy 和 SciPy：用于处理数据数组和科学计算的高效库，是被重点关注并且维护良好的工具。
 2. Pandas：一个开源库，可以为 Python 编程语言提供快速简化的初步数据处理和数据分析工具。
 3. Matplotlib ：数据视觉化实用工具。
 4. Seaborn ：提供更多的绘图功能和更专门的绘图。
@@ -516,7 +528,7 @@ False
 
 https://pandas.pydata.org/pandas-docs/version/0.15/10min.html#min
 
-iterate rows in df:
+### Iterate rows in DataFrame
 
 ```
 for index, row in df.iterrows():

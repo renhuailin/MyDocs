@@ -3,9 +3,7 @@
 
 select word at caret [command + w],很有用的快捷键，为了和textmate统一，我把它改成[ctrl + w]了。
 
-
 live templates 跟textmate里的snippets展开是一样的，你可以查看当前可用的live templates  by shortcut [command + j].
-
 
 查看javadoc  用快捷键 F1.
 

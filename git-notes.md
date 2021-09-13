@@ -503,12 +503,6 @@ Now, your local branch sf will automatically push to and pull from origin/server
 
 这是官方解释，不过我没看懂，还要再消化消化   [Git - 变基](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA)
 
-
-
-
-
-
-
 ## 4.5 Git flow
 
 http://www.ruanyifeng.com/blog/2015/12/git-workflow.html

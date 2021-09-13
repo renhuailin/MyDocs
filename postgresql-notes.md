@@ -68,8 +68,6 @@ DROP DATABASE db_name WITH (FORCE);
 
 [How to drop a PostgreSQL database if there are active connections to it? - Stack Overflow](https://stackoverflow.com/questions/5408156/how-to-drop-a-postgresql-database-if-there-are-active-connections-to-it)
 
-
-
 ### 允许远程访问
 
 在MySQL中，如果我们想让MySQL可以远程访问，需要修改配置文件，让MySQL的进程监听在0.0.0.0上。同时需要创建一个远程用户。
@@ -100,7 +98,3 @@ as a user, a group, or both.
 ```
 
 8.1以后的版本，只有角色了，它也是用户、组或是两者都是。
-
-
-
-
