@@ -725,19 +725,9 @@ https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-une
 
 https://github.com/moby/moby/issues/34488
 
-
-
 Mac docker desktop alternative.
 
 [Docker Desktop 收费之后，神网友弄了个替代方案-InfoQ](https://www.infoq.cn/article/J2V2gakOTKgQOrjZEUrO?utm_source=rss&utm_medium=article)
-
-
-
-
-
-
-
-
 
 # 使用supervisord来管理进程
 

@@ -297,8 +297,6 @@ https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
 
 http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/contents/
 
-
-
 # Django
 
 ## Shell

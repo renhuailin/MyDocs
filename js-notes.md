@@ -164,21 +164,13 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 # React
 
-
-
 可视化基于组件的编辑器
 
 https://craft.js.org/
 
-
-
 [GitHub - retejs/rete: JavaScript framework for visual programming and creating node editor](https://github.com/retejs/rete)
 
-
-
 [GitHub - jagenjo/webglstudio.js: A full open source 3D graphics editor in the browser, with scene editor, coding pad, graph editor, virtual file system, and many features more.](https://github.com/jagenjo/webglstudio.js)
-
-
 
 https://demo.bpmn.io/s/start
 
@@ -1008,6 +1000,75 @@ npm -g config set user root
 Vscode debugging 
 
 [在 VS Code 中调试 — Vue.js](https://cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
+
+
+
+
+
+
+
+# ECharts
+
+默认并不是显示所有的x轴的标签的，如果要显示，需要设置`axisLabel`下的`interval`为0。
+
+```typescript
+xAxis: {
+        type: "category",
+        axisTick: {
+          alignWithLabel: true,
+        },
+        data: statData.horizontal,
+        axisLabel: {
+          interval: 0,
+        }
+      },
+```
+
+
+
+### 让单series的柱状图，每个柱显示不同的颜色
+
+```typescript
+series: [
+        {
+          name: "A",
+          type: "bar",
+          data: dataA,
+          itemStyle: {
+            // color: "#0c84c6",
+            color: function (parms: any) {
+              let colours = [
+                "#002c53",
+                "#ffa510",
+                "#0c84c6",
+                "#ffbd66",
+                "#f74d4d",
+                "#2455a4",
+                "#41b7ac",
+              ];
+              return colours[parms.dataIndex % colours.length];
+            },
+          },
+          markLine: {
+            // data: statData.vertical[3]["BaseLine"]["A"],
+            data: [
+              {
+                name: "Y 轴值为 100 的水平线",
+                yAxis: statData.vertical[3]["BaseLine"]["A"],
+              },
+            ],
+            lineStyle: {
+              color: "#fdc746",
+              width: 2,
+            },
+          },
+        },
+      ],
+```
+
+
+
+
 
 # Yarn 使用淘宝源
 
