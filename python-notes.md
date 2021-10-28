@@ -27,8 +27,6 @@ six这个包受系统保护不能删除，还好Pip是可以忽略依赖的包�
 $ sudo pip install  python-neutronclient  --ignore-installed six
 ```
 
-# 
-
 # 内部命令
 
 ## type
@@ -252,6 +250,17 @@ pprint(myobj)
 bar = [1,2,3,4]
 foo(*bar)
 ```
+
+## ArgumentParser
+
+```python
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--env',action="extend", nargs='+')
+parser.parse_args(["--env", "a=1", "--env", "b=3"])
+```
+
+结果：Namespace(env=['a=1', 'b=3'])
 
 ### joins
 
@@ -598,7 +607,14 @@ windows下安装
 
 如果你使用`matplotlib.pyplot`，则会为每个图形自动创建工具栏。 如果你正在编写自己的用户界面代码，则可以将工具栏添加为窗口小部件。 确切的语法取决于你的 UI，但在
 
-# 
+## URL Encode
+
+
+
+```python
+import urllib.parse
+safe_string = urllib.parse.quote_plus(...)
+```
 
 # Typing
 
@@ -663,7 +679,7 @@ datetime_object = datetime.strptime('2015-12-25 01:22:33', "%Y-%m-%d %H:%M:%S")
 # 字符串格式化表达式
 
 ```python
-#打印bool
+# 打印bool
 print "%r, %r" % (True, False)
 ```
 

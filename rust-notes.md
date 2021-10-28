@@ -1,13 +1,7 @@
 Rust编程语言学习心得备忘
 ----------------
 
-
-
-
-
 [The Rust Programming Language - The Rust Programming Language](https://doc.rust-lang.org/book/index.html)
-
-
 
 ## 5.1 Expressions vs. Statements
 
@@ -894,3 +888,11 @@ In both unsafe functions and unsafe blocks, Rust will let you do three things th
 # 错误处理
 
 Option,Result,Some,None.这些是要了解的
+
+
+
+# Attributes
+
+很奇怪，在The Rust programming language这本书中没有介绍Attributes，不过语言的reference里是有的。
+
+[Attributes - The Rust Reference](https://doc.rust-lang.org/reference/attributes.html#attributes)

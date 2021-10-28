@@ -76,3 +76,23 @@ Dynamic Source Lookup plugin for Eclipse : https://github.com/ifedorenko/com.ife
 Wiremock 用来mock一些api，主要用来测试。
 
 阿里的RPC框架 [dubbo](http://dubbo.io/)
+
+#### Drools
+
+Drools是规则引擎
+
+Drools is a Business Rules Management System (BRMS) solution. It provides a core Business Rules Engine (BRE), a web authoring and rules management application (Drools Workbench), full runtime support for [Decision Model and Notation (DMN)](https://www.drools.org/learn/dmn.html) models at Conformance level 3 and an Eclipse IDE plugin for core development.
+
+#### Camel
+
+Camel is an Open Source integration framework that empowers you to quickly and easily integrate various systems consuming or producing data.
+
+
+
+
+
+
+
+#### Expression Evaluation
+
+https://www.springframework.net/doc-latest/reference/html/expressions.html

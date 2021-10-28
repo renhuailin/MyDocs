@@ -470,7 +470,8 @@ https://webpack.github.io/docs/optimization.html#multi-page-app
 
 # JQuery
 
-jQuery操作select总结：
+## jQuery操作select总结
+
 1.添加option
 
 ```js
@@ -589,7 +590,7 @@ Get Select Box Value/Text In jQuery
 
 Sometimes we want to know what is the value of the selected option. This is how we do it. Please bear in mind that there shouldn’t be any spaces between the : and selected.
 
-```
+```js
 //#selectbox is the id of the select box
 2
 jQuery('#selectbox option:selected').val();
@@ -719,6 +720,27 @@ $('#selectbox').change(function(){
 });
 ```
 
+
+
+## Show ,hide element
+
+```js
+// https://www.w3schools.com/jquery/jquery_hide_show.asp
+$("#hide").click(function(){
+  $("p").hide();
+});
+
+$("#show").click(function(){
+  $("p").show();
+});
+```
+
+
+
+
+
+
+
 SpringMVC, jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
 解决方法是在 jquery post中加入 contentType: "application/json; charset=utf-8",就行了，
 
@@ -742,7 +764,11 @@ $.ajax({
 });
 ```
 
+```js
 jQuery('#some_element').append('<select></select>');
+```
+
+
 I bet everyone would have tried this and it work. However, manipulating might be a more challenging task.
 
 Add Option In Select Box With jQuery
@@ -954,58 +980,13 @@ dataType : "json"
 });
 ```
 
-# 
 
-NodeJS 8.0 install polymer 2.0 failed:
-
-```
-> wd@1.4.0 install /usr/local/lib/node_modules/polymer-cli/node_modules/wd
-> node scripts/build-browser-scripts
-
-/usr/local/lib/node_modules/polymer-cli/node_modules/mkdirp/index.js:90
-                    throw err0;
-                    ^
-
-Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/polymer-cli/node_modules/wd/build'
-    at Object.fs.mkdirSync (fs.js:891:18)
-    at sync (/usr/local/lib/node_modules/polymer-cli/node_modules/mkdirp/index.js:71:13)
-    at Object.<anonymous> (/usr/local/lib/node_modules/polymer-cli/node_modules/wd/scripts/build-browser-scripts.js:6:1)
-    at Module._compile (module.js:573:30)
-    at Object.Module._extensions..js (module.js:584:10)
-    at Module.load (module.js:507:32)
-    at tryModuleLoad (module.js:470:12)
-    at Function.Module._load (module.js:462:3)
-    at Function.Module.runMain (module.js:609:10)
-    at startup (bootstrap_node.js:158:16)
-npm ERR! code ELIFECYCLE
-npm ERR! errno 1
-npm ERR! wd@1.4.0 install: `node scripts/build-browser-scripts`
-npm ERR! Exit status 1
-npm ERR!
-npm ERR! Failed at the wd@1.4.0 install script.
-npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
-
-npm ERR! A complete log of this run can be found in:
-npm ERR!     /Users/harley/.npm/_logs/2017-08-31T06_52_00_690Z-debug.log
-```
-
-解决方法：
-
-```
-npm -g config set user root
-```
 
 # Vue.js
 
 Vscode debugging 
 
 [在 VS Code 中调试 — Vue.js](https://cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
-
-
-
-
-
-
 
 # ECharts
 
@@ -1023,8 +1004,6 @@ xAxis: {
         }
       },
 ```
-
-
 
 ### 让单series的柱状图，每个柱显示不同的颜色
 
@@ -1065,10 +1044,6 @@ series: [
         },
       ],
 ```
-
-
-
-
 
 # Yarn 使用淘宝源
 
