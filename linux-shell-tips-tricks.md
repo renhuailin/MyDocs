@@ -232,9 +232,7 @@ else
 fi
 ```
 
-## does a directory exist?
-
-## 
+## Script Path
 
 Absolute path this script is in.
 
@@ -1033,6 +1031,12 @@ http://www.youdzone.com/signature.html
 
 ```
 0 23-7 * * * /etc/init.d/smb restart
+```
+
+certbot现在用systemd timer做定时刷新证书
+
+```
+$ systemctl list-timers
 ```
 
 # SSL 证书

@@ -59,22 +59,8 @@ When you assign a default value to a stored property, or set its initial value w
 
 https://stackoverflow.com/a/43332520
 
-
-
 ## NSOutlineView save item expanded status
 
 根据文档[https://developer.apple.com/documentation/appkit/nsoutlineview/1530638-autosaveexpandeditems](https://developer.apple.com/documentation/appkit/nsoutlineview/1530638-autosaveexpandeditems)
 
 在`Attributes Inspector`中选中`Autosave Expanded Items`, 同时为Autosave属性填一个值，最后要实现the [`outlineView(_:itemForPersistentObject:)`](https://developer.apple.com/documentation/appkit/nsoutlineviewdatasource/1533602-outlineview) and [`outlineView(_:persistentObjectForItem:)`](https://developer.apple.com/documentation/appkit/nsoutlineviewdatasource/1532545-outlineview) delegate methods
-
-
-
-
-
-
-
-
-
-
-
-

@@ -297,6 +297,16 @@ F12->
 $x(“//title”)
 ```
 
+
+
+## document.querySelector()
+
+
+
+
+
+
+
 # ES6
 
 ## Generator
@@ -720,8 +730,6 @@ $('#selectbox').change(function(){
 });
 ```
 
-
-
 ## Show ,hide element
 
 ```js
@@ -734,12 +742,6 @@ $("#show").click(function(){
   $("p").show();
 });
 ```
-
-
-
-
-
-
 
 SpringMVC, jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
 解决方法是在 jquery post中加入 contentType: "application/json; charset=utf-8",就行了，
@@ -767,7 +769,6 @@ $.ajax({
 ```js
 jQuery('#some_element').append('<select></select>');
 ```
-
 
 I bet everyone would have tried this and it work. However, manipulating might be a more challenging task.
 
@@ -979,8 +980,6 @@ alert(textStatus.error + " " + errorThrown);
 dataType : "json"
 });
 ```
-
-
 
 # Vue.js
 

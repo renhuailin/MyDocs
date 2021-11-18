@@ -343,6 +343,12 @@ $python manage.py sqlmigrate
 $ python manage.py runserver 0.0.0.0:8000
 ```
 
+### Database table to model
+
+```
+$ python ./manage.py inspectdb [table [table ...]]
+```
+
 ## view
 
 ```python
@@ -392,7 +398,25 @@ djanto Form在产生的html widget里会生成`required`这个属性,如果不�
 tags = models.CharField(max_length=191, null=True, blank=True)
 ```
 
-## models
+## Models
+
+### Field reference
+
+[Model field reference | Django documentation | Django](https://docs.djangoproject.com/en/3.2/ref/models/fields/)
+
+```python
+from django.db import models
+
+class Customer(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['last_name', 'first_name']),
+            models.Index(fields=['first_name'], name='first_name_idx'),
+        ]
+```
 
 从现有的数据库生成model.
 
@@ -487,6 +511,10 @@ STATICFILES_DIRS这个目录下的文件是开发模式服务器`runserver`寻�
 当我们部署在生产环境，尤其是用apache部署时，通常我们是用apache来服务静态文件的，我们要先运行`python manage.py collectstatic`，再在apache的配置文件里把`/static/` alias到`STATIC_ROOT下就行了。
 
 总之django的这个思路是挺奇怪的，他假设你在部署的时候一定是用nginx或apache等来服务静态文件的。开发模式和生产模式是完全不一样的。
+
+## Deployment with apache2
+
+https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-14-04
 
 # Setup tools
 
@@ -608,8 +636,6 @@ windows下安装
 如果你使用`matplotlib.pyplot`，则会为每个图形自动创建工具栏。 如果你正在编写自己的用户界面代码，则可以将工具栏添加为窗口小部件。 确切的语法取决于你的 UI，但在
 
 ## URL Encode
-
-
 
 ```python
 import urllib.parse
@@ -802,8 +828,6 @@ import sys
 print sys.executable
 print sys.exec_prefix
 ```
-
-# 
 
 # 问题及解决
 

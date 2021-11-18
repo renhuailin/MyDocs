@@ -104,51 +104,41 @@ A crate will group related functionality together in a scope so the functionalit
 
 以一个饭店*module*为例，可以分为前端和后端，前端主要是接待的，后端主要是做菜的。
 
-*```rust*
-
+```rust
 mod front_of_house {
 
- mod hosting {
+mod hosting {
 
- fn add_to_waitlist() {}
+fn add_to_waitlist() {}
 
- fn seat_at_table() {}
-
- }
-
- mod serving {
-
- fn take_order() {}
-
- fn serve_order() {}
-
- fn take_payment() {}
-
- }
+fn seat_at_table() {}
 
 }
 
-*```*
+mod serving {
+
+fn take_order() {}
+
+fn serve_order() {}
+
+fn take_payment() {}
+
+}
+
+}
+```
 
 `*module tree*`  显示了module之间的关系。
 
 ```
 crate
-
  └── front_of_house
-
  ├── hosting
-
  │ ├── add_to_waitlist
-
  │ └── seat_at_table
-
  └── serving
-
  ├── take_order
-
  ├── serve_order
-
  └── take_payment
 ```
 
@@ -494,7 +484,7 @@ fn main() {
 
 If the Result value is the Ok variant, unwrap will return the value inside the Ok. If the Result is the Err variant, unwrap will call the panic! macro for us.
 
-如果Result是Ok,那么`unwrap`就会返回Ok里的值，如果Result是`Err`,那就直接调用panic!的了。
+**如果Result是Ok,那么`unwrap`就会返回Ok里的值，如果Result是`Err`,那就直接调用panic!的了。**
 
 可以使用expect方法来提供一个自定义的错误消息。
 
@@ -603,7 +593,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 ```
 
-## 10 Generic Types, Traits, and Lifetimes
+## 10. Generic Types, Traits, and Lifetimes
 
 ### 10.2 Traits: Defining Shared Behavior
 
@@ -867,3 +857,388 @@ where
     }
 }
 ```
+
+## 13. Functional Language Features: Iterators and Closures
+
+### 13.1 Closures: Anonymous Functions that Can Capture Their Environment
+
+**My Note**: Rust的Closure跟其实语言的差不多,但是因为rust是有ownership的，所以在capture enviromment的时候有一些差别的。
+
+Closures can capture values from their environment in three ways, which directly map to the three ways a function can take a parameter: taking ownership, borrowing mutably, and borrowing immutably. These are encoded in the three `Fn` traits as follows:
+
+- `FnOnce` consumes the variables it captures from its enclosing scope, known as the closure’s *environment*. To consume the captured variables, the closure must take ownership of these variables and move them into the closure when it is defined. The `Once` part of the name represents the fact that the closure can’t take ownership of the same variables more than once, so it can be called only once.
+- `FnMut` can change the environment because it mutably borrows values.
+- `Fn` borrows values from the environment immutably.
+
+When you create a closure, Rust infers which trait to use based on how the closure uses the values from the environment. All closures implement `FnOnce` because they can all be called at least once. Closures that don’t move the captured variables also implement `FnMut`, and closures that don’t need mutable access to the captured variables also implement `Fn`. 
+
+Closure 捕捉capture环境变量的方式有三种：
+
+* FnOnce  这种方式的closure会take环境变量的ownership到closure里，Once的意思是，take环境变量的ownership这种事只能发生一次，因此也只能被调用一次。
+
+* FnMut 以 mutably 的方式借用
+
+* Fn 以immutably的方式借用。
+
+```rust
+fn main() {
+    let x = vec![1, 2, 3];
+
+    let equal_to_x = move |z| z == x;
+
+    println!("can't use x here: {:?}", x);
+
+    let y = vec![1, 2, 3];
+
+    assert!(equal_to_x(y));
+}
+```
+
+编译这段代码会报错：
+
+```
+$ cargo run
+   Compiling equal-to-x v0.1.0 (file:///projects/equal-to-x)
+error[E0382]: borrow of moved value: `x`
+ --> src/main.rs:6:40
+  |
+2 |     let x = vec![1, 2, 3];
+  |         - move occurs because `x` has type `Vec<i32>`, which does not implement the `Copy` trait
+3 | 
+4 |     let equal_to_x = move |z| z == x;
+  |                      --------      - variable moved due to use in closure
+  |                      |
+  |                      value moved into closure here
+5 | 
+6 |     println!("can't use x here: {:?}", x);
+  |                                        ^ value borrowed here after move
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `equal-to-x`
+
+To learn more, run the command again with --verbose.
+```
+
+这是因为，在closure**定义**的那一行，x的ownership就属于closure了。
+
+### 13.2 Processing a Series of Items with Iterators
+
+迭代器这个概念其它语言也有，不过rust里要考虑ownership的问题。
+
+```rust
+#[test]
+    fn iterator_demonstration() {
+        let v1 = vec![1, 2, 3];
+
+        let mut v1_iter = v1.iter();
+
+        assert_eq!(v1_iter.next(), Some(&1));
+        assert_eq!(v1_iter.next(), Some(&2));
+        assert_eq!(v1_iter.next(), Some(&3));
+        assert_eq!(v1_iter.next(), None);
+    }
+```
+
+Note that we needed to make `v1_iter` mutable: calling the `next` method on an iterator changes internal state that the iterator uses to keep track of where it is in the sequence. In other words, this code *consumes*, or uses up, the iterator. Each call to `next` eats up an item from the iterator. We didn’t need to make `v1_iter` mutable when we used a `for` loop because the loop took ownership of `v1_iter` and made it mutable behind the scenes.
+
+Also note that the values we get from the calls to `next` are immutable references to the values in the vector. The `iter` method produces an iterator over immutable references. If we want to create an iterator that takes ownership of `v1` and returns owned values, we can call `into_iter` instead of `iter`. Similarly, if we want to iterate over mutable references, we can call `iter_mut` instead of `iter`.
+
+需要注意：
+
+我们创建iterator时，用了`mut`,因为每次调用next时，实际上是修改了v1的。
+
+另外： `iter`方法是通过v1的immutable references产生的。
+
+如果用`into_iter`，产生的iterator就会takes ownership of `v1`。
+
+如果相通过iterator来修改v1时，需要用`iter_mut`   instead of   `iter`.
+
+这是需要特别注意的。
+
+### 13.3 Improving Our I/O Project
+
+这一小节，把上面讲一个例子用iterator重构了一下。
+
+原来的代码：
+
+```rust
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config {
+            query,
+            filename,
+            case_sensitive,
+        })
+    }
+}
+```
+
+这个代码的参数是slice,返回结果是`Result<Config, &str>`,要注意Config前面没有&，所以是发生了ownership转移的。也就是new方法在创建完Config后，把ownership转移给了caller。
+
+所以，在声明`query`和`filename`时，都用了clone()这个方法。
+
+而且这个函数里没有显式地指定lifetime，因为它符合省略lifetime的规则。
+
+重构后的代码：
+
+```rust
+impl Config {
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
+
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config {
+            query,
+            filename,
+            case_sensitive,
+        })
+    }
+}
+```
+
+由于new的参数不是reference了，所以不符合省略lifetime的规则了，返回值中的&str的lifetime必须明确地声明，这里只能声明为`static`。
+
+### 13.4 Comparing Performance: Loops vs. Iterators
+
+这一章，对比了for loop和iterator的性能，我之前觉得，iterator那么花哨，性能肯定好不了，结果是iterator的性能反而会稍稍好一点！
+
+```
+test bench_search_for  ... bench:  19,620,300 ns/iter (+/- 915,700)
+test bench_search_iter ... bench:  19,234,900 ns/iter (+/- 657,200)
+```
+
+## 
+
+## 15. Smart Pointers
+
+本章会主要介绍以下几种pointers:
+
+- `Box<T>` for allocating values on the heap
+- `Rc<T>`, a reference counting type that enables multiple ownership
+- `Ref<T>` and `RefMut<T>`, accessed through `RefCell<T>`, a type that enforces the borrowing rules at runtime instead of compile time
+
+### 15.1 Using `Box<T>` to Point to Data on the Heap
+
+Boxes allow you to store data on the heap rather than the stack.
+
+ You’ll use them most often in these situations:
+
+- When you have a type whose size can’t be known at compile time and you want to use a value of that type in a context that requires an exact size
+  
+  当你有一个数据，它的大小在编译期是不确定的，但是你的使用场景却需要明确地需要它的大小。
+
+- When you have a large amount of data and you want to transfer ownership but ensure the data won’t be copied when you do so
+  
+  当你有一大块的数据要转移所有权，但确保这些数据是不会被复制时。
+
+- When you want to own a value and you care only that it’s a type that implements a particular trait rather than being of a specific type
+  
+  当你想要拥有一个值 ，你只在意它的类型实现了特定trait，但你不关心它具体是什么类型时。
+
+#### Enabling Recursive Types with Boxes
+
+这就是一个比较典型的使用场景。
+
+假设有个枚举，它保存了自己的一个引用。
+
+```rust
+enum List {
+    Cons(i32, List),
+    Nil,
+}
+use crate::List::{Cons, Nil};
+
+fn main() {
+    let list = Cons(1, Cons(2, Cons(3, Nil)));
+}
+```
+
+上面的代码在编译时会报错。
+
+```rust
+$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+error[E0072]: recursive type `List` has infinite size
+ --> src/main.rs:1:1
+  |
+1 | enum List {
+  | ^^^^^^^^^ recursive type has infinite size
+2 |     Cons(i32, List),
+  |               ---- recursive without indirection
+  |
+help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to make `List` representable
+  |
+2 |     Cons(i32, Box<List>),
+  |               ^^^^    ^
+
+error[E0391]: cycle detected when computing drop-check constraints for `List`
+ --> src/main.rs:1:1
+  |
+1 | enum List {
+  | ^^^^^^^^^
+  |
+  = note: ...which again requires computing drop-check constraints for `List`, completing the cycle
+  = note: cycle used when computing dropck types for `Canonical { max_universe: U0, variables: [], value: ParamEnvAnd { param_env: ParamEnv { caller_bounds: [], reveal: UserFacing }, value: List } }`
+
+error: aborting due to 2 previous errors
+
+Some errors have detailed explanations: E0072, E0391.
+For more information about an error, try `rustc --explain E0072`.
+error: could not compile `cons-list`
+
+To learn more, run the command again with --verbose.
+```
+
+rust无法计算List size了，也就无法给它分配内存。
+
+In this suggestion, “indirection” means that instead of storing a value directly, we’ll change the data structure to store the value indirectly by storing a pointer to the value instead.
+
+在rustc给出的建议里，“indirection”的意思是，不要直接保存值，我们修改数据结构，通过存储指向这个值的指针来保存值。
+
+```rust
+enum List {
+    Cons(i32, Box<List>),
+    Nil,
+}
+
+use crate::List::{Cons, Nil};
+
+fn main() {
+    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+}
+```
+
+### 15.2 Treating Smart Pointers Like Regular References with the `Deref` Trait
+
+Implementing the `Deref` trait allows you to customize the behavior of the *dereference operator*, `*` (as opposed to the multiplication or glob operator). By implementing `Deref` in such a way that a smart pointer can be treated like a regular reference, you can write code that operates on references and use that code with smart pointers too.
+
+实现了Deref trait后，就可以用星号`*`来解引用指针了。这跟c语言里是一个操作符。
+
+正常引用的解引用是这样的，假设y是x的引用，那么`*`y就和x是一样的。
+
+```rust
+fn main() {
+    let x = 5;
+    let y = &x;
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}
+```
+
+用Box也是一样的。
+
+```rust
+fn main() {
+    let x = 5;
+    let y = Box::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}
+```
+
+为什么`*y`还是可以引用到x呢，因为Box实现了`Deref` trait。
+
+我们自己来创建一个智能指针，体会一下。
+
+```rust
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+```
+
+首先第一行`struct MyBox(T);`定义了一个tuple struct。关于什么是tuple struct请看[这里](https://doc.rust-lang.org/reference/expressions/struct-expr.html#tuple-struct-expression)。
+
+这时如果直接使用`MyBox<T>`是有问题的。
+
+```rust
+fn main() {
+    let x = 5;
+    let y = MyBox::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}
+```
+
+编译器会报无法解引用的错误
+
+```
+$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0614]: type `MyBox<{integer}>` cannot be dereferenced
+  --> src/main.rs:14:19
+   |
+14 |     assert_eq!(5, *y);
+   |                   ^^
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0614`.
+error: could not compile `deref-example`
+
+To learn more, run the command again with --verbose.
+```
+
+实现`Deref` trait:
+
+```rust
+use std::ops::Deref;
+
+impl<T> Deref for MyBox<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+```
+
+`type Target = T;`这一行定义了`associated type`。这会在19章详解介绍。
+
+这样修改后，就可以使用`*y`了。
+
+Deref coercion is a convenience that Rust performs on arguments to functions and methods. Deref coercion works only on types that implement the Deref trait. 
+
+`Deref coercion`这个词没有官方准确的中文翻译，从字面就可以理解为`强制解引用`，只适用于实现了Deref trait的类型。
+
+For example, deref coercion can convert `&String` to `&str` because `String` implements the `Deref` trait such that it returns `&str`.
+
+这种转换发生在函数参数的传递过程中，如果我们转递的实参与形参的类型并不一致，但是可以通过转换实现一致，那么自动转换就会发生。比如形参是`&str`，但实参是`&String`,你会发现rust并不报错，因为String实现了`Deref` trait，可以转成`&str`。
+
+BTW:  为什么有两个字符类型str和String?
+
+Deref coercion 如何处理可变性呢？
+
+Rust does deref coercion when it finds types and trait implementations in three cases:
+
+- From `&T` to `&U` when `T: Deref<Target=U>`
+- From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
+- From `&mut T` to `&U` when `T: Deref<Target=U>`

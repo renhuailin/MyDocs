@@ -30,6 +30,14 @@ $ createdb test
 postgres-# CREATE DATABASE exampledb;
 ```
 
+### 查看数据库
+
+```
+postgres-# \l
+```
+
+
+
 ### 连接数据库
 
 有两种方法：
@@ -44,6 +52,8 @@ $ psql gitlab
 
 ```
 postgres-# \c gitlab
+用法
+  \c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo}
 ```
 
 ### 创建一个数据库用户并设置密码

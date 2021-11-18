@@ -201,3 +201,11 @@ There’s currently an [open issue to allow the user to set line spacing as a r
 It looks like the [default line spacing defaults to 1.35 relative to the font size](https://github.com/microsoft/vscode/issues/115960#issuecomment-840530402).
 
 For a font size of `13`, setting the value in `editor.lineHeight` to `22` has the same effect as keeping the default (1.35 relative?). I’ve manually bumped it down to `21`.
+
+# 问题
+
+## rg进程占用CPU
+
+在mac上，我经常发现rg占满了我的CPU，在网上搜索发现大家都有这种情况，解决方案是：
+
+`"search.followSymlinks": false` solved my issue too, thx
