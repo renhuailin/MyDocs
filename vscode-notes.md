@@ -5,6 +5,53 @@ Visual Studio Code Notes
 
 Join lines:  ctrl + j  (mac)
 
+
+
+
+
+
+
+## Add "Open in VSCode"  to folder action.
+
+1. Launch Automator
+
+2. Create New Document
+
+3. Create a new Quick Action [![Select "Quick Action"](https://i.stack.imgur.com/BwWGs.png)](https://i.stack.imgur.com/BwWGs.png)
+
+4. Add the Action...
+   
+   - Workflow receives current **files and folders** from **Finder**.
+   - Add a new Run Shell Script action to the workflow. (drag the "Run Shell Script" object, highlighted in the screenshot, to the empty window on the right)
+
+5. Configure the Workflow
+   
+   - Set the Pass Input to be **as arguments**
+   - Paste the following in the input box:
+   
+   ```
+   open -n -b "com.microsoft.VSCode" --args "$*" 
+   ```
+   
+   [![Screenshot of Workflow](https://i.stack.imgur.com/MnPT6.png)](https://i.stack.imgur.com/MnPT6.png)
+
+6. Save the action using a name like **Open In Visual Studio Code**.
+   
+   
+
+## Launching from the command line[#](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
+
+You can also run VS Code from the terminal by typing 'code' after adding it to the path:
+
+- Launch VS Code.
+- Open the **Command Palette** (Cmd+Shift+P) and type 'shell command' to find the **Shell Command: Install 'code' command in PATH** command.
+
+![macOS shell commands](https://code.visualstudio.com/assets/docs/setup/mac/shell-command.png)
+
+- Restart the terminal for the new `$PATH` value to take effect. You'll be able to type 'code .' in any folder to start editing files in that folder.
+
+> **Note:** If you still have the old `code` alias in your `.bash_profile` (or equivalent) from an early VS Code version, remove it and replace it by executing the **Shell Command: Install 'code' command in PATH** command.
+
 # Tips and Tricks
 
 https://github.com/Microsoft/vscode-tips-and-tricks
@@ -122,7 +169,7 @@ settings.json
 }
 ```
 
-# hide certain files from the sidebar.
+# Hide certain files from the sidebar.
 
 You can configure patterns to hide files and folders from the explorer and searches.
 

@@ -69,7 +69,7 @@ print(big_yellow.name)
 # output: big_yellow
 ```
 
-## 
+
 
 list comprehension和普通的for loop还是有区别的,因为它产生一个list!!! 所以你不能用它来只做赋值用.
 http://stackoverflow.com/a/10292038
@@ -663,13 +663,28 @@ class BasicStarship:
 
 **Forget about**  ClassVar  **altogether:** This was proposed since mypy seems to be getting along fine without a way to distinguish between class and instance variables. But a type checker can do useful things with the extra information, for example flag accidental assignments to a class variable via the instance (which would create an instance variable shadowing the class variable). It could also flag instance variables with mutable defaults, a well-known hazard.
 
-# Pyenv
+# Python venv
 
-在mac下安装python 3.6时要加上参数`--enable-framework` ,才能用`matplotlib`。
+
+
+通过执行 `venv` 指令来创建一个 [虚拟环境](https://docs.python.org/zh-cn/3/library/venv.html#venv-def):
 
 ```
-$ PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.6.5
+python3 -m venv /path/to/new/virtual/environment
 ```
+
+创建虚拟环境后，可以使用虚拟环境的二进制目录中的脚本来“激活”该环境。不同平台调用的脚本是不同的（须将 <venv> 替换为包含虚拟环境的目录路径）：
+
+| 平台      | Shell           | 用于激活虚拟环境的命令                         |
+| ------- | --------------- | ----------------------------------- |
+| POSIX   | bash/zsh        | $ source <venv>/bin/activate        |
+|         | fish            | $ source <venv>/bin/activate.fish   |
+|         | csh/tcsh        | $ source <venv>/bin/activate.csh    |
+|         | PowerShell Core | $ <venv>/bin/Activate.ps1           |
+| Windows | cmd.exe         | C:\> <venv>\Scripts\activate.bat    |
+|         | PowerShell      | PS C:\> <venv>\Scripts\Activate.ps1 |
+
+
 
 # 时间与日期
 
@@ -848,6 +863,25 @@ print sys.exec_prefix
 https://stackoverflow.com/a/20334767/3012163
 
 我看了这个帖子后，解决了。
+
+
+
+## On mac install Pillow error
+
+```
+The headers or library files could not be found for jpeg,
+    a required dependency when compiling Pillow from source.
+```
+
+解决办法 是用brew安装`libjpeg` ,看来必须安装brew呀。
+
+```
+brew install libjpeg
+```
+
+
+
+
 
 # 参考文献：
 

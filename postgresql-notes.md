@@ -36,8 +36,6 @@ postgres-# CREATE DATABASE exampledb;
 postgres-# \l
 ```
 
-
-
 ### 连接数据库
 
 有两种方法：

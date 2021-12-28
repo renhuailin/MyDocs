@@ -267,7 +267,7 @@ const store = createStore(rootReducer, initialState, enhancer);
 
 ```
 # 使用国内的源
-$ npm install -g cnpm --registry=https://registry.npm.taobao.org
+$ npm install -g cnpm --registry=https://registry.npmmirror.com
 
 # 安全并保存到package.json的dependencies
 $ npm install --save hbs
@@ -297,15 +297,7 @@ F12->
 $x(“//title”)
 ```
 
-
-
 ## document.querySelector()
-
-
-
-
-
-
 
 # ES6
 
