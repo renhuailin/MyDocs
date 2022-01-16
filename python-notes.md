@@ -69,8 +69,6 @@ print(big_yellow.name)
 # output: big_yellow
 ```
 
-
-
 list comprehension和普通的for loop还是有区别的,因为它产生一个list!!! 所以你不能用它来只做赋值用.
 http://stackoverflow.com/a/10292038
 
@@ -224,7 +222,7 @@ Note: 目前版本的Cython-0.29.17还不支持dataclass，所以要把这些类
 
 我不得不承认，python的生态真的很成熟！
 
-# Functions
+## Functions
 
 Python 3 允许指定参数必须用参数名的方式传入。
 Python 3: Keyword-only arguments: arguments that must be passed by name
@@ -269,6 +267,24 @@ Join URL
 ```python
 from urllib.parse import urljoin
 urljoin("https://www.renhl.com/","/article/1.html")
+```
+
+## File
+
+```python
+with open("/Users/harley/Downloads/access.log.2") as infile:
+    i = 0
+    for line in infile:
+        parts = line.split("][")
+        key = parts[9].split(":")[1]
+        if key not in result:
+            result[key] = {parts[6]: 1}
+        else:
+            accesses = result[key]
+            if parts[6] not in accesses:
+                accesses[parts[6]] = 1
+            else:
+                accesses[parts[6]] += 1
 ```
 
 # PIP
@@ -440,6 +456,28 @@ QuerySets are lazy.  也就是用户在使用这个queryset时才真正地去查
 articles = Article.objects.filter(
         Q(title__contains=key) | Q(synopsis__contains=key) | Q(content__contains=key))[:5]
 ```
+
+#### Raw SQL 查询
+
+```python
+sql = """select * from articles a 
+join website_recommendationlink w on a.id = w.item_id
+where w.recommendation_id = %s
+order by w.sn"""
+articles_objects = Article.objects.raw(sql, [recom_id])
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## ajax post
 
@@ -665,8 +703,6 @@ class BasicStarship:
 
 # Python venv
 
-
-
 通过执行 `venv` 指令来创建一个 [虚拟环境](https://docs.python.org/zh-cn/3/library/venv.html#venv-def):
 
 ```
@@ -683,8 +719,6 @@ python3 -m venv /path/to/new/virtual/environment
 |         | PowerShell Core | $ <venv>/bin/Activate.ps1           |
 | Windows | cmd.exe         | C:\> <venv>\Scripts\activate.bat    |
 |         | PowerShell      | PS C:\> <venv>\Scripts\Activate.ps1 |
-
-
 
 # 时间与日期
 
@@ -864,8 +898,6 @@ https://stackoverflow.com/a/20334767/3012163
 
 我看了这个帖子后，解决了。
 
-
-
 ## On mac install Pillow error
 
 ```
@@ -878,10 +910,6 @@ The headers or library files could not be found for jpeg,
 ```
 brew install libjpeg
 ```
-
-
-
-
 
 # 参考文献：
 

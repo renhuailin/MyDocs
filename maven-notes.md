@@ -1,8 +1,8 @@
 maven备忘
 ----------
 
-
 【常用maven命令】
+
 ```
 $ mvn archetype:generate
 $ mvn archetype:generate -DgroupId=com.chinaops -DartifactId=CloudOps -DarchetypeArtifactId=maven-archetype-gwt
@@ -25,10 +25,8 @@ $ mvn -X archetype:generate -DgroupId=cn.com.xiangcloud -DartifactId=xiangcloud-
 
 ```$ mvn clean compile package -Dmaven.test.skip=true```
 
-
-
-
 # 把本地包加入的本地库中
+
 mvn install:install-file \
   -Dfile=/Users/harley/Downloads/typica-m4c-1.6.jar \
   -DgroupId=china-ops \
@@ -37,14 +35,11 @@ mvn install:install-file \
   -Dpackaging=jar \
   -DgeneratePom=true
 
-  
-
-
 mvn dependency:tree
 
 # Create a runnable jar
 
-``` xml
+```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -81,8 +76,6 @@ mvn dependency:tree
 </plugin>
 ```
 
-
-
 使用Self-Signed certificate 时，禁用ssl检查
 
 ```xml
@@ -90,25 +83,10 @@ $ cat ~/.mavenrc
 MAVEN_OPTS="-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true"
 ```
 
-
-
 [Publishing Archetypes](https://books.sonatype.com/mvnref-book/reference/archetype-sect-publishing.html)   这里面讲到了如何在mvn 命令行里导出`archetype-catalog.xml`
 
-
-
 使用自定义Nexus里的Archetype
-
-
 
 ```
 $ mvn archetype:generate -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true 
 ```
-
-
-
-
-
-
-
-
-

@@ -246,6 +246,10 @@ https://docs.docker.com/registry/insecure/
 | [网易云](https://c.163yun.com/hub)                                                                                                | `https://hub-mirror.c.163.com`                                                     |                                                                                                | Docker Hub                                                                                                                       |
 | [腾讯云](https://cloud.tencent.com/document/product/457/9113)                                                                     | `https://mirror.ccs.tencentyun.com`                                                |                                                                                                | Docker Hub                                                                                                                       |
 
+
+
+
+
 docker已经进中国了，有了官方的hub加速
 
 https://www.docker-cn.com/registry-mirror
@@ -254,7 +258,7 @@ https://www.docker-cn.com/registry-mirror
 
 ```
 {
-  "registry-mirrors": ["https://registry.docker-cn.com"]
+  "registry-mirrors": ["https://rbnbkm9i.mirror.aliyuncs.com"]
 }
 ```
 
@@ -277,6 +281,22 @@ docker pull registry.docker-cn.com/library/nginx
 ```
 docker pull registry.docker-cn.com/prom/prometheus:v2.2.0
 ```
+
+Azure源举例：
+
+```
+docker pull  dockerhub.azk8s.cn/library/nginx:1.15
+```
+
+
+
+
+
+
+
+
+
+
 
 # 8 Image
 

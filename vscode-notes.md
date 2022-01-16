@@ -5,12 +5,6 @@ Visual Studio Code Notes
 
 Join lines:  ctrl + j  (mac)
 
-
-
-
-
-
-
 ## Add "Open in VSCode"  to folder action.
 
 1. Launch Automator
@@ -36,8 +30,6 @@ Join lines:  ctrl + j  (mac)
    [![Screenshot of Workflow](https://i.stack.imgur.com/MnPT6.png)](https://i.stack.imgur.com/MnPT6.png)
 
 6. Save the action using a name like **Open In Visual Studio Code**.
-   
-   
 
 ## Launching from the command line[#](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
 
