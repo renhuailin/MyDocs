@@ -268,6 +268,13 @@ Join URL
 from urllib.parse import urljoin
 urljoin("https://www.renhl.com/","/article/1.html")
 ```
+## Iterate multilines string
+```python
+import io
+s = io.StringIO(myString)
+for line in s:
+    do_something_with(line)
+```
 
 ## File
 
