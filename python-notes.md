@@ -756,6 +756,9 @@ datetime.datetime.now().timestamp()
 datetime_object = datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
 
 datetime_object = datetime.strptime('2015-12-25 01:22:33', "%Y-%m-%d %H:%M:%S")
+
+# 当前时间加9小时
+nine_hours_from_now = datetime.now() + timedelta(hours=9)
 ```
 
 # 字符串格式化表达式
