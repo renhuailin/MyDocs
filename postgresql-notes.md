@@ -6,7 +6,19 @@
 
 ```
 $ psql
+
+#这就是进入以后的PG的命令行提示符,获取帮助请输入\?
+postgres-# \?
 ```
+
+```
+\? [commands]          show help on backslash commands
+\? options             show help on psql command-line options
+\? variables           show help on special variables
+\h [NAME]              help on syntax of SQL commands, * for all commands
+```
+
+
 
 第一次登录进来时，是无需密码的。这时你是以postgres这个用户登录进来的。请用下面的命令来修改密码。
 
