@@ -124,4 +124,6 @@ as a user, a group, or both.
 
 默认的user:`postgres`,默认的密码需要在启动时指定。
 
+# Migrate data from MySQL to PostgreSQL
 
+https://techdocs.broadcom.com/us/en/ca-enterprise-software/layer7-api-management/api-developer-portal/4-5/install-configure-and-upgrade/install-portal-on-docker-swarm/migrating-portal-data-from-postgresql-to-mysql.html
