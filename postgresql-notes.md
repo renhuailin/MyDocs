@@ -84,6 +84,13 @@ GRANT ALL PRIVILEGES ON DATABASE exampledb to dbuser;
 DROP DATABASE db_name WITH (FORCE);
 ```
 
+### List all users
+List all user accounts (or roles) in the current PostgreSQL database server
+```
+postgres-# \du
+postgres-# \du+
+```
+
 如果有活动的连接，会无法删除，如果想硬删除，请看这里：
 
 [How to drop a PostgreSQL database if there are active connections to it? - Stack Overflow](https://stackoverflow.com/questions/5408156/how-to-drop-a-postgresql-database-if-there-are-active-connections-to-it)
@@ -120,10 +127,10 @@ as a user, a group, or both.
 8.1以后的版本，只有角色了，它也是用户、组或是两者都是。
 
 
-# docker image
+## docker image
 
 默认的user:`postgres`,默认的密码需要在启动时指定。
 
-# Migrate data from MySQL to PostgreSQL
+## Migrate data from MySQL to PostgreSQL
 
 https://techdocs.broadcom.com/us/en/ca-enterprise-software/layer7-api-management/api-developer-portal/4-5/install-configure-and-upgrade/install-portal-on-docker-swarm/migrating-portal-data-from-postgresql-to-mysql.html
