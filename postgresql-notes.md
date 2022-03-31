@@ -84,6 +84,13 @@ GRANT ALL PRIVILEGES ON DATABASE exampledb to dbuser;
 DROP DATABASE db_name WITH (FORCE);
 ```
 
+
+### 查看表结构
+```
+\d table1
+```
+
+
 ### List all users
 List all user accounts (or roles) in the current PostgreSQL database server
 ```
