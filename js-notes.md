@@ -281,6 +281,10 @@ $ npm i ---save-dev @types/express-session
 
 # 列出全局安装的包
 $ npm list -g --depth=0
+
+# 查看某个包的所有versions.
+$ npm view webpack versions --json
+
 ```
 
 # Selector
