@@ -977,13 +977,67 @@ dataType : "json"
 });
 ```
 
-# Vue.js
+# 3. Vue
 
 Vscode debugging 
 
 [在 VS Code 中调试 — Vue.js](https://cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
 
-# ECharts
+
+
+## Vue Router
+
+v4.0是为支持vue3.0开始的，主要有以下改动。
+
+## new Router 变成 createRouter
+Vue Router 不再是一个类，而是一组函数。现在你不用再写 new Router()，而是要调用 createRouter:
+
+// 以前是
+```js
+// import Router from 'vue-router'
+import { createRouter } from 'vue-router'
+
+const router = createRouter({
+  // ...
+})
+```
+
+## 新的 history 配置取代 mode
+mode: 'history' 配置已经被一个更灵活的 history 配置所取代。根据你使用的模式，你必须用适当的函数替换它：
+
+* "history": createWebHistory()
+* "hash": createWebHashHistory()
+* "abstract": createMemoryHistory()
+
+
+下面是一个完整的代码段：
+
+```js
+import { createRouter, createWebHistory } from 'vue-router'
+// 还有 createWebHashHistory 和 createMemoryHistory
+
+createRouter({
+  history: createWebHistory(),
+  routes: [],
+})
+```
+
+在 SSR 上使用时，你需要手动传递相应的 history：
+
+```js
+// router.js
+let history = isServer ? createMemoryHistory() : createWebHistory()
+let router = createRouter({ routes, history })
+// 在你的 server-entry.js 中的某个地方
+router.push(req.url) // 请求 url
+router.isReady().then(() => {
+  // 处理请求
+})
+```
+原因：为未使用的 history 启用摇树，以及为高级用例（如原生解决方案）实现自定义 history。
+
+
+# 4. ECharts
 
 默认并不是显示所有的x轴的标签的，如果要显示，需要设置`axisLabel`下的`interval`为0。
 
@@ -1047,7 +1101,6 @@ $ yarn config set registry 'https://registry.npmmirror.com'
 
 # use taobao registry
 $ npm install --registry=https://registry.npmmirror.com
- 
 ```
 
 # CLI
