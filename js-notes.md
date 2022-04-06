@@ -1041,7 +1041,7 @@ series: [
 ```
 $ yarn config set registry 'https://registry.npmmirror.com'
 
- 
+# use taobao registry
 $ npm install --registry=https://registry.npmmirror.com
  
 ```
