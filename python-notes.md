@@ -276,7 +276,21 @@ for line in s:
     do_something_with(line)
 ```
 
-## File
+## IO
+
+### 循环字符串中的每一行
+
+```python
+ids = """e92c5e598590
+b15c70f53dfc
+c9078612aa06
+7af88c127a65"""
+
+for id in StringIO.StringIO(ids):
+    print id
+```
+
+### Open file
 
 ```python
 with open("/Users/harley/Downloads/access.log.2") as infile:
@@ -421,6 +435,21 @@ djanto Form在产生的html widget里会生成`required`这个属性,如果不�
 tags = models.CharField(max_length=191, null=True, blank=True)
 ```
 
+
+
+1. Set the `fields` attribute to the special value `'__all__'` to indicate that all fields in the model should be used. For example:
+   
+   ```python
+   from django.forms import ModelForm
+   
+   class AuthorForm(ModelForm):
+       class Meta:
+           model = Author
+           fields = '__all__'
+   ```
+
+
+
 ## Models
 
 ### Field reference
@@ -446,6 +475,8 @@ class Customer(models.Model):
 https://docs.djangoproject.com/en/1.11/howto/legacy-databases/
 
 ### 查询
+
+get()和filter()的区别之一，就是如果记录为空，get会抛出异常，而filter不会。
 
 [字段的查找](https://docs.djangoproject.com/en/1.11/topics/db/queries/#field-lookups-intro)  格式为:  
 `field__lookuptype=value`. (That’s a double-underscore)
@@ -473,18 +504,6 @@ where w.recommendation_id = %s
 order by w.sn"""
 articles_objects = Article.objects.raw(sql, [recom_id])
 ```
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## ajax post
 
