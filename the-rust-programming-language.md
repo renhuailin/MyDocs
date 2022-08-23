@@ -1264,8 +1264,15 @@ pub enum SamplerFallback {
 The derive attribute generates code that will implement a trait with its own default implementation on the type you’ve annotated with the derive syntax.
 这个derive宏，会生成代码 ，这些代码会为宏所标注的类型(如struct)以它自己默认的实现来实现一个trait，
 这么说可能不好理解，有点像java里只有个方法的接口（interface）的效果。
+就以上面的代码为例，它实现了`Debug`这个trait,这个trait启用了调试信息中字符串格式化的能力，你可以在代码中使用`:?`占位符。
 
+The Debug trait enables debug formatting in format strings, which you indicate by adding :? within {} placeholders.
 
+在5.2这一节，我们看到Debug trait的能力。
+
+Let’s try it! The println! macro call will now look like println!("rect1 is {:?}", rect1);. Putting the specifier :? inside the curly brackets tells println! we want to use an output format called Debug. The Debug trait enables us to print our struct in a way that is useful for developers so we can see its value while we’re debugging our code.
+
+`:?`占位符告诉`println!`我们要使用叫Debug的输出格式。看来`println`这个宏里有多个输出格式呀。
 
 
 这里是rust里内置的一些attributes,当有不理解的attributes时，可以到这里查查看：
