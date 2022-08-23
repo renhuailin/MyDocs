@@ -1242,3 +1242,31 @@ Rust does deref coercion when it finds types and trait implementations in three 
 - From `&T` to `&U` when `T: Deref<Target=U>`
 - From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
 - From `&mut T` to `&U` when `T: Deref<Target=U>`
+
+
+## Appendix C: Derivable Traits
+
+
+
+``` rust
+#[derive(Deserialize, Debug, PartialEq, Clone, Copy, Visit, Eq)]
+pub enum SamplerFallback {
+    /// A 1x1px white texture.
+    White,
+    /// A 1x1px texture with (0, 1, 0) vector.
+    Normal,
+    /// A 1x1px black texture.
+    Black,
+}
+```
+我在代码里经常可以看到derive这个宏。一直不明白它的含义，这个附录C里讲的就是这个宏。
+
+The derive attribute generates code that will implement a trait with its own default implementation on the type you’ve annotated with the derive syntax.
+这个derive宏，会生成代码 ，这些代码会为宏所标注的类型(如struct)以它自己默认的实现来实现一个trait，
+这么说可能不好理解，有点像java里只有个方法的接口（interface）的效果。
+
+
+
+
+这里是rust里内置的一些attributes,当有不理解的attributes时，可以到这里查查看：
+[Built-in attributes index](https://doc.rust-lang.org/reference/attributes.html#built-in-attributes-index)
