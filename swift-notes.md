@@ -45,6 +45,11 @@ When you assign a default value to a stored property, or set its initial value w
 
 当你为stored property设置值，或是在initializer里为它设置初始值时，都不会触发任何的observers。
 
+
+## Ownership
+https://forums.swift.org/t/a-roadmap-for-improving-swift-performance-predictability-arc-improvements-and-ownership-control/54206
+
+
 ## 调用apple script时报错
 
 ```
