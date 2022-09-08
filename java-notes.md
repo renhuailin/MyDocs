@@ -560,6 +560,12 @@ How to retrieve String from  jsonPath in mvcMock?
 
 https://stackoverflow.com/a/49537158
 
+
+# 性能调优
+[没有二十年功力，写不出Thread.sleep(0)这一行“看似无用”的代码！](https://www.cnblogs.com/thisiswhy/p/16657667.html)
+
+
+
 # Nexus
 
 Nexus里的repo有hosts、proxy、group三种，
