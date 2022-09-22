@@ -210,13 +210,9 @@ mod back_of_house {
 
 ```rust
 mod front_of_house {
-
- pub mod hosting {
-
- pub fn add_to_waitlist() {}
-
- }
-
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
 }
 
 use crate::front_of_house::hosting;
@@ -334,7 +330,7 @@ use std::io::Write;
 use std::io::{self, Write};
 ```
 
-**7.5 Separating Modules into Different Files**
+### 7.5 Separating Modules into Different Files**
 
 前面的例子里，我们把module放在一个文件里，在现实中的项目中module可能很大，需要把它分散到多个文件中去。
 
@@ -399,6 +395,64 @@ pub fn add_to_waitlist() {}
 The `mod` keyword declares modules, and Rust looks in a file with the same name as the module for the code that goes into that module.
 
 `mod`用来定义module，Rust会查询在相同名字的rs文件里找这个module的代码。
+
+
+### 7.6 extern crate
+我们经常会在代码中看到这样的语法。
+``` rust
+extern crate pcre;
+
+```
+根据rust language [reference](https://doc.rust-lang.org/reference/items/extern-crates.html),这样的声明主要是为了`extern prelude`.
+
+    An extern crate declaration specifies a dependency on an external crate. The external crate is then bound into the declaring scope as the identifier provided in the extern crate declaration. Additionally, if the extern crate appears in the crate root, then the crate name is also added to the extern prelude, making it automatically in scope in all modules. The as clause can be used to bind the imported crate to a different name.
+
+也就是会把这个crate绑定到当前的（declaring scope）scope中。也就是不用`use`这个关键字，就可以访问crate里的内容了。
+如果这个外部声明出现在crate root,那么这个crate的名字也会被加到`extern prelude`中，这个scope下的所有Modules都自动可以引用它了。
+
+### 7.7 Prelude
+
+    A prelude is a collection of names that are automatically brought into scope of every module in a crate.
+
+    These prelude names are not part of the module itself: they are implicitly queried during name resolution. For example, even though something like Box is in scope in every module, you cannot refer to it as self::Box because it is not a member of the current module.
+
+
+标准库的[prelude](https://doc.rust-lang.org/std/prelude/index.html)模块讲得非常详细了。 
+
+Rust comes with a variety of things in its standard library. However, if you had to manually import every single thing that you used, it would be very verbose. But importing a lot of things that a program never uses isn’t good either. A balance needs to be struck.
+意思是标准库里有好多东西，如果我们手动导入的话，就太繁琐了。但是如果导入了很多没用的东西也不是好的选择，rust需要平衡这些需求，于是有了prelude。
+
+
+**The prelude is the list of things that Rust automatically imports into every Rust program.** It’s kept as small as possible, and is focused on things, particularly traits, which are used in almost every single Rust program.
+Other preludes
+
+prelude是Rust自动导入到每个程序的一系列东西。它尽可能的小，它聚焦在那些每个Rust程序都会用到的东西上，尤其是`traits`.
+
+Preludes can be seen as a pattern to make using multiple types more convenient. As such, you’ll find other preludes in the standard library, such as std::io::prelude. Various libraries in the Rust ecosystem may also define their own preludes.
+
+Prelude可经被视为一种更方便地使用多个types的范式。你可在标准库中找到其它的Preludes，如`std::io::prelude`。Rust生态圈中的库也可能包含它们自己的preludes.
+
+The difference between ‘the prelude’ and these other preludes is that they are not automatically use’d, and must be imported manually. This is still easier than importing all of their constituent components.
+
+`the prelude`跟其它preludes的区别是，后者不是自动导入的，必须被手动导入。即使这样也比手动导入它们里面的components要方便很多。
+
+通过查看[标准库中的preludes](https://doc.rust-lang.org/reference/names/preludes.html#standard-library-prelude)，我明白了，为什么我常在代码中看到`#[derive(PartialEq)]`这样的代码，但是我没见代码里有导入`derive`和`PartialEq`.
+
+注意，可以通过`no_std`这个attribute来禁用标准库的preludes.
+
+#### Language Prelude
+除了标准库中的prelude外，Rust也有语言级的prelude。
+
+    Type namespace
+        Boolean type — bool
+        Textual types — char and str
+        Integer types — i8, i16, i32, i64, i128, u8, u16, u32, u64, u128
+        Machine-dependent integer types — usize and isize
+        floating-point types — f32 and f64
+    Macro namespace
+        Built-in attributes
+
+这也是为什么可以在代码中使用这些类型而没有看到相关use的原因。
 
 ## 8. Common Collections
 
