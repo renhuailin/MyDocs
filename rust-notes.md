@@ -894,3 +894,7 @@ Option,Result,Some,None.这些是要了解的
 很奇怪，在The Rust programming language这本书中没有介绍Attributes，不过语言的reference里是有的。
 
 [Attributes - The Rust Reference](https://doc.rust-lang.org/reference/attributes.html#attributes)
+## String 和 str的区别
+    主要是因为内存管理方式的不同。
+[疯狂字符串](https://course.rs/difficulties/string.html)
+[Exploring Strings in Rust](https://betterprogramming.pub/strings-in-rust-28c08a2d3130) 把string讲解得非常清楚
