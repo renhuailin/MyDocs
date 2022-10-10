@@ -342,6 +342,7 @@ n>>                      使n行都向右移动一个宽度，例如3>>就将接
 ```
 
 【进入和退出recording模式】
+
 了解什么是recording.
 ```
 :h recording或q  
