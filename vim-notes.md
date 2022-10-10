@@ -355,3 +355,4 @@ esc q
 ```
 esc q
 ```
+这篇文章讲了它有什么用[Vi and Vim Macro Tutorial: How To Record and Play](https://www.thegeekstuff.com/2009/01/vi-and-vim-macro-tutorial-how-to-record-and-play/)
