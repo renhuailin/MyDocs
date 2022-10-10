@@ -340,3 +340,18 @@ n>>                      使n行都向右移动一个宽度，例如3>>就将接
 
 3. 按esc键,这一步很重要！
 ```
+
+【进入和退出recording模式】
+了解什么是recording.
+```
+:h recording或q  
+```
+在文档中的正式名称是Complex repeats。
+首先在非编辑模式上，按`q`进入宏的录制模式。
+```
+esc q
+```
+然后做你想做的操作，然后按`q`退出recording.
+```
+esc q
+```
