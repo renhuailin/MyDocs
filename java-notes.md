@@ -327,6 +327,9 @@ The Java Persistence Query Language
 http://docs.oracle.com/javaee/6/tutorial/doc/bnbtg.html
 
 # Java web framework
+## Quarkus
+[这个框架](https://quarkus.io)实在比Play web framework还要好，有点像django了。而且还是redhat的开发的。喜欢呀。。。
+这绝对是我以后开发java web应用首选的web framework了。
 
 ## Play web framework
 
