@@ -720,3 +720,11 @@ Mac 下编译 Linux 和 Windows 64位可执行程序
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go -o helloworld
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go12
 ```
+
+# GC
+
+下面的文章解释了Go GC与Java GC的区别，非常值得一读。
+[Go并不需要Java风格的GC](https://cloud.tencent.com/developer/article/1910979)
+
+
+
