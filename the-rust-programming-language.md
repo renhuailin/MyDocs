@@ -80,17 +80,57 @@ fn main() {
 我们来看看`String`版本的。
 
 ```rust
+{
     let s1 = String::from("hello");
     let s2 = s1;
+    println!("{}",s1);
+}
+    
+```
+如果是其它语言，上面的代码可以编译并执行。因为`let s2 = s1;`会执行一个浅copy，也就是只copy指针，并没有copy它所指向的内存中的内容。
+那种copy内存中的内容的操作叫deep copy，深度复制。
+因为String是从堆上分配内存的，所以如果像其它语言一样，s1和s2都指向同一块内存，且同时超出scope，那被同时销毁的话，就会出现同一块内存被销毁两次的情况。
+这是很多程序的bug，也是非常危险的操作。
+在rust里当执行`let s2 = s1;`时，就发生了ownership的转移，这时s1就不再指向堆上的内存了。这时你再尝试打印它的值时就会编译报错，因为编译器知道这时s1已经是没有指向有效的内容了。
+
+
+**Ways Variables and Data Interact: Clone**
+
+那在rust里如果执行深copy呢？需要手工调用一个方法：`clone()`
+
+```rust
+{
+    let s1 = String::from("hello");
+    let s2 = s1.clone();
+
+    println!("s1 = {}, s2 = {}", s1, s2);
+}
+    
 ```
 
+**Stack-Only Data: Copy 栈上数据：复制**
+这一节的意思是`stack-only`,也就是只存在于栈上的数据。比如同一个函数里的两个整数变量。
 
+```rust
+    let x = 5;
+    let y = x;
 
+    println!("x = {}, y = {}", x, y);
+```
+像integer这样的类型，编译期就知道它的大小，因为它是固定大小的嘛，是完全保存在栈上的。所以它的内容copy起来也非常的快。因此浅copy和deep copy也操作也基本没啥区别了，开销都非常小（甚至copy整数的开销更小）。
 
+Rust有一个特别的annotation叫 `Copy trait`.我们可以把它放在可以在栈里保存的类型的前面，如果一个类型实现了`Copy` trait，当变量被赋给其它变量时，就会自动执行deep copy。
 
+从[Copy trait](https://doc.rust-lang.org/std/marker/trait.Copy.html)的文档里，可以总结出来它有以下特点：
+- it is always a simple bit-wise copy.它一直执行的简单的按位复制。根据我的理解，它复制的是变量保存在栈里的内容。比如integer变量，它在栈里保存的内容就是整数的值；如果是`String`那保存就是一个指针，这个指针包含三个部分，如下图，包含一个指向堆上的指针、字符串的len和capacity.如果是按位复制就会把指向堆上的指针也复制了。会导致二次释放的问题。
+![字符串指针](https://doc.rust-lang.org/book/img/trpl04-01.svg)
 
+- 它是隐式执行的，而且无法被重载,is not overloadable.查看它的源代码，会发现它只是一个空的trait，也就是它只起标识的作用。所以当然是无法重载的啦。
 
-
+```rust
+pub trait Copy: Clone { }
+```
+更详细的内容，请看[Copy和Cloe的区别](https://doc.rust-lang.org/std/marker/trait.Copy.html#whats-the-difference-between-copy-and-clone)
 
 
 ## 6. Enums and Pattern Matching
