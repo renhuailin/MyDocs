@@ -16,6 +16,83 @@ https://www.jianshu.com/p/500ed3635a41
 
 https://users.rust-lang.org/t/why-does-thread-spawn-need-static-lifetime-for-generic-bounds/4541
 
+
+## 4. Understanding Ownership
+一定要先了解什么情况下会在堆里分配内存，什么情况下在栈里分配内存。只有在堆里分配的内存才需要手工释放。
+
+
+
+
+### Ownership Rules
+
+First, let’s take a look at the ownership rules. Keep these rules in mind as we work through the examples that illustrate them:
+
+- Each value in Rust has an owner.
+- There can only be one owner at a time.
+- When the owner goes out of scope, the value will be dropped.
+
+
+**The String Type**
+
+To illustrate the rules of ownership, we need a data type that is more complex than those we covered in the “Data Types” section of Chapter 3. The types covered previously are all a known size, can be stored on the stack and popped off the stack when their scope is over, and can be quickly and trivially copied to make a new, independent instance if another part of code needs to use the same value in a different scope. But we want to look at data that is stored on the heap and explore how Rust knows when to clean up that data, and the String type is a great example.
+
+在第三章里提到的类型都是预知大小的，能被保存在栈上，并在超出范围后被弹出栈（也就是销毁），当其它范围的代码（比如其它函数）要用到这个值的时候，也可以非常快速地复制为一个新的、独立的实例。
+
+
+
+我们一定时刻牢记下面三个规则：
+- 每个值都有owner.
+- 在某一时刻只能有一个owner.
+- 当owner超出作用范围时，它own的值就会被drop，也就是释放掉。
+
+
+那在什么情况下才在堆里分配内存呢？那就是在**编译时无法确定大小的变量**。
+
+
+就来字符串来说吧，
+```rust
+let s1 = "hello";
+let s2 = String::from("hello");
+```
+s1就是字符字面量（string literal），在编译时就知道大小了。会分配在栈上，而s2则会分配在堆上。
+
+下面的例子是一个变量，没有发生owner转移，所以在作用域的最后就回收了。rust会自动调用`drop`这个方法来释放内存。
+```rust
+fn main() {
+    {
+        let s = String::from("hello"); // s is valid from this point forward
+
+        // do stuff with s
+    }                                  // this scope is now over, and s is no
+                                       // longer valid
+}
+```
+我们的代码当然不可能都像上面那么简单，当有多个变量要使用分配在堆上的内存时，情况就会复杂很多。
+
+**Ways Variables and Data Interact: Move**
+
+```rust
+    let x = 5;
+    let y = x;
+```
+因为integer是简单、已知固定大小的类型，所以`let y=x;`会简单地把x的值copy一份给y。 这时会有两个`5`被压进栈。
+
+我们来看看`String`版本的。
+
+```rust
+    let s1 = String::from("hello");
+    let s2 = s1;
+```
+
+
+
+
+
+
+
+
+
+
 ## 6. Enums and Pattern Matching
 
 **6.1 Defining an Enum**
