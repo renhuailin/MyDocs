@@ -23,7 +23,7 @@ https://users.rust-lang.org/t/why-does-thread-spawn-need-static-lifetime-for-gen
 
 
 
-### Ownership Rules
+Ownership Rules
 
 First, let’s take a look at the ownership rules. Keep these rules in mind as we work through the examples that illustrate them:
 
@@ -131,6 +131,37 @@ Rust有一个特别的annotation叫 `Copy trait`.我们可以把它放在可以�
 pub trait Copy: Clone { }
 ```
 更详细的内容，请看[Copy和Cloe的区别](https://doc.rust-lang.org/std/marker/trait.Copy.html#whats-the-difference-between-copy-and-clone)
+
+### 4.2 References and Borrowing
+
+首先要理解，**引用** 就是一个指针，还是以字符串为例：
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
+上面的例子里s是s1的引用，如下图，s保存就是s1在内存中的地址。
+![图解引用](https://doc.rust-lang.org/book/img/trpl04-05.svg)
+
+We call the action of creating a reference *borrowing*. 创建引用的动作叫*borrowing*. rust为什么用借呢？我理解是这样：
+- 对于你借的东西，你不拥有*所有权*，没有所有权的意思是你无权销毁它。在上面的函数calculate_length里，如果s不是引用，是普通变量，那它就会在函数结束后就销毁了。引用则不会，引用的东西是借的，最后要还的，不能销毁。
+
+**The Rules of References 引用定律**
+Let’s recap what we’ve discussed about references:
+
+- At any given time, you can have either one mutable reference or any number of immutable references.
+在任何给定的时间，你只能有一个可变引用或是多个不可变引用。
+如果你借的是可变引用，那就只能你借，别人无法再借了。
+- References must always be valid.  引用必须一直是有效的，这是强制的。你不可能为一个空值创建一个引用。
 
 
 ## 6. Enums and Pattern Matching
