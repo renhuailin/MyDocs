@@ -164,6 +164,18 @@ Let’s recap what we’ve discussed about references:
 - References must always be valid.  引用必须一直是有效的，这是强制的。你不可能为一个空值创建一个引用。
 
 
+### 4.3 The Slice Type
+
+这一章非常好理解没啥讲的。
+下面这段话对初学者有点指导价值。
+A more experienced Rustacean would write the signature shown in Listing 4-9 instead because it allows us to use the same function on both &String values and &str values.
+
+```rust
+fn first_word(s: &str) -> &str {
+```
+If we have a string slice, we can pass that directly. If we have a String, we can pass a slice of the String or a reference to the String. This flexibility takes advantage of deref coercions, a feature we will cover in the “Implicit Deref Coercions with Functions and Methods” section of Chapter 15. Defining a function to take a string slice instead of a reference to a String makes our API more general and useful without losing any functionality。
+
+
 ## 6. Enums and Pattern Matching
 
 **6.1 Defining an Enum**
