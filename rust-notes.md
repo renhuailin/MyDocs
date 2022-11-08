@@ -8,6 +8,11 @@ Rust 1.65.0 稳定版发布，泛型关联类型 ([GATs](https://github.com/rust
 
 [The Rust Programming Language - The Rust Programming Language](https://doc.rust-lang.org/book/index.html)
 
+
+## 类型的大小
+
+我感觉要理解Rust，一定要理解**类型的大小**也就是size，对rust来说是非常重要的。为了让类型的大小在编译期可知，rust做了好多工作。
+
 ## 5.1 Expressions vs. Statements
 
 从根本上来说，rust是基于expression的一门语言。它只有两种类型的statement，其它的全是expression。

@@ -882,8 +882,6 @@ pub trait Summary {
 
 &'a mut i32 // a mutable reference with an explicit lifetime
 
-
-
 One lifetime annotation by itself doesn’t have much meaning, because the annotations are meant to tell Rust how generic lifetime parameters of multiple references relate to each other. For example, let’s say we have a function with the parameter first that is a reference to an i32 with lifetime 'a. The function also has another parameter named second that is another reference to an i32 that also has the lifetime 'a. **The lifetime annotations indicate that the references first and second must both live as long as that generic lifetime.**
 ```
 
@@ -1456,6 +1454,87 @@ Rust does deref coercion when it finds types and trait implementations in three 
 - From `&T` to `&U` when `T: Deref<Target=U>`
 - From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
 - From `&mut T` to `&U` when `T: Deref<Target=U>`
+
+
+## 19 Advanced Features
+
+### 19.2 Advanced Traits
+
+**在Trait的定义里通过Associated Types指定一个占位符类型**    
+Specifying Placeholder Types in Trait Definitions with Associated Types
+这是一个很高级的特性，我经常在代码中看到，但是我不明白。 终于在看了这小节后，有了些理解。
+
+这是在trait的定义里包含一个类型占位符，所谓类型占位符就是这是个类型，但又不是具体的类型，只是个占位用的类型，trait的实现者会指定具体的类型。
+
+下面是一个例子：
+```rust
+pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+```
+`Iterator`是标准库里的一个trait,里面包含了一个叫Item的类型。这个trait定义了一个方法它的返回值是`Option<Self::Item>`,要注意的是：
+1. Self是首字母大写的Self，不是self，这个Self代表是trait的类型。self代表的是trait的实例。
+2. 它返回的类型不是具体的类型，是Item这个类型。
+
+
+下面我们来看看它的一个实现
+
+```rust
+impl Iterator for Counter {
+    type Item = u32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+```
+在Counter里，我们实现添加Iterator的实现时，为Item这个占位类型指定了具体的类型：u32. 于是next实际的返回类型就是Option<u32>了。
+
+有人会说，这跟泛型好像没有区别呀，泛型好像也可以实现类似的功能呀。比如：
+
+```rust
+pub trait Iterator<T> {
+    fn next(&mut self) -> Option<T>;
+}
+```
+但是如果这样的定义一个Iterator，那么我们在实现它的时候必须指定具体的类型，因为使用了泛型，所以我们可以为一个类型，多次实现`Iterator` trait。
+比如我们可以实现一个Iterator<u32> for Counter,也可以再实现一个Iterator<String> for Counter.这样在调用Counter的next方法时，就要指定类型了，因为Counter有两个next方法。  使用Associated Types，我们不用在使用时标注类型。
+
+
+下面就是例子，这是用泛型来实现的，所以在调用next的时候必须指定类型。
+```rust
+trait Test<T> {
+    fn next(&mut self) -> Option<T>;
+}
+
+struct Hua;
+
+impl Test<u32> for Hua {
+    fn next(&mut self) -> Option<u32> {
+        Some(666)
+    }
+}
+
+impl Test<String> for Hua {
+    fn next(&mut self) -> Option<String> {
+        Some("Hello world!".to_string())
+    }
+}
+
+
+fn main() {
+    let mut hua = Hua{};
+    
+    let i:Option<u32> = hua.next(); // 在调用next时，必须为返回值指定类型。
+    
+    println!("i = {:?}",i);
+    
+    let s:Option<String> = hua.next();// 在调用next时，必须为返回值指定类型。
+    
+    println!("s = {:?}",s);
+}
+```
+
+
 
 
 ## Appendix C: Derivable Traits
