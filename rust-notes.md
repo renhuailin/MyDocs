@@ -1,6 +1,11 @@
 Rust编程语言学习心得备忘
 ----------------
 
+
+## What's new?
+
+Rust 1.65.0 稳定版发布，泛型关联类型 ([GATs](https://github.com/rust-lang/rust/pull/96709/)) 正式稳定
+
 [The Rust Programming Language - The Rust Programming Language](https://doc.rust-lang.org/book/index.html)
 
 ## 5.1 Expressions vs. Statements
