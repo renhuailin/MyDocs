@@ -779,13 +779,19 @@ follow redirect.
 
 ```
 $ curl -L http://www.google.com
+
 ```
+
+通过-o/-O选项保存下载的文件到指定的文件中：
+-o：将文件保存为命令行中指定的文件名的文件中
+-O：使用URL中默认的文件名保存文件到本地
 
 Add header 
 
 ```
 $ curl -H "X-First-Name: Joe" http://example.com/
 
+# Download a file.
 $ curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar
 ```
 
