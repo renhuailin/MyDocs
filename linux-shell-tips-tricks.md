@@ -471,7 +471,7 @@ ssh -i ~/.ssh/<your_ssh_key> -R 8000:127.0.0.1:8000 ubuntu@132.226.6.25
 # tmux
 
 列出了tmux的几个基本模块之后，就要来点实实在在的干货了，和screen默认激活控制台的Ctrl+a不同，tmux默认的是Ctrl+b，使用快捷键之后就可以执行一些相应的指令了。当然如果你不习惯使用Ctrl+b，也可以在~/.tmux文件中加入以下内容把快捷键变为Ctrl+a：
-
+```
 `Set prefix key to Ctrl-a`
 unbind-key C-b
 set-option -g prefix C-a
@@ -518,8 +518,14 @@ o    选择当前窗口中下一个面板
 Alt+o    逆时针旋转当前窗口的面板
 Ctrl+o    顺时针旋转当前窗口的面板
 z    tmux 1.8新特性，最大化当前所在面板
+```
 
 tmux a 或 tmux attach.
+
+
+
+
+
 
 ```
 $ tmux ls
