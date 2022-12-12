@@ -306,3 +306,10 @@ Note the difference between declaring two parameters and declaring a destructuri
 ### Type aliases
 
 Kotlin支持类型别名了.
+
+
+
+Kotlin Native的GC更新
+https://blog.jetbrains.com/kotlin/2021/05/kotlin-native-memory-management-update/
+
+
