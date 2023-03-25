@@ -14,3 +14,9 @@ https://ai.stackexchange.com/questions/38150/how-does-chatgpt-retain-the-context
 
 
 [Storing OpenAI embeddings in Postgres with pgvector](https://supabase.com/blog/openai-embeddings-postgres-vector?continueFlag=89c2c28b4b68da7693b243de88eb3de8) 这篇文章讲了如何把OpenAI的embeddings保存在PostgreSQL中。
+
+
+gpt-index 
+
+
+]ChatGPT：和黑客知识库聊天](https://www.wangan.com/p/11v7360029883403)  这里讲到了中文embedding的例子，而且提到了redis也可以做矢量数据库。
