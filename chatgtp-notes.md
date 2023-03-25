@@ -19,4 +19,7 @@ https://ai.stackexchange.com/questions/38150/how-does-chatgpt-retain-the-context
 gpt-index 
 
 
-]ChatGPT：和黑客知识库聊天](https://www.wangan.com/p/11v7360029883403)  这里讲到了中文embedding的例子，而且提到了redis也可以做矢量数据库。
+[ChatGPT：和黑客知识库聊天](https://www.wangan.com/p/11v7360029883403)  这里讲到了中文embedding的例子，而且提到了redis也可以做矢量数据库。
+
+
+[能否用85000美元从头开始训练一个打败ChatGPT的模型，并在浏览器中运行？](https://www.datalearner.com/blog/1051679145757205) 这篇讲得也是非常地好。其实可以用Alpaca自己搭建一个ChatGPT。
