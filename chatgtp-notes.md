@@ -8,3 +8,6 @@ https://ai.stackexchange.com/questions/38150/how-does-chatgpt-retain-the-context
 这个是通过 传递全部消息context的例子： https://medium.com/mlearning-ai/using-chatgpt-api-to-ask-contextual-questions-within-your-application-a80b6a76da98
 
 了解什么是embedding    https://blinkdata.com/openai-embedding-tutorial/
+
+
+  [关于ChatGPT的思考](http://fancyerii.github.io/2023/02/20/about-chatgpt/#llama) 这篇文章讲得比较详细，不过没时间完全看完。这里也需要数学的基础。
