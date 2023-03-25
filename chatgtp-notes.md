@@ -11,3 +11,6 @@ https://ai.stackexchange.com/questions/38150/how-does-chatgpt-retain-the-context
 
 
   [关于ChatGPT的思考](http://fancyerii.github.io/2023/02/20/about-chatgpt/#llama) 这篇文章讲得比较详细，不过没时间完全看完。这里也需要数学的基础。
+
+
+[Storing OpenAI embeddings in Postgres with pgvector](https://supabase.com/blog/openai-embeddings-postgres-vector?continueFlag=89c2c28b4b68da7693b243de88eb3de8) 这篇文章讲了如何把OpenAI的embeddings保存在PostgreSQL中。
