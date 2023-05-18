@@ -414,6 +414,13 @@ http://www.ubuntu.org.cn/download/desktop/create-a-usb-stick-on-ubuntu
 
 # SSH
 
+
+用密钥登录
+```
+$ ssh-copy-id -i key_file user@host
+```
+
+
 ssh client如果长时间不向服务器发数据，连接就会断开，如：
 
 ```
