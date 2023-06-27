@@ -307,10 +307,10 @@ with open("/Users/harley/Downloads/access.log.2") as infile:
             else:
                 accesses[parts[6]] += 1
 ```
+# 包管理
+## PIP
 
-# PIP
-
-## pip 自定义豆瓣 pypi 源
+### pip 自定义豆瓣 pypi 源
 
 ```
 python -m pip install -r requirements.txt -i https://pypi.douban.com/simple 
@@ -338,6 +338,14 @@ $ pip install pylibmc==blork
 
 Python PIP 使用笔记
 https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
+
+## PDM
+一款高级、功能强大的包管理器。有人称是划时代的包管理器。
+[来了！划时代的 Python 包管理工具 -- PDM](https://zhuanlan.zhihu.com/p/468445226)
+
+一定要好好学习一下。
+
+
 
 ## Google python style guide
 
