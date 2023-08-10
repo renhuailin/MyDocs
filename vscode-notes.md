@@ -241,6 +241,14 @@ It looks like the [default line spacing defaults to 1.35 relative to the font s
 
 For a font size of `13`, setting the value in `editor.lineHeight` to `22` has the same effect as keeping the default (1.35 relative?). I’ve manually bumped it down to `21`.
 
+## Fonts
+Source Code Pro
+Anonymous Pro
+
+
+
+
+
 # 问题
 
 ## rg进程占用CPU
