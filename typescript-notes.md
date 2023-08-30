@@ -33,6 +33,71 @@ Thrown: ⨯ Unable to compile TypeScript
 https://github.com/TypeStrong/ts-node/issues/351#issuecomment-329234952
 
 
+## TypeScript (Three dots)三个点语法
+TypeScript 中的三个点语法是指 Rest Parameters、Spread Operators 和 Destructuring。
+下面分别介绍一下它们的用法。
+
+### 1. Rest Parameters
+Rest Parameters 是用来表示一个函数可以接受不定数量的参数。它用三个点（...）加上一个参数名来表示，这个参数将会是一个数组，包含了所有传入的参数。
+
+例如：
+```ts
+function foo(...args: number[]) {
+  console.log(args);
+}
+
+foo(1, 2, 3); // 输出 [1, 2, 3]
+foo(4, 5); // 输出 [4, 5]
+```
+### 2.Spread Operators
+Spread Operators 是用来将数组或对象展开成一个新的数组或对象。它也用三个点（...）来表示。
+
+例如：
+```ts
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+const arr3 = [...arr1, ...arr2];
+
+console.log(arr3); // 输出 [1, 2, 3, 4, 5, 6]
+```
+
+还可以使用 Spread Operators 将一个对象的属性展开到另一个对象中：
+```ts
+const obj1 = { foo: 1, bar: 2 };
+const obj2 = { ...obj1, baz: 3 };
+
+console.log(obj2); // 输出 { foo: 1, bar: 2, baz: 3 }
+```
+### 3. Destructuring
+Destructuring 是一种将数组或对象的属性解构成独立变量的语法。它也用三个点（...）来表示。当三个点（...）和解构语法一起使用时，它表示剩余的所有属性或元素。
+
+例如：
+```ts
+const arr = [1, 2, 3, 4, 5];
+const [first, second, ...rest] = arr;
+
+console.log(first); // 输出 1
+console.log(second); // 输出 2
+console.log(rest); // 输出 [3, 4, 5]
+
+const obj = { foo: 1, bar: 2, baz: 3 };
+const { foo, ...rest } = obj;
+
+console.log(foo); // 输出 1
+console.log(rest); // 输出 { bar: 2, baz: 3 }
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Interface
 
