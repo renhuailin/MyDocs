@@ -690,64 +690,6 @@ screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux
 
 * 官方文档上的ssl的配置方法没有用，根本不用./prepare，也不用修改什么harbor.cfg，只要把证书放在config/nginx/cert,然后编辑`nginx.conf`这个文件，把ssl配置加上就行了。请不要编辑`nginx.https.conf`,没用。
 
-# 错误解决
-
-问题： Driver devicemapper failed to remove root filesystem 11568bbc999a490ccb783cb23fc5a532de444215b4617132d2185a831d4f1905: Device is Busy
-
-http://blog.hashbangbash.com/2014/11/docker-devicemapper-fix-for-device-or-resource-busy-ebusy/
-
-https://github.com/docker/docker/issues/5684#issuecomment-69052334
-
-http://www.tuicool.com/articles/y2UBjqB
-
-从这个回复看，应该是内核版本太低的原因，我是在CentOS 7上发现这个问题的，内核版本3.10.0。
-https://github.com/docker/docker/issues/17902
-
-从这个帖子的last reply来看，应该在3.10的centos7上没有办法解决了，:(  
-http://blog.hashbangbash.com/2014/11/docker-devicemapper-fix-for-device-or-resource-busy-ebusy/
-
-Device is Busy这个一般的解决步骤：
-
-1. 看容器进程是否已经杀掉。没有的话，可以手动杀死。
-2. mount -l看是不是该容器的路径还在挂载状态。是的话，umount掉。
-3. 然后再次尝试docker rm。
-
-问题： 今天发现docker login登录超时了，就是在jenkins这台机器上，用`docker daemon -D`可以看到是请求超时了。把registry.xiangcloud.com.cn手工绑定在/etc/hosts上，瞬间登录成功，看来是dns
-的问题，可是我用户dig测试registry.xiangcloud.com.cn时，解析的速度非常快，应该是docker login在处理解析时的问题吧。
-
-Answer: 问题找到了，是host主机的dns的问题：在`/etc/resolv.conf`里配置了两个nameserver，其中的第一个是自建的powerdns的测试，已经不在了，所以导致解析的时候速度极慢。删除了这个nameserver就可以了。
-关于docker 的dns，请参考：https://robinwinslow.uk/2016/06/23/fix-docker-networking-dns/
-
-* MySQL in docker exit occasionally with these errors: 
-
-```
-2017-04-06T20:10:41.248511Z 0 [ERROR] InnoDB: mmap(137428992 bytes) failed; errno 12
-2017-04-06T20:10:41.248530Z 0 [ERROR] InnoDB: Cannot allocate memory for the buffer pool
-2017-04-06T20:10:41.248535Z 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
-2017-04-06T20:10:41.248542Z 0 [ERROR] Plugin 'InnoDB' init function returned error.
-2017-04-06T20:10:41.248559Z 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
-2017-04-06T20:10:41.248564Z 0 [ERROR] Failed to initialize plugins.
-2017-04-06T20:10:41.248567Z 0 [ERROR] Aborting
-
-2017-04-06T20:10:41.248582Z 0 [Note] Binlog end
-2017-04-06T20:10:41.248630Z 0 [Note] Shutting down plugin 'MyISAM'
-2017-04-06T20:10:41.249775Z 0 [Note] Shutting down plugin 'CSV
-```
-
-docker 默认是不限制内存使用的,会向Host申请尽可能多的内存.
-这个MySQL是与Gitlab一起用的,Gitlab在备份时会占用大量的内存,导致MySQL无法分配到内存了.解决方案是为gitlab的主机多分配些内存.
-
-http://stackoverflow.com/questions/12114746/mysqld-service-stops-once-a-day-on-ec2-server/12683951#12683951
-https://github.com/docker-library/mysql/issues/248
-https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-unexpectedly
-
-## 无法进入容器 executing setns process caused "exit status 15
-
-https://github.com/moby/moby/issues/34488
-
-Mac docker desktop alternative.
-
-[Docker Desktop 收费之后，神网友弄了个替代方案-InfoQ](https://www.infoq.cn/article/J2V2gakOTKgQOrjZEUrO?utm_source=rss&utm_medium=article)
 
 # 使用supervisord来管理进程
 
@@ -947,3 +889,87 @@ func (s *State) WaitStop(timeout time.Duration) (int, error) {
 **于是我明白了！**
 
 在Linux中父进程可以通过调用函数来监控子进程的退出的。这就可以理解docker是如何实现自动重启的了。因为容器里的主进程为daemon的子进程，子进程在退出时主进程是能知道的。在docker里，state.go，monitor.go就实现了这些功能。然后根据restart policy来重新启动container就行了。
+
+
+
+
+
+# 错误解决
+
+问题： Driver devicemapper failed to remove root filesystem 11568bbc999a490ccb783cb23fc5a532de444215b4617132d2185a831d4f1905: Device is Busy
+
+http://blog.hashbangbash.com/2014/11/docker-devicemapper-fix-for-device-or-resource-busy-ebusy/
+
+https://github.com/docker/docker/issues/5684#issuecomment-69052334
+
+http://www.tuicool.com/articles/y2UBjqB
+
+从这个回复看，应该是内核版本太低的原因，我是在CentOS 7上发现这个问题的，内核版本3.10.0。
+https://github.com/docker/docker/issues/17902
+
+从这个帖子的last reply来看，应该在3.10的centos7上没有办法解决了，:(  
+http://blog.hashbangbash.com/2014/11/docker-devicemapper-fix-for-device-or-resource-busy-ebusy/
+
+Device is Busy这个一般的解决步骤：
+
+1. 看容器进程是否已经杀掉。没有的话，可以手动杀死。
+2. mount -l看是不是该容器的路径还在挂载状态。是的话，umount掉。
+3. 然后再次尝试docker rm。
+
+问题： 今天发现docker login登录超时了，就是在jenkins这台机器上，用`docker daemon -D`可以看到是请求超时了。把registry.xiangcloud.com.cn手工绑定在/etc/hosts上，瞬间登录成功，看来是dns
+的问题，可是我用户dig测试registry.xiangcloud.com.cn时，解析的速度非常快，应该是docker login在处理解析时的问题吧。
+
+Answer: 问题找到了，是host主机的dns的问题：在`/etc/resolv.conf`里配置了两个nameserver，其中的第一个是自建的powerdns的测试，已经不在了，所以导致解析的时候速度极慢。删除了这个nameserver就可以了。
+关于docker 的dns，请参考：https://robinwinslow.uk/2016/06/23/fix-docker-networking-dns/
+
+* MySQL in docker exit occasionally with these errors: 
+
+```
+2017-04-06T20:10:41.248511Z 0 [ERROR] InnoDB: mmap(137428992 bytes) failed; errno 12
+2017-04-06T20:10:41.248530Z 0 [ERROR] InnoDB: Cannot allocate memory for the buffer pool
+2017-04-06T20:10:41.248535Z 0 [ERROR] InnoDB: Plugin initialization aborted with error Generic error
+2017-04-06T20:10:41.248542Z 0 [ERROR] Plugin 'InnoDB' init function returned error.
+2017-04-06T20:10:41.248559Z 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
+2017-04-06T20:10:41.248564Z 0 [ERROR] Failed to initialize plugins.
+2017-04-06T20:10:41.248567Z 0 [ERROR] Aborting
+
+2017-04-06T20:10:41.248582Z 0 [Note] Binlog end
+2017-04-06T20:10:41.248630Z 0 [Note] Shutting down plugin 'MyISAM'
+2017-04-06T20:10:41.249775Z 0 [Note] Shutting down plugin 'CSV
+```
+
+docker 默认是不限制内存使用的,会向Host申请尽可能多的内存.
+这个MySQL是与Gitlab一起用的,Gitlab在备份时会占用大量的内存,导致MySQL无法分配到内存了.解决方案是为gitlab的主机多分配些内存.
+
+http://stackoverflow.com/questions/12114746/mysqld-service-stops-once-a-day-on-ec2-server/12683951#12683951
+https://github.com/docker-library/mysql/issues/248
+https://www.digitalocean.com/community/questions/mysql-server-keeps-stopping-unexpectedly
+
+## 无法进入容器 executing setns process caused "exit status 15
+
+https://github.com/moby/moby/issues/34488
+
+Mac docker desktop alternative.
+
+[Docker Desktop 收费之后，神网友弄了个替代方案-InfoQ](https://www.infoq.cn/article/J2V2gakOTKgQOrjZEUrO?utm_source=rss&utm_medium=article)
+
+##  
+在docker container里，我们经常会碰到这样的错误：
+```
+E: Problem executing scripts DPkg::Post-Invoke 'rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true'
+E: Sub-process returned an error code
+```
+或是这样的：
+````
+curl: (6) getaddrinfo() thread failed to start
+````
+有人详细分析了这个错误 ： https://pascalroeleven.nl/2021/09/09/ubuntu-21-10-and-fedora-35-in-docker/
+
+这些问题在docker 20.10.10中被修复。
+```
+In fact, you’ll get the same error if you using Docker 19.03, the version they use in most of their examples. The problem is a little complicated (and thanks to Pascal Roeleven for writing the blog post that originally helped me fix this problem when I encountered it) but the short version is that it’s fixed in Docker 20.10.10, released in late October 2021.
+```
+
+
+
+
