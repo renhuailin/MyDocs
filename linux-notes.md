@@ -1,4 +1,4 @@
-Linux Shell Tips and Tricks
+Linux Notes
 ------
 
 # bash or dash
