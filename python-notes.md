@@ -344,8 +344,9 @@ https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
 [来了！划时代的 Python 包管理工具 -- PDM](https://zhuanlan.zhihu.com/p/468445226)
 
 一定要好好学习一下。
-
-
+```
+pdm config pypi.url https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
 ## Google python style guide
 
