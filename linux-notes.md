@@ -1094,11 +1094,13 @@ Error unable to get issuer certificate getting chain.
 $ openssl verify  allcacerts.crt
 ```
 
-#用户管理
+# 用户管理
 
+Add a user to a group
 ```
-usermod -a -G sudo geek
+usermod -aG sudo geek
 usermod geek -G sudo
+usermod -aG docker ubuntu
 ```
 
 ### Alpine
