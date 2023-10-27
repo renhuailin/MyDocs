@@ -345,7 +345,17 @@ https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
 
 一定要好好学习一下。
 ```
+pdm init
+pdm add flask
+pdm remove flask
 pdm config pypi.url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+配置文件
+```toml
+[[tool.pdm.source]]
+name = "private"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
 ```
 
 ## Google python style guide
