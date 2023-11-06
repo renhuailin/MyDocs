@@ -11,3 +11,11 @@ In the Cell B2, change your formula with adding **absolute reference** signs “
 Note: You can click on the reference cell in the Formula Bar, and then press the F4 key to add $ signs to this reference cell in the formula.
 
 Now the absolute reference SUM($A$2: $A$15) is not incrementing when filling down. 
+
+## Functions 函数
+
+###  vlookup
+vlookup的查找范围，要查找的列，必须在这个range的第一列。
+
+### SUMPRODUCT
+这里的product是乘积的意思。
