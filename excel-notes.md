@@ -1,6 +1,6 @@
 
 
-## Formula 公式
+## 1. Formula 公式
 
 如何阻止自动填充功能自增公式里的数字。[请参考这里](https://www.extendoffice.com/documents/excel/3215-excel-prevent-cell-reference-from-incrementing-changing.html#a1)
 
@@ -12,10 +12,10 @@ Note: You can click on the reference cell in the Formula Bar, and then press the
 
 Now the absolute reference SUM($A$2: $A$15) is not incrementing when filling down. 
 
-## Functions 函数
+## 2. Functions 函数
 
-###  vlookup
+###  2.1 vlookup
 vlookup的查找范围，要查找的列，必须在这个range的第一列。
 
-### SUMPRODUCT
+### 2.2 SUMPRODUCT
 这里的product是乘积的意思。
