@@ -10,4 +10,4 @@ In the Cell B2, change your formula with adding **absolute reference** signs “
 
 Note: You can click on the reference cell in the Formula Bar, and then press the F4 key to add $ signs to this reference cell in the formula.
 
-Now the absolute reference SUM($A$2: $A$15) is not incrementing when filling down. See screenshot:
+Now the absolute reference SUM($A$2: $A$15) is not incrementing when filling down. 
