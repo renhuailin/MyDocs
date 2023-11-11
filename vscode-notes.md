@@ -245,7 +245,9 @@ For a font size of `13`, setting the value in `editor.lineHeight` to `22` h
 Source Code Pro
 Anonymous Pro
 
-
+## disable Bracket Pairs 
+如果打开了这个设置，vs code会在两个括号之间显示一条彩色的竖线，特别烦人。所以要禁用它。
+在setting里搜`Bracket Pairs`然后禁用它。
 
 
 
