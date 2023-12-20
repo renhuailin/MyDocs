@@ -7,7 +7,7 @@ https://github.com/realint/monkey
 提升基于英特尔®架构的 Android* 模拟器的速度
 http://software.intel.com/zh-cn/speeding-up-the-android-emulator-on-intel-architecture/?utm_campaign=CSDN&utm_source=intel.csdn.net&utm_medium=Link&utm_content=%20intelandroid%20-jiasuqi
 
-
+[思源笔记](https://github.com/siyuan-note/siyuan)是一款非常好的笔记，我感觉比Obsidian要强大，跟Notion好像啊。更主要的它是开源的。非常强。
 
 facebook的大数据查询引擎
 
