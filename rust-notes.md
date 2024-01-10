@@ -10,7 +10,7 @@ Rust 1.65.0 稳定版发布，泛型关联类型 ([GATs](https://github.com/rust
 ## 一些教程
 [Comprehensive Rust ](https://github.com/google/comprehensive-rust) google推出的rust教程。
 
-
+[rust-course](https://github.com/sunface/rust-course)  这个教程特别好，上面的Google的教程有点太简洁了，不够细。
 
 ## 类型的大小
 
