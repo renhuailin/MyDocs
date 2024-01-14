@@ -902,6 +902,22 @@ In both unsafe functions and unsafe blocks, Rust will let you do three things th
 
 Option,Result,Some,None.这些是要了解的
 
+## blocking waiting for file lock on package cache卡住
+1.出现问题的场景：
+
+下载create出现timeout,之后更换了国内源下载create成功后,再次build或run时出现这个问题。
+
+2.解决办法：
+
+删除 ~/.cargo/.package-cache ，然后再次build或run
+
+3. code
+
+cd    ~/.cargo 
+rm -f  .package-cache 
+
+
+
 # Attributes
 
 很奇怪，在The Rust programming language这本书中没有介绍Attributes，不过语言的reference里是有的。
