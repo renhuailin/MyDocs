@@ -134,6 +134,11 @@ as a user, a group, or both.
 8.1以后的版本，只有角色了，它也是用户、组或是两者都是。
 
 
+## backup and restore
+
+https://tembo.io/docs/postgres_guides/how-to-backup-and-restore-a-postgres-database
+
+
 ## docker image
 
 默认的user:`postgres`,默认的密码需要在启动时指定。
