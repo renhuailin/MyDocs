@@ -138,6 +138,11 @@ as a user, a group, or both.
 
 https://tembo.io/docs/postgres_guides/how-to-backup-and-restore-a-postgres-database
 
+PG backup生成的备份文件里不会生成`drop database`这样的命令,如果要恢复到一个已存在的数据库，需要在使用`pg_restore`恢复时指定`--clean`参数。
+```
+$ pg_restore -U <username> -d <database> --clean  xxxxxx.tar
+```
+
 
 ## docker image
 
