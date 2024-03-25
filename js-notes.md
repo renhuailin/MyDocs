@@ -984,6 +984,25 @@ Vscode debugging
 [在 VS Code 中调试 — Vue.js](https://cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
 
 
+## 模式和环境变量
+[https://cn.vitejs.dev/guide/env-and-mode.html](https://cn.vitejs.dev/guide/env-and-mode.html)
+
+为了防止意外地将一些环境变量泄漏到客户端，只有以 VITE_ 为前缀的变量才会暴露给经过 vite 处理的代码。例如下面这些环境变量：
+
+```
+VITE_SOME_KEY=123
+DB_PASSWORD=foobar
+```
+只有 `VITE_SOME_KEY` 会被暴露为 `import.meta.env.VITE_SOME_KEY` 提供给客户端源码，而 `DB_PASSWORD` 则不会。
+
+```js
+console.log(import.meta.env.VITE_SOME_KEY) // "123"
+console.log(import.meta.env.DB_PASSWORD) // undefined
+```
+环境变量解析
+
+如上所示，`VITE_SOME_KEY` 是一个数字，但在解析时会返回一个字符串。布尔类型的环境变量也会发生同样的情况。在代码中使用时，请确保转换为所需的类型。
+
 
 ## Vue Router
 
