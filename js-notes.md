@@ -168,25 +168,10 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Dest
 
 # React
 
-可视化基于组件的编辑器
+## nextjs
+使用Link来实现局部刷新
+用`usePathname() ` 来显示active links.
 
-https://craft.js.org/
-
-[GitHub - retejs/rete: JavaScript framework for visual programming and creating node editor](https://github.com/retejs/rete)
-
-[GitHub - jagenjo/webglstudio.js: A full open source 3D graphics editor in the browser, with scene editor, coding pad, graph editor, virtual file system, and many features more.](https://github.com/jagenjo/webglstudio.js)
-
-https://demo.bpmn.io/s/start
-
-http://logic-flow.org/usage/bpmn.html
-
-react 强制我们以组件的方式去思考。
-每个组件有自己的state，这个东西有点像跟UI关联的model，是一對象。
-
-this.props和this.state的区别是什么 ？  
-https://github.com/uberVU/react-guide/blob/master/props-vs-state.md
-
-https://facebook.github.io/react/docs/thinking-in-react.html    这个链接讲了如何确定你的Component的state。
 
 ## React & Redux
 
