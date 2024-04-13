@@ -162,6 +162,10 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 如果用es6的语法，autobinding会解决问题，请看：https://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html
 
+
+## Destructuring assignment
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
 # React
 
 可视化基于组件的编辑器
