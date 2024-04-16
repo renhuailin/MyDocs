@@ -276,6 +276,15 @@ $ npm view webpack versions --json
 
 ```
 
+## pnpm 命令
+
+|command|npm|yarn|yarn (berry)|pnpm|bun|
+|---|---|---|---|---|---|
+|run package|{% raw %}`npx <package>`|`yarn dlx <package>`|`yarn dlx <package>`|`pnpm dlx <package>`|`bunx <package>`|
+
+
+
+
 # Selector
 
 ## xpath selector
