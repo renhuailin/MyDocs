@@ -754,16 +754,16 @@ class BasicStarship:
 python3 -m venv /path/to/new/virtual/environment
 ```
 
-创建虚拟环境后，可以使用虚拟环境的二进制目录中的脚本来“激活”该环境。不同平台调用的脚本是不同的（须将 <venv> 替换为包含虚拟环境的目录路径）：
+创建虚拟环境后，可以使用虚拟环境的二进制目录中的脚本来“激活”该环境。不同平台调用的脚本是不同的（须将 <venv\> 替换为包含虚拟环境的目录路径）：
 
 | 平台      | Shell           | 用于激活虚拟环境的命令                         |
 | ------- | --------------- | ----------------------------------- |
-| POSIX   | bash/zsh        | $ source <venv>/bin/activate        |
-|         | fish            | $ source <venv>/bin/activate.fish   |
-|         | csh/tcsh        | $ source <venv>/bin/activate.csh    |
-|         | PowerShell Core | $ <venv>/bin/Activate.ps1           |
-| Windows | cmd.exe         | C:\> <venv>\Scripts\activate.bat    |
-|         | PowerShell      | PS C:\> <venv>\Scripts\Activate.ps1 |
+| POSIX   | bash/zsh        | $ `source \<venv\>/bin/activate    `    |
+|         | fish            | $ `source <venv>/bin/activate.fish`   |
+|         | csh/tcsh        | $` source <venv>/bin/activate.csh`    |
+|         | PowerShell Core | $` <venv>/bin/Activate.ps1 `          |
+| Windows | cmd.exe         | `C:\> <venv>\Scripts\activate.bat `   |
+|         | PowerShell      | `PS C:\> <venv>\Scripts\Activate.ps1 `|
 
 # 时间与日期
 
@@ -910,6 +910,23 @@ frozen = jsonpickle.encode(obj)
 
 $ sqlacodegen "mysql+mysqlconnector://root:mysql@localhost/virtual_exchange?charset=utf8" --outfile models.py 
 ```
+
+# 错误处理
+
+### DetachedInstanceError
+我想在添加完对象后，使用它，它直接给我报`DetachedInstanceError`，即使我已经加了`session.expunge`。这真TM见鬼了，这么正常的功能SQLalchemy居然不支持？
+我折腾了好久，最后在https://stackoverflow.com/a/3040164/3012163，发现了解决办法。就是把`expire_on_commit`设置为`False`
+```python
+def add_conversation(self, conversation: Conversations):
+        with Session(self.engine, expire_on_commit=False) as session:
+            session.add(conversation)
+            session.commit()
+            session.expunge(conversation)
+```
+
+
+
+
 
 # SimpleHTTPServer
 

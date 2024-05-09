@@ -414,13 +414,33 @@ http://www.ubuntu.org.cn/download/desktop/create-a-usb-stick-on-ubuntu
 
 # SSH
 
+## 用密钥登录
 
-用密钥登录
+如果你原来的登录方式是用密码，那你可以用这条命令把key文件导入到目标服务器上。
 ```
 $ ssh-copy-id -i key_file user@host
 ```
 
+如果你本来就已经是用key登录的，现在想添加一个新key，那么首先通过私钥来生成公钥。
+```
+$ ssh-keygen -y -f /`path_to_key_pair`/`my-key-pair.pem`
+```
 
+生成的公钥大概是这样的：
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCC9sDQOvBRYxITn380ZmAQY0ImVWX1PGFhod+i1i0onxRAZ7hwr/Hd9C9VgCSBRvFetJbEwvd8za/XcQkORm6bMCH9qRgixtGQzCLJKNjc4dtuHxJ4Ne12m9i5Q0AqW9ON0H05QwwfrDZZeuxAaiZQJBAUW65hDvUrNxYmfR/093+hcBpV8+0YXYk2yjLN5lzTsg8lw1D47EaSC7aL9HJxLJ9PYUUkp060SfBJbWDGUTskBWg6ETOyIbUmf3C4/8YguiFSJFlt1CIMlF/8sBEUkVLuNOWrxsRSSA5vLopmvg5ayExocG97lO2DultNKx1WnXc1GsJdeUclpWoidmuV
+```
+然后你登录到服务器上，转到`~/.ssh`目录下
+
+```
+$ cd ~/.ssh/
+```
+
+用文本编辑器把上面的公钥添加到`authorized_keys`这个文件里，就可以了。
+
+
+
+## SSH  alive interval
 ssh client如果长时间不向服务器发数据，连接就会断开，如：
 
 ```
@@ -1103,7 +1123,13 @@ usermod geek -G sudo
 usermod -aG docker ubuntu
 ```
 
-### Alpine
+查看某个用户所属的组。
+```
+$ groups ubuntu
+```
+
+
+# Alpine
 
 目前Docker镜像越来越倾向于使用Alpine系统作为基础的系统镜像，Docker Hub 官方制作的镜像都在逐步支持Alpine系统。
 
@@ -1120,7 +1146,7 @@ echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories
 $ apk update
 ```
 
-####Setup timezone
+##  Setup timezone
 
 ```
 # echo "http://mirrors.aliyun.com/alpine/v3.7/main/" > /etc/apk/repositories

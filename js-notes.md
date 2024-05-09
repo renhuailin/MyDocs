@@ -169,11 +169,20 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Dest
 # React
 
 ## nextjs
+
 使用Link来实现局部刷新
+
 用`usePathname() ` 来显示active links.
+
+```
+npx create-next-app@latest
+# or use pnpm
+pnpm create next-app
+```
 
 
 ## React & Redux
+
 
 1. react-redux里的`connect`方法是干什么用的？它的参数具体有什么用?
 
@@ -245,6 +254,21 @@ const store = createStore(rootReducer, initialState, enhancer);
 ```
 
 这时生成的state里有个属性就叫todos1。这是非常诡异的，我是调试了好久才发现的，要好好看看createStore的源代码。
+
+
+### useEffect
+
+**What does `useEffect` do?** By using this Hook, you tell React that your component needs to do something after render. React will remember the function you passed (we’ll refer to it as our “effect”), and call it later after performing the DOM updates. In this effect, we set the document title, but we could also perform data fetching or call some other imperative API.  
+ `useEffect`都做了什么 ？通过使用这个 Hook，你可以告诉 React 你的组件在渲染后需要做一些事情。React 会记住你传递的函数（我们称之为“effect”），并在执行 DOM 更新后稍后调用它。在这种效果下，我们设置了文档标题，但我们也可以执行数据获取或调用其他一些命令式 API。
+
+**Why is `useEffect` called inside a component?** Placing `useEffect` inside the component lets us access the `count` state variable (or any props) right from the effect. We don’t need a special API to read it — it’s already in the function scope. Hooks embrace JavaScript closures and avoid introducing React-specific APIs where JavaScript already provides a solution.  
+为什么在组件内部 `useEffect` 调用？放置 `useEffect` 在组件中，我们可以直接从效果中访问 `count` 状态变量（或任何道具）。我们不需要特殊的 API 来读取它——它已经在函数范围内了。Hook 采用 JavaScript 闭包，避免在 JavaScript 已经提供解决方案的情况下引入特定于 React 的 API。
+
+**Does `useEffect` run after every render?** Yes! By default, it runs both after the first render _and_ after every update. (We will later talk about [how to customize this](https://legacy.reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects).) Instead of thinking in terms of “mounting” and “updating”, you might find it easier to think that effects happen “after render”. React guarantees the DOM has been updated by the time it runs the effects.  
+是否在每次渲染后 `useEffect` 运行？是的！默认情况下，它在第一次渲染后和每次更新后都运行。（我们稍后将讨论如何自定义它。与其从“挂载”和“更新”的角度来思考，不如认为效果发生在“渲染之后”更容易。React 保证 DOM 在运行效果时已更新。
+
+
+
 
 # NodeJS
 
@@ -766,192 +790,6 @@ jQuery('#some_element').append('<select></select>');
 
 I bet everyone would have tried this and it work. However, manipulating might be a more challenging task.
 
-Add Option In Select Box With jQuery
-
-One easy way is to create a string with the whole element and create it straight away
-
-1
-//obj is the list of option values
-2
-function(obj)
-3
-{
-4
-    var create = '<select id="test">';
-5
-    for(var i = 0; i < obj.length;i++)
-6
-    {
-7
-        create += '<option value="'+obj[i]+'">'+obj[i]+'</option>';
-8
-    }
-9
-    create += '</select>';
-10
-    jQuery('#some_element').append(create);
-11
-}
-Another way to create a list of elements is to create its option and append it in using pure jQuery.
-
-1
-function(id, obj)
-2
-{
-3
-    jQuery('#some_element').append('<select id="'+id+'"></select>');
-4
-    jQuery.each(obj, function(val, text) {
-5
-        jQuery('#'+id).append(
-6
-        jQuery('<option></option').val(val).html(text)
-7
-    );})
-8
-}
-You may not be familiar what i wrote above. Hence, a more javascript approach is shown below.
-
-1
-function(id, obj)
-2
-{
-3
-    jQuery('#some_element').append('<select id="'+id+'"></select>');
-4
-    for(var i = 0; i < obj.length;i++)
-5
-    {
-6
-        jQuery('#'+id).append('<option value="'+obj[i]+'">'+obj[i]+'</option')
-7
-    }
-8
-}
-Get Select Box Value/Text In jQuery
-
-Sometimes we want to know what is the value of the selected option. This is how we do it. Please bear in mind that there shouldn’t be any spaces between the : and selected.
-
-1
-//#selectbox is the id of the select box
-2
-jQuery('#selectbox option:selected').val();
-On the other hand, we can get the text of the option by doing this.
-
-1
-//#selectbox is the id of the select box
-2
-jQuery('#selectbox option:selected').text();
-What if you know the value of the options you want to get instead of the one selected?
-
-1
-//#selectbox is the id of the select box
-2
-$("#selectList option[value='thisistheone']").text();
-How about the first element on the select box?
-
-1
-//#selectbox is the id of the select box
-2
-$("#selectList option:first").text()
-How about the n element on the select box?
-
-1
-//#selectbox is the id of the select box
-2
-$("#selectList option:eq(3)").text()
-How about getting all elements but the first and last one in a select box?
-
-1
-//#selectbox is the id of the select box
-2
-$("#selectList option:not(option:first, option:last)").each(function(){
-3
-$(this).text();
-4
-});
-
-Get Multiple Selected Value/Text In jQuery Select Box
-
-Now we want to try to retrieve multiple selected values, we can do it easily with the following code.
-
-1
-jQuery('#some_element:selected').each(function(){
-2
-    alert(jQuery(this).text());
-3
-    alert(jQuery(this).val());
-4
-});
-How about storing these values?
-
-1
-var current = [];
-2
-jQuery('#some_element:selected').each(function(index, selectedObj){
-3
-    current[index] = $(selectedObj).text();
-4
-});
-This way we eliminate the additional index needed to follow through the loop! How about shorten the cold a bit?
-
-1
-var foo = jQuery('#multiple :selected').map(function(){return jQuery(this).val();}).get();
-This way we eliminate the need to create an array.
-
-Remove Element In Select Box With jQuery
-
-So we can get and add element into the select box. How about remove them? Basically, you will need to use one of the get element method describe above before applying the remove instruction.
-
-1
-jQuery('#selectbox: selected').remove();
-Here we will remove all elements except the first and last one.
-
-1
-//#selectbox is the id of the select box
-2
-$("#selectbox option:not(option:first, option:last)").remove();
-Select an option in the select box with jQuery
-
-If you want to select an option in the select box, you can do this.
-
-1
-jQuery('#selectbox option[value="something"]').attr('selected', 'selected');
-all option will be selected in this case.
-
-UnSelect an option in the select box with jQuery
-
-If you want to unselect an option in the select box, you can do this.
-
-1
-jQuery('#selectbox option[value="something"]').attr('selected', false);
-all option will be unselected n this case.
-
-OnChange find selected option from the select box
-
-onchange find select box selected item.
-
-1
-$('#selectbox').change(function(){
-2
-    var val = $(this).find('option:selected').text();r
-3
-    alert('i selected: ' + val);
-4
-});
-onchange find select box selected items.
-
-1
-$('#selectbox').change(function(){
-2
-    $(this).find('option:selected').each(function () {
-3
-        alert('i selected: ' + $(this).text());
-4
-    }
-5
-});
-
 jQuery post  json object 报：415 (Unsupported Media Type)  这个错，
 解决方法是在 jquery post中加入 contentType: "application/json; charset=utf-8",就行了，
 
@@ -1052,6 +890,12 @@ router.isReady().then(() => {
 })
 ```
 原因：为未使用的 history 启用摇树，以及为高级用例（如原生解决方案）实现自定义 history。
+
+
+## Layout 
+Vue3 目前我认为是最好的实现。
+
+[Vue 3 layout system: smart layouts for VueJS | by Saken | Medium](https://medium.com/@sakensaten1409/vue-3-layout-system-smart-layouts-for-vuejs-80ae700e48a6)
 
 
 # 4. ECharts

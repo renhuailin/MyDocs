@@ -183,3 +183,11 @@ p:first-child {
   color: lime;
 }
 ```
+
+
+# tailwind CSS
+
+
+### 垂直剧中
+使用`place-items-center`这个就可以了。
+

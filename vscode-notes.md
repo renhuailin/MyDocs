@@ -242,12 +242,16 @@ It looks like the [default line spacing defaults to 1.35 relative to the font s
 For a font size of `13`, setting the value in `editor.lineHeight` to `22` has the same effect as keeping the default (1.35 relative?). I’ve manually bumped it down to `21`.
 
 ## Fonts
-Source Code Pro
+
+`"Source Code Pro"`
 
 Anonymous Pro
 
-IBM Plex Mono
+`"IBM Plex Mono"`
 
+`0xProto`
+
+"Fira Code"
 ## disable Bracket Pairs 
 如果打开了这个设置，vs code会在两个括号之间显示一条彩色的竖线，特别烦人。所以要禁用它。
 在setting里搜`Bracket Pairs`然后禁用它。
