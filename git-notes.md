@@ -14,6 +14,26 @@ $ git config --global http.sslverify false
 
 如果自签名的证书在Jenkins下有问题，请添加一个构建参数： GIT_SSL_NO_VERIFY  true
 
+## 1.1 设置Proxy
+https://gist.github.com/evantoli/f8c23a37eb3558ab8765
+可以设置全局的Proxy，也可以针对某个git server(比如`https://github.com`)设置Proxy。后一种方式是最实用的。
+```
+[http "https://github.com"]
+	proxy = http://0.0.0.0:1087
+```
+
+## 1.2 Unset a proxy or SSL verification
+
+Use the `--unset` flag to remove configuration being specific about the property -- for example whether it was `http.proxy` or `http.<url>.proxy`. Consider using any of the following:
+
+```
+git config --global --unset http.proxy
+git config --global --unset http.https://domain.com.proxy
+
+git config --global --unset http.sslVerify
+git config --global --unset http.https://domain.com.sslVerify
+```
+
 # 2 git的特点
 
 Conceptually, most other systems store information as a list of file-based changes.
