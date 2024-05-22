@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "f3f83dc4f51bd5fe",
+        "id": "dfd862bcc272caa6",
         "type": "tabs",
         "children": [
           {
-            "id": "c67c2bbeb0d25fce",
+            "id": "e12b0da5ae4f93a3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "css.md",
+                "file": "vscode-notes.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "css.md",
+                "file": "vscode-notes.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "css.md",
+                "file": "vscode-notes.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "css.md"
+                "file": "vscode-notes.md"
               }
             }
           }
@@ -146,17 +146,23 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "c67c2bbeb0d25fce",
+  "active": "e12b0da5ae4f93a3",
   "lastOpenFiles": [
-    "mysql-notes.md",
+    "js-notes.md",
     "css.md",
+    "vscode-notes.md",
+    "images/Pasted-image-20240509221442.png",
+    "images/Pasted.md",
+    "images/Pasted image 20240509221442 1.png",
+    "images/WX20211128-111446@2x.png",
+    "Pasted image 20240509221442.png",
+    "java-style-guide.md",
+    "mysql-notes.md",
     "emacs-lisp.md",
     "linux-notes.md",
     "obsidian-notes.md",
     "docker-notes.md",
-    "vscode-notes.md",
     "java-notes.md",
-    "python-notes.md",
-    "js-notes.md"
+    "python-notes.md"
   ]
 }

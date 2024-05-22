@@ -210,7 +210,74 @@ http://stackoverflow.com/a/30142299
 
 ```
 $ ssh -R 52698:localhost:52698 VIRTUAL_MACHINE_IP_ADDRESS
+
 ```
+
+
+# Editor 设置
+
+##  eslint 和 prettier   tabwidth冲突的问题
+
+eslint 和 prettier在tabwidth上是有冲突，如果你喜欢设置tabwidth为4，同时喜欢用空格替代tab的话，你会发现eslint一直在报错。
+
+![images/Pasted-image-20240509221442.png](images/Pasted-image-20240509221442.png)
+明明4个空格是对的，但是就是报错，看着非常难受。
+网上说了好多解决方案，我发现只有下面这个能解决，修改ESLint的配置文件如下：。
+https://stackoverflow.com/a/72215152/3012163
+```js
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: 'tsconfig.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module',
+  },
+  plugins: ['@typescript-eslint/eslint-plugin'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ],
+  root: true,
+  env: {
+    node: true,
+    jest: true,
+  },
+  ignorePatterns: ['.eslintrc.js'],
+  rules: {
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    "prettier/prettier": [
+      "error",
+      {
+        "tabWidth": 4
+      }
+    ]
+  },
+};
+```
+
+最主要的是这几行：
+```js
+ "prettier/prettier": [
+      "error",
+      {
+        "tabWidth": 4
+      }
+    ]
+```
+
+## How do I change the code formatter in VS Code?
+
+**Set a default formatter**
+
+1. Open a Python file in VS Code.
+2. Right-click on the editor to display the context menu.
+3. Select Format Document With....
+4. Select Configure Default Formatter... from the drop-down menu.
+5. Select your preferred formatter extension from the list.
+
 
 # 设置Proxy
 
