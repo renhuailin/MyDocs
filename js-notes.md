@@ -12,7 +12,8 @@ delete fakevar      // => true: variable deleted
 delete this.fakevar2 // => true: variable deleted
 ```
 
-Ojbect.create() 这个函数用来创建用一个对象来创建一个新对象，这样做的好处是可以保护原来的对象，以防止非恶意的修改。
+### Object.create()
+`Object.create()` 静态方法以一个现有对象作为原型，创建一个新对象。这样做的好处是可以保护原来的对象，以防止非恶意的修改。
 
 # 4. Expressions and Operators
 
@@ -165,6 +166,13 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 ## Destructuring assignment
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
+
+
+
+
+## Regex 正则表达式
+特别好用的一个测试正则表达式的网站： https://regex101.com/
 
 # React
 

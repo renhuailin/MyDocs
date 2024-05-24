@@ -531,7 +531,6 @@ https://nvie.com/posts/a-successful-git-branching-model/
 
 https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/git-flow   这里讲到了最流行的git flow扩展包： [AVH Edition](https://github.com/petervanderdoes/gitflow/) 。
 
-# 
 
 # 5. Submodule
 
@@ -570,7 +569,7 @@ This takes the current master branch and places all of its files into a ZIP arch
 
 ## 6.1 从stage中删除文件
 
-use "git rm --cached <file>..." to unstage
+use "git rm --cached \<file\>..." to unstage
 
 ## 6.2 交互式的staging
 
@@ -685,22 +684,26 @@ git config http.postBuffer 524288000
 client_max_body_size 50m;
 ```
 
-*. error: RPC failed; result=22, HTTP code = 502
+
+```*. error: RPC failed; result=22, HTTP code = 502
 fatal: The remote end hung up unexpectedly
 fatal: The remote end hung up unexpectedly
-Everything up-to-date     
+Everything up-to-date
+```
 我用push到gitlab上时，出现了这个问题，从网上找到了解决方法，把/home/git/gitlab/config/gitlab.yml中的max_size和timeout值调得大些就行了。
 
 ```
 max_size: 55242880 # 55.megabytes
+```
+
+
 # Git timeout to read a commit, in seconds
 timeout: 60
 ```
 
 * unable to access 'https://gitlab.china-ops.com/project/ssl-vpn.git/': server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
-
+```
 這個錯誤是因爲你的git服務器用的是自簽名的證書，或是證書過期了。
-
 解決方法是設置環境變量GIT_SSL_NO_VERIFY爲1,或是設置全局配置http.sslverify爲false
 
 ```

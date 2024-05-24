@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "git-notes.md",
+                "file": "js-notes.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "git-notes.md",
+                "file": "js-notes.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "git-notes.md",
+                "file": "js-notes.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "git-notes.md"
+                "file": "js-notes.md"
               }
             }
           }
@@ -148,21 +148,23 @@
   },
   "active": "e12b0da5ae4f93a3",
   "lastOpenFiles": [
-    "vscode-notes.md",
+    "kotlin-notes.md",
+    "linux-notes.md",
     "js-notes.md",
+    "java-style-guide.md",
+    "java-notes.md",
+    "git-notes.md",
+    "vscode-notes.md",
     "css.md",
     "images/Pasted-image-20240509221442.png",
     "images/Pasted.md",
     "images/Pasted image 20240509221442 1.png",
     "images/WX20211128-111446@2x.png",
     "Pasted image 20240509221442.png",
-    "java-style-guide.md",
     "mysql-notes.md",
     "emacs-lisp.md",
-    "linux-notes.md",
     "obsidian-notes.md",
     "docker-notes.md",
-    "java-notes.md",
     "python-notes.md"
   ]
 }
