@@ -2,7 +2,7 @@
 
 position这个属性很有用。
 
-## Flex
+## 1.  Flex
 
 Flex box已经获得了所有主流brower的支持,可以安全地使用它了.
 
@@ -190,4 +190,15 @@ p:first-child {
 
 ### 垂直剧中
 使用`place-items-center`这个就可以了。
+
+
+## 常用CSS
+
+## code 标签的换行
+经常看到一些页面里含有code，而且这种通常包裹在pre里的，但是没有做换行。主要问题是打印的时候超出的部分会裁掉，所以需要挑选的。
+[html - How do I wrap text in a pre tag? - Stack Overflow](https://stackoverflow.com/questions/248011/how-do-i-wrap-text-in-a-pre-tag)
+```css
+white-space: pre-wrap;
+```
+
 

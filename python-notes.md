@@ -50,6 +50,17 @@ import datetime
 help(datetime.datetime)
 ```
 
+
+
+## PYTHONPATH
+
+
+In [Python](https://www.tutorialspoint.com/python/index.htm), PYTHONPATH is an environment variable that specifies a list of directories to search for Python modules when importing them. When you import a module in Python, Python looks for the module in the directories specified in sys.path, which is a list of directories that includes the current working directory and directories specified in PYTHONPATH.
+
+PYTHONPATH is an environment variable which you can set to add additional directories where python will look for modules and packages. For most installations, you should not set these variables since they are not needed for Python to run. Python knows where to find its standard library.
+
+
+
 # Collections
 
 ## namedtuple

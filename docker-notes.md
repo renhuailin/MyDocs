@@ -168,7 +168,7 @@ registry:
     - /opt/china_ops_docker_registry/certs:/certs
 ```
 
-如何把自己的镜像push到private registry上呢？ 首先把你的image打一个tag. 这个tag以 <private registry domain>：<port>/开头．
+如何把自己的镜像push到private registry上呢？ 首先把你的image打一个tag. 这个tag以 <private registry domain\>：<port\>/开头．
 
 ```
 $ docker tag hello-world:latest localhost:5000/hello-mine:latest
@@ -183,7 +183,7 @@ $ docker push localhost:5000/hello-mine:latest
 如果nginx报下面的错，请在配置里添加：`client_max_body_size 0;`
 
 ```
-error parsing HTTP 413 response body: invalid character '<' looking for beginning of value: "<html>\r\n<head><title>413 Request Entity Too Large</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1>413 Request Entity Too Large</h1></center>\r\n<hr><center>nginx/1.4.6 (Ubuntu)</center>\r\n</body>\r\n</html>\r\n"
+error parsing HTTP 413 response body: invalid character '<' looking for beginning of value: "<html>\r\n<head><title>413 Request Entity Too Large</title></head>\r\n<body bgcolor=\"white\">\r\n<center><h1></h1></center>\r\n<hr><center>nginx/1.4.6 (Ubuntu)</center>\r\n</body>\r\n</html>\r\n"
 ```
 
 ## 7.1 查看 private registry．
@@ -288,16 +288,6 @@ Azure源举例：
 docker pull  dockerhub.azk8s.cn/library/nginx:1.15
 ```
 
-
-
-
-
-
-
-
-
-
-
 # 8 Image
 
 ## 8.1 导出导入image
@@ -316,7 +306,7 @@ $ docker load < busybox.tar
 $ docker load --input fedora.tar
 ```
 
-### 通过 docker commit来创建一个image.
+## 8.2 通过 docker commit来创建一个image.
 
 Create a new image from a container’s changes
 
@@ -324,7 +314,7 @@ Create a new image from a container’s changes
 $ sudo docker commit 614122c0aabb rhl/apache2
 ```
 
-## 8.2 Docker image 存储地址
+## 8.3 Docker image 存储地址
 
 https://stackoverflow.com/a/25978888
 
@@ -348,7 +338,7 @@ In the case of `devicemapper`:
 - `/var/lib/docker/devicemapper/devicemapper/metadata` the metadata
 - Note these files are thin provisioned "sparse" files so aren't as big as they seem.
 
-## 8.3 Dockerfile
+# 9  Dockerfile
 
 ### ADD 更高级的复制文件
 
@@ -416,7 +406,7 @@ CMD ["/root/k8s-monitor"]
 
 构建镜像，你会发现生成的镜像只有上面COPY 指令指定的内容，镜像大小只有2M。这样在以前使用两个Dockerfile（一个Dockerfile用于开发和一个用于生产的瘦客户端），现在使用多阶段构建就可以搞定。
 
-# 9  Docker Log
+# 10  Docker Log
 
 ## 9.1 使用JouralD来管理日志
 
@@ -523,6 +513,87 @@ volumes:
   test_vol:
     external: true
 ```
+
+
+# 12. Volume 
+
+创建
+
+```
+docker volume create my-vol
+```
+
+Remove a volume:
+
+```console
+$ docker volume rm my-vol
+```
+
+### [Populate a volume using a container](https://docs.docker.com/storage/volumes/#populate-a-volume-using-a-container)
+
+If you start a container which creates a new volume, and the container has files or directories in the directory to be mounted such as `/app/`, Docker copies the directory's contents into the volume. The container then mounts and uses the volume, and other containers which use the volume also have access to the pre-populated content.
+
+新创建的卷是空的，你要populate数据。
+To show this, the following example starts an `nginx` container and populates the new volume `nginx-vol` with the contents of the container's `/usr/share/nginx/html` directory. This is where Nginx stores its default HTML content.
+
+The `--mount` and `-v` examples have the same end result.
+
+`--mount` `-v`
+
+---
+
+```console
+$ docker run -d \
+  --name=nginxtest \
+  --mount source=nginx-vol,destination=/usr/share/nginx/html \
+  nginx:latest
+```
+
+---
+
+After running either of these examples, run the following commands to clean up the containers and volumes. Note volume removal is a separate step.
+
+```console
+$ docker container stop nginxtest
+
+$ docker container rm nginxtest
+
+$ docker volume rm nginx-vol
+```
+
+
+## [Use a volume with Docker Compose](https://docs.docker.com/storage/volumes/#use-a-volume-with-docker-compose)
+
+The example below shows a single Docker Compose service with a volume:
+
+```yaml
+services:
+  frontend:
+    image: node:lts
+    volumes:
+      - myapp:/home/node/app
+volumes:
+  myapp:
+```
+
+Running `docker compose up` for the first time creates a volume. Docker reuses the same volume when you run the command subsequently.
+
+You can create a volume directly outside of Compose using `docker volume create` and then reference it inside `compose.yaml` as follows:
+你可以在compose外通过`docker volume create`来创建volume，然后在compose.yaml里使用它，不过要加上`external: true`.
+
+```yaml
+services:
+  frontend:
+    image: node:lts
+    volumes:
+      - myapp:/home/node/app
+volumes:
+  myapp:
+    external: true
+```
+
+For more information about using volumes with Compose, refer to the [Volumes](https://docs.docker.com/compose/compose-file/07-volumes/) section in the Compose specification.
+
 
 # Docker build
 
