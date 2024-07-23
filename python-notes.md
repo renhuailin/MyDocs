@@ -355,11 +355,15 @@ https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
 [来了！划时代的 Python 包管理工具 -- PDM](https://zhuanlan.zhihu.com/p/468445226)
 
 一定要好好学习一下。
-```
+``` bash
 pdm init
 pdm add flask
 pdm remove flask
 pdm config pypi.url https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+# python 项目通常是用 requirements.txt 来保存依赖的，可以用下面的命令来把这些依赖导入到 pdm 中。
+pdm import -f requirements requirements.txt
 ```
 配置文件
 ```toml
