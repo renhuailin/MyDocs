@@ -326,6 +326,13 @@ List<Person> filtered =
 The Java Persistence Query Language
 http://docs.oracle.com/javaee/6/tutorial/doc/bnbtg.html
 
+
+### All JPA annotations
+
+https://dzone.com/articles/all-jpa-annotations-mapping-annotations
+
+
+
 # Java web framework
 ## Quarkus
 [这个框架](https://quarkus.io)实在比Play web framework还要好，有点像django了。而且还是redhat的开发的。喜欢呀。。。
