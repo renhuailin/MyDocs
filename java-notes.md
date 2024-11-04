@@ -1,8 +1,22 @@
 # Java Notes
 
-## Java 1.8
+# 1. JDK
+## 1.1 Java 1.8
 
 要好好了解java 8里的 Predicate，Function,Consumer这几个类，跟lambda有关。
+
+### 1.1.1 Stream
+
+stream to List
+
+```java
+List<Person> filtered =
+    persons
+        .stream()
+        .filter(p -> p.name.startsWith("P"))
+        .collect(Collectors.toList());
+```
+
 
 ### mac下找java home
 
@@ -18,7 +32,7 @@ NIO  这篇文章讲得最好： https://www.ibm.com/developerworks/cn/education
 
 JDK1.5_update10版本使用epoll替代了传统的select/poll，极大的提升了NIO通信的性能。
 
-# Spring
+#  2. Spring
 
 Spring boot是可以写web的，请看：https://stormpath.com/blog/build-spring-boot-spring-security-app
 
@@ -154,25 +168,30 @@ http://stackoverflow.com/a/22307705
 java -Dspring.config.location=/target/application.properties -jar target/myproject-0.0.1-SNAPSHOT.jar
 ```
 
-# Maven
+# 3. Build
 
-###【常用maven命令】
-    mvn archetype:generate
-    mvn archetype:generate -DgroupId=com.chinaops -DartifactId=CloudOps -DarchetypeArtifactId=maven-archetype-gwt
+## 3.1 Maven
+
+### 3.1.1  【常用maven命令】
+```
+$ mvn archetype:generate -DgroupId=com.chinaops -DartifactId=CloudOps -DarchetypeArtifactId=maven-archetype-gwt
 
 $ mvn archetype:generate -DgroupId=com.vianet -DartifactId=ManrecaServer -DarchetypeArtifactId=maven-archetype-quickstart
 
-    mvn archetype:generate -DgroupId=com.chinaops.tuts -DartifactId=Tuts -DarchetypeArtifactId=maven-archetype-webapp
+$ mvn archetype:generate -DgroupId=com.chinaops.tuts -DartifactId=Tuts -DarchetypeArtifactId=maven-archetype-webapp
 
-mvn archetype:create -DarchetypeGroupId=com.totsp.gwt \
+$ mvn archetype:create -DarchetypeGroupId=com.totsp.gwt \
 ​    -DarchetypeArtifactId=maven-googlewebtoolkit2-archetype \
 ​    -DarchetypeVersion=1.0.4 \
 ​    -DremoteRepositories=http://gwt-maven.googlecode.com/svn/trunk/mavenrepo \
 ​    -DgroupId=com.chinaops \
 ​    -DartifactId=CloudOps
+```
+
 
 #### 把本地包加入的本地库中
 
+```bash
 mvn install:install-file \
   -Dfile=/Users/harley/Downloads/typica-m4c-1.6.jar \
   -DgroupId=china-ops \
@@ -181,8 +200,9 @@ mvn install:install-file \
   -Dpackaging=jar \
   -DgeneratePom=true
 
-Print dependency tree.
+# Print dependency tree.
 mvn dependency:tree
+```
 
 如果mvn archetype:generate卡住了，增加参数-DarchetypeCatalog=internal后解决卡住问题。
 
@@ -192,7 +212,7 @@ $ mvn -X archetype:generate -DgroupId=cn.com.xiangcloud -DartifactId=xiangcloud-
 
 如果出现问题，请加`-X`用来调试。
 
-## Create a new ArcheType
+#### Create a new ArcheType
 
 https://maven.apache.org/guides/mini/guide-creating-archetypes.html
 
@@ -206,13 +226,29 @@ mvn install
 mvn archetype:generate -DarchetypeCatalog=local
 ```
 
-## checksum
+#### checksum
 
 我最近在整合tsf和seata，发现一个奇怪的现象，可能是好久没有做java的开发了，发现一个类死活编译不成功，明明依赖已经加上了，就是编译不成功。后来在左侧的outline tree里我发现我引用的jar包无法展开，也就是无法查看其内容，于是我在Finder里打开一看，是0字节的jar，我晕。Maven在下载jar包时，是同时下载了checksum的文件的。难道不应该校验一下，如果这种包就提示失败吗？
 
 后来我发现maven有一个命令行的选项 `-C, --strict-checksums`就是用来做这个的。加入这个选项后，如果jar没有通过校验，build会直接出错。
 
-# 工具备注
+## 3.2 Nexus
+
+Nexus里的repo有hosts、proxy、group三种，
+
+hosts就是host在Nexus里的repo，当你运行mvn deploy时，artifact 就会Push到这个repo.
+
+proxy类型
+
+A *proxy repository* is a repository that is linked to a remote repository. Any request for a component is verified against the local content of the proxy repository. If no local component is found, the request is forwarded to the remote repository. The component is then retrieved and stored locally in the repository manager, which acts as a cache. Any future requests for the same component are fulfilled from the local storage, eliminating network bandwidth and time overhead when retrieving the component from the remote repository again
+
+Group类型
+
+A *repository group* is a collection of other repositories, where you can combine multiple repositories of the same format into a single item. This represents a powerful feature of Nexus Repository Manager that lets developers rely on a single URL for their configuration needs. For example, if your group has a Maven Central proxy repository and a hosted repository for 3rd party JARs, these can be combined into a group with one URL for builds.
+
+
+
+# 4. 工具备注
 
 ##### Java性能总览
 
@@ -271,7 +307,7 @@ What's New in Java 8 [https://leanpub.com/whatsnewinjava8/read#leanpub-auto-opti
 
 [What’s New in Java 8: Lambdas](http://radar.oreilly.com/2014/04/whats-new-in-java-8-lambdas.html)  这个作者的[其它文章](http://radar.oreilly.com/madhusudhank)也很好。
 
-# Java 日期
+# 5. Java 日期
 
 Joda-Time 在java 8之前是java 8之前事实上的data time标准库？（靠，我居然没用过）。Java 8的New Date Time API受其严重启发而生。
 
@@ -307,38 +343,114 @@ LocalDateTime sippinFruityDrinksInMexico = superBowlXLV.plusMonths(1);
 
 Method References ，只要是参数类型一样，返回结果兼容，就可以用。方法名可以不一样，有点像函数指针。但是对constructor的引用有点不一样。
 
-## Stream
 
-stream to List
+# 6.  Database
 
-```java
-List<Person> filtered =
-    persons
-        .stream()
-        .filter(p -> p.name.startsWith("P"))
-        .collect(Collectors.toList());
-```
-
-# Spring Data JPA
+## 6.1 JPA
 
 可以用JPA Tools来生成 entity class.  用eclipse. http://shengwangi.blogspot.com/2014/12/how-to-create-java-classes-from-tables.html
 
 The Java Persistence Query Language
 http://docs.oracle.com/javaee/6/tutorial/doc/bnbtg.html
 
-
-### All JPA annotations
+### 6.1.1 All JPA annotations
 
 https://dzone.com/articles/all-jpa-annotations-mapping-annotations
 
 
 
-# Java web framework
-## Quarkus
+## 6.2 Liquibase 数据库变更管理工具
+
+Liquibase
+Rails的Db Migration的java alternative.
+
+开发过程中，可以使用命令行来migrate，生产环境用servlet listener的来自动运行，这样的缺点是每次启动时都要运行这个，如果不小心修改了changelog文件，可能会有风险。
+
+# 7. Java web framework
+## 7.1 Quarkus
 [这个框架](https://quarkus.io)实在比Play web framework还要好，有点像django了。而且还是redhat的开发的。喜欢呀。。。
 这绝对是我以后开发java web应用首选的web framework了。
 
-## Play web framework
+
+### 7.1.1 配置Configuration
+
+#### 7.1.1.1 系统配置
+
+System properties can be handed to the application through the `-D` flag during startup. The following examples assign the value `youshallnotpass` to the attribute `quarkus.datasource.password`.
+
+- For Quarkus dev mode: `./mvnw quarkus:dev -Dquarkus.datasource.password=youshallnotpass`
+    
+- For a runner jar: `java -Dquarkus.datasource.password=youshallnotpass -jar target/quarkus-app/quarkus-run.jar`
+    
+- For a native executable: `./target/myapp-runner -Dquarkus.datasource.password=youshallnotpass`
+
+[`quarkus.hibernate-orm.database.generation`](https://quarkus.io/guides/all-config#quarkus-hibernate-orm_quarkus-hibernate-orm-database-generation)
+这个配置决定在每次启动时对数据库的操作，如果配置为`drop-and-create`那么在启动时会把所有的表都drop掉，然后重新创建，这个配置在开发环境还可以，**如果是生产环境，不要这样配置**。
+`quarkus.hibernate-orm."persistence-unit-name".database.generation`
+
+Select whether the database schema is generated or not. `drop-and-create` is awesome in development mode. This defaults to 'none', however if Dev Services is in use and no other extensions that manage the schema are present this will default to 'drop-and-create'. Accepted values: `none`, `create`, `drop-and-create`, `drop`, `update`, `validate`.
+
+Environment variable: `QUARKUS_HIBERNATE_ORM_DATABASE_GENERATION`
+
+#### 7.1.1.2. Default Profiles
+
+By default, Quarkus provides three profiles, that activate automatically in certain conditions:
+
+- **dev** - Activated when in development mode (i.e. `quarkus:dev`)
+- **test** - Activated when running tests
+- **prod** - The default profile when not running in development or test mode
+默认是生产环境
+
+#### 7.1.1.2 环境变量
+
+- For a runner jar: `export QUARKUS_DATASOURCE_PASSWORD=youshallnotpass ; java -jar target/quarkus-app/quarkus-run.jar`
+    
+- For a native executable: `export QUARKUS_DATASOURCE_PASSWORD=youshallnotpass ; ./target/myapp-runner`
+    
+
+Environment variables names follow the conversion rules specified by [MicroProfile Config](https://github.com/eclipse/microprofile-config/blob/master/spec/src/main/asciidoc/configsources.asciidoc#default-configsources). Config searches three environment variables for a given property name (e.g. `foo.BAR.baz`):
+
+- `foo.BAR.baz` - Exact match
+    
+- `foo_BAR_baz` - Replace each character that is neither alphanumeric nor `_` with `_`
+    
+- `FOO_BAR_BAZ` - Replace each character that is neither alphanumeric nor `_` with `_`; then convert the name to upper case
+    
+
+SmallRye Config specifies [additional conversion rules](https://smallrye.io/smallrye-config/Main/config/environment-variables/).
+
+- A property with double quotes `foo."bar".baz`, replace each character that is neither alphanumeric nor `_` with `_`: `FOO__BAR__BAZ`
+    
+- A property with dashes `foo.bar-baz`, replace each character that is neither alphanumeric nor `_` with `_`: `FOO_BAR_BAZ`
+    
+- An indexed property `foo.bar[0]` or `foo.bar[0].baz`, replace each character that is neither alphanumeric nor `_` with `_`: `FOO_BAR_0_` or `FOO_BAR_0__BAZ`
+    
+
+
+In some situations, looking up the exact property name is impossible. This is the case for configuration names that contain user defined path segments.
+
+Applying the conversion rules for Environment Variables names, `quarkus.datasource."datasource-name".jdbc.url` becomes `QUARKUS_DATASOURCE__DATASOURCE_NAME__JDBC_URL`. The configuration will work as expected if both properties are available in the Config system.
+
+If only `QUARKUS_DATASOURCE__DATASOURCE_NAME__JDBC_URL` is present, the Config system needs to reconvert the configuration name to its most likely dotted format. This works fine for fixed configuration segments, but not for names that contain dynamic segments. In this case, Quarkus is unable to determine if `DATASOURCE_NAME` should be converted to `datasource.name` or `datasource-name` (or any other special character separator).
+
+For this reason, such properties always require their dotted version name in another source (the value can be left empty) to disambiguate the Environment Variable name. It will provide additional information to perform a two-way conversion and match the property names together.
+
+`# value can be left empty quarkus.datasource."datasource-name".jdbc.url=`
+
+`EXPORT QUARKUS_DATASOURCE__DATASOURCE_NAME__JDBC_URL=jdbc:postgresql://localhost:5432/database`
+
+
+
+
+
+### 7.1.2 JPA
+
+
+ 
+
+
+
+## 7.2 Play web framework
 
 
 
@@ -358,87 +470,22 @@ it's only possible because Play is stateless,
 
 
 
-# Java Template
+
+# 8. Java Template
 
 ## Freemarker
 
 [Freemarker template inheritance - Implementation Specific](https://nickfun.github.io/posts/2014/freemarker-template-inheritance.html)
 
-# Others
 
-eclipse 换行插件
-
-http://dev.cdhq.de/eclipse/word-wrap/
-
-JRebel or Spring Loaded  
-Thymeleaf
-
-Liquibase 类似于Rails Migration的东西。请见下面的具体章节。
-
-Jtwig   这个模板系统很强，而且能在Spring里使用。推荐。
-
-Hotswap Agent project : http://hotswapagent.org/  这个是用DCEVM的，实现的是jvm级的reload，比Spring loaded更强。
-
-我现在用的就是Hotswap Agent 的JDK。
-
-Dynamic Source Lookup plugin for Eclipse : https://github.com/ifedorenko/com.ifedorenko.m2e.sourcelookup
-
-Wiremock 用来mock一些api，主要用来测试。
-
-阿里的RPC框架 [dubbo](http://dubbo.io/)
-
-https://yq.aliyun.com/articles/60789
-
-# Logging
+# 9. Logging
 
 如何live reload log4j configuration.
 http://stackoverflow.com/a/4599083
 
-# Liquibase 数据库变更管理工具
+# 10. Test 测试
 
-Liquibase
-Rails的Db Migration的java alternative.
-
-开发过程中，可以使用命令行来migrate，生产环境用servlet listener的来自动运行，这样的缺点是每次启动时都要运行这个，如果不小心修改了changelog文件，可能会有风险。
-
-# IDEA spring boot & spring Loaded
-
-首先要设计项目自动编译
-
-设置里：
-`Build > Compiler > Build project automatically`.
-
-然后在启动参数里添加
-
-```xml
-<plugin>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-maven-plugin</artifactId>
-    <configuration>
-        <jvmArguments>
-            -javaagent:/Users/harley/.m2/repository/org/springframework/springloaded/1.2.6.RELEASE/springloaded-1.2.6.RELEASE.jar -noverify
-        </jvmArguments>
-    </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>repackage</goal>
-            </goals>
-        </execution>
-    </executions>
-
-</plugin>
-```
-
-# Netty
-
-http://www.infoq.com/cn/articles/netty-high-performance   这里面讲了Reactor主从多线程模型，非常好。
-
-# Eclipse
-
-I installed two Java vm on my mac ,one is  oracle java 1.8 and the other is  dcevm.  Today I download the newest eclipse , but i can not startup  with error "Failed to create java virtual machine".  I googled and try all solution , no help.  I specified the dcevm in `eclipse.ini`   it failed too.   Then I changed jvm to oracle jvm , It started up !
-
-# Mockito
+## 10. 1 Mockito
 
 判断http返回值是2xx。
 
@@ -571,21 +618,81 @@ How to retrieve String from  jsonPath in mvcMock?
 https://stackoverflow.com/a/49537158
 
 
-# 性能调优
+# 11 .性能调优
 [没有二十年功力，写不出Thread.sleep(0)这一行“看似无用”的代码！](https://www.cnblogs.com/thisiswhy/p/16657667.html)
 
 
+# 12. Network
+## Netty
 
-# Nexus
+http://www.infoq.com/cn/articles/netty-high-performance   这里面讲了Reactor主从多线程模型，非常好。
 
-Nexus里的repo有hosts、proxy、group三种，
+# 13. IDE
 
-hosts就是host在Nexus里的repo，当你运行mvn deploy时，artifact 就会Push到这个repo.
+## Eclipse
 
-proxy类型
+I installed two Java vm on my mac ,one is  oracle java 1.8 and the other is  dcevm.  Today I download the newest eclipse , but i can not startup  with error "Failed to create java virtual machine".  I googled and try all solution , no help.  I specified the dcevm in `eclipse.ini`   it failed too.   Then I changed jvm to oracle jvm , It started up !
 
-A *proxy repository* is a repository that is linked to a remote repository. Any request for a component is verified against the local content of the proxy repository. If no local component is found, the request is forwarded to the remote repository. The component is then retrieved and stored locally in the repository manager, which acts as a cache. Any future requests for the same component are fulfilled from the local storage, eliminating network bandwidth and time overhead when retrieving the component from the remote repository again
 
-Group类型
+# 14. Others
 
-A *repository group* is a collection of other repositories, where you can combine multiple repositories of the same format into a single item. This represents a powerful feature of Nexus Repository Manager that lets developers rely on a single URL for their configuration needs. For example, if your group has a Maven Central proxy repository and a hosted repository for 3rd party JARs, these can be combined into a group with one URL for builds.
+eclipse 换行插件
+
+http://dev.cdhq.de/eclipse/word-wrap/
+
+JRebel or Spring Loaded  
+Thymeleaf
+
+Liquibase 类似于Rails Migration的东西。请见下面的具体章节。
+
+Jtwig   这个模板系统很强，而且能在Spring里使用。推荐。
+
+Hotswap Agent project : http://hotswapagent.org/  这个是用DCEVM的，实现的是jvm级的reload，比Spring loaded更强。
+
+我现在用的就是Hotswap Agent 的JDK。
+
+Dynamic Source Lookup plugin for Eclipse : https://github.com/ifedorenko/com.ifedorenko.m2e.sourcelookup
+
+Wiremock 用来mock一些api，主要用来测试。
+
+阿里的RPC框架 [dubbo](http://dubbo.io/)
+
+https://yq.aliyun.com/articles/60789
+
+ IDEA spring boot & spring Loaded
+
+首先要设计项目自动编译
+
+设置里：
+`Build > Compiler > Build project automatically`.
+
+然后在启动参数里添加
+
+```xml
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <configuration>
+        <jvmArguments>
+            -javaagent:/Users/harley/.m2/repository/org/springframework/springloaded/1.2.6.RELEASE/springloaded-1.2.6.RELEASE.jar -noverify
+        </jvmArguments>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>repackage</goal>
+            </goals>
+        </execution>
+    </executions>
+
+</plugin>
+```
+
+
+
+
+
+
+
+
+
