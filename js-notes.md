@@ -906,6 +906,94 @@ Vue3 目前我认为是最好的实现。
 [Vue 3 layout system: smart layouts for VueJS | by Saken | Medium](https://medium.com/@sakensaten1409/vue-3-layout-system-smart-layouts-for-vuejs-80ae700e48a6)
 
 
+
+
+## Nuxtjs
+
+[The need for `useFetch` and `useAsyncData`](https://nuxt.com/docs/getting-started/data-fetching#the-need-for-usefetch-and-useasyncdata)
+
+Nuxt is a framework which can run isomorphic (or universal) code in both server and client environments. If the [`$fetch` function](https://nuxt.com/docs/api/utils/dollarfetch) is used to perform data fetching in the setup function of a Vue component, this may cause data to be fetched twice, once on the server (to render the HTML) and once again on the client (when the HTML is hydrated). This can cause hydration issues, increase the time to interactivity and cause unpredictable behavior.
+
+The [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) and [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) composables solve this problem by ensuring that if an API call is made on the server, the data is forwarded to the client in the payload.
+
+The payload is a JavaScript object accessible through [`useNuxtApp().payload`](https://nuxt.com/docs/api/composables/use-nuxt-app#payload). It is used on the client to avoid refetching the same data when the code is executed in the browser [during hydration](https://nuxt.com/docs/guide/concepts/rendering#universal-rendering).
+
+要注意，如果在setup函数中直接使用$fetch来做数据的抓取，会导致数据被抓取两次，一次是在Server端，一次是在client端。
+
+不过在使用useFetch的时候也要注意，如果使用了reactive变量，可能会导致发送多次请求的问题。
+请看这个视频： https://www.youtube.com/watch?v=njsGVmcWviY&ab_channel=AlexanderLichter
+
+
+### [Client-only fetching](https://nuxt.com/docs/getting-started/data-fetching#client-only-fetching)
+
+By default, data fetching composables will perform their asynchronous function on both client and server environments. Set the `server` option to `false` to only perform the call on the client-side. On initial load, the data will not be fetched before hydration is complete so you have to handle a pending state, though on subsequent client-side navigation the data will be awaited before loading the page.
+
+Combined with the `lazy` option, this can be useful for data that is not needed on the first render (for example, non-SEO sensitive data).
+
+```
+/* This call is performed before hydration */
+const articles = await useFetch('/api/article')
+
+/* This call will only be performed on the client */
+const { status, data: comments } = useFetch('/api/comments', {
+  lazy: true,
+  server: false
+})
+```
+
+默认 data fetching composables会在服务器端和client端都执行一遍，可以设置server为false以阻止在服务器端运行，也就是只在Client执行。
+
+
+我一直要实现的在Post方法中使用SSE功能，nuxt是支持的，有意思。
+https://nuxt.com/docs/getting-started/data-fetching#consuming-sse-server-sent-events-via-post-request
+
+### [Client-Only Pages](https://nuxt.com/docs/guide/directory-structure/pages#client-only-pages)
+
+You can define a page as [client only](https://nuxt.com/docs/guide/directory-structure/components#client-components) by giving it a `.client.vue` suffix. None of the content of this page will be rendered on the server.
+
+### [Server-Only Pages](https://nuxt.com/docs/guide/directory-structure/pages#server-only-pages)
+
+You can define a page as [server only](https://nuxt.com/docs/guide/directory-structure/components#server-components) by giving it a `.server.vue` suffix. While you will be able to navigate to the page using client-side navigation, controlled by `vue-router`, it will be rendered with a server component automatically, meaning the code required to render the page will not be in your client-side bundle.
+
+Server-only pages must have a single root element. (HTML comments are considered elements as well.)
+
+### Server端编程 Server side programming  
+
+https://nuxt.com/docs/guide/directory-structure/server
+
+
+在服务器端取数据，然后像jsp php一样把data做为http的payload传给client，nuxt也可以实现这个功能。可以参考这个文档： https://nuxt.com/docs/getting-started/data-fetching#the-need-for-usefetch-and-useasyncdata
+
+The [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) and [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) composables solve this problem by ensuring that if an API call is made on the server, the data is forwarded to the client in the payload.
+
+这些数据可以在Nuxt DevTools的Payload标签里看到。
+Use the [Nuxt DevTools](https://devtools.nuxt.com/) to inspect this data in the **Payload tab**.
+
+### UI库
+
+支持Nuxt的UI组件库：
+shadcn: https://www.shadcn-vue.com/
+Vant for nuxt : https://github.com/vant-ui/vant-nuxt
+
+
+
+```
+pnpm dlx nuxi@latest module add tailwindcss
+```
+
+CSS Rules in Web Design for Mobile Screens:
+https://www.geeksforgeeks.org/css-rules-in-web-design-for-mobile-screens/
+
+
+吸底按钮
+https://vant-ui.github.io/vant/#/zh-CN/sticky
+
+
+
+### 参考的开源项目
+https://github.com/atinux/atidone/blob/main/app/pages/todos.vue
+
+
 # 4. ECharts
 
 默认并不是显示所有的x轴的标签的，如果要显示，需要设置`axisLabel`下的`interval`为0。
