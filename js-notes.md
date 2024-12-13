@@ -163,24 +163,116 @@ Object.getOwnPropertyDescriptor(random, "octet");
 
 如果用es6的语法，autobinding会解决问题，请看：https://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html
 
+## Spread syntax (...)
+The **spread (`...`)** syntax allows an iterable, such as an array or string, to be expanded in places where zero or more arguments (for function calls) or elements (for array literals) are expected. In an object literal, the spread syntax enumerates the properties of an object and adds the key-value pairs to the object being created.
+
+
 
 ## Destructuring assignment
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 
 
+```js
+const { a, ...others } = { a: 1, b: 2, c: 3 };
+console.log(a); //1
+console.log(others); //{ b: 2, c: 3 }
 
+const [first, ...others2] = [1, 2, 3];
+console.log(others2); // [2, 3]
 
-
+```
 ## Regex 正则表达式
 特别好用的一个测试正则表达式的网站： https://regex101.com/
 
 # React
 
+## jsx tsx 
+我在tsx里使用forEach，结果发现不输出任何东西，我改成map就行了。
+
+```tsx
+{
+
+	pageSettings.agreements.forEach(value =>
+	
+	// <span><a onClick={() => showAgreement(index)} className="text-white"> {value.title}</a></span>
+	
+	<h1>{value.title}</h1>
+	
+	)
+
+}
+```
+原来forEach是不返回任何东西的，而map是返回的。
+https://stackoverflow.com/a/47616385/3012163
+
+
 ## nextjs
+
+
+Create a new app 
+```
+npx create-next-app@latest
+#or
+pnpm dlx create-next-app@latest
+```
+
+### App router & Page router
+In version 13, Next.js introduced a new **App Router** built on [React Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components), which supports shared layouts, nested routing, loading states, error handling, and more.
+
+The App Router works in a new directory named `app`. The `app` directory works alongside the `pages` directory to allow for incremental adoption.
+
+Page Router https://nextjs.org/docs/pages/building-your-application/routing
+The `Pages Router` has a file-system based router built on concepts of pages. When a file is added to the `pages` directory it's automatically available as a route. Learn more about routing in the Pages Router:
+
+
 
 使用Link来实现局部刷新
 
 用`usePathname() ` 来显示active links.
+
+#### Dynamic Routes
+
+A Dynamic Segment can be created by wrapping a folder's name in square brackets: `[folderName]`. For example, `[id]` or `[slug]`.  
+可以通过将文件夹名称括在方括号中来创建动态分段： `[folderName]` 。例如， `[id]`或`[slug]` 。
+
+Dynamic Segments are passed as the `params` prop to [`layout`](https://nextjs.org/docs/app/api-reference/file-conventions/layout), [`page`](https://nextjs.org/docs/app/api-reference/file-conventions/page), [`route`](https://nextjs.org/docs/app/building-your-application/routing/route-handlers), and [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function) functions.  
+动态段作为`params`属性传递给[`layout`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) 、 [`page`](https://nextjs.org/docs/app/api-reference/file-conventions/page) 、 [`route`](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)和[`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function)函数。
+
+
+#### [Catch-all Segments](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#catch-all-segments)
+
+Dynamic Segments can be extended to **catch-all** subsequent segments by adding an ellipsis inside the brackets `[...folderName]`.  
+通过在括号`[...folderName]`内添加省略号，可以将动态段扩展为**捕获所有**后续段。
+
+For example, `app/shop/[...slug]/page.js` will match `/shop/clothes`, but also `/shop/clothes/tops`, `/shop/clothes/tops/t-shirts`, and so on.  
+例如， `app/shop/[...slug]/page.js`将匹配`/shop/clothes` ，但也会匹配`/shop/clothes/tops` 、 `/shop/clothes/tops/t-shirts` ，等等。
+
+| Route 路线                     | Example URL 示例网址 | `params`                    |
+| ---------------------------- | ---------------- | --------------------------- |
+| `app/shop/[...slug]/page.js` | `/shop/a`        | `{ slug: ['a'] }`           |
+| `app/shop/[...slug]/page.js` | `/shop/a/b`      | `{ slug: ['a', 'b'] }`      |
+| `app/shop/[...slug]/page.js` | `/shop/a/b/c`    | `{ slug: ['a', 'b', 'c'] }` |
+
+#### [Optional Catch-all Segments  ](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#optional-catch-all-segments)
+
+Catch-all Segments can be made **optional** by including the parameter in double square brackets: `[[...folderName]]`.  
+通过将参数包含在双方括号中，可以使 Catch-all Segments 成为**可选**： `[[...folderName]]` 。
+
+For example, `app/shop/[[...slug]]/page.js` will **also** match `/shop`, in addition to `/shop/clothes`, `/shop/clothes/tops`, `/shop/clothes/tops/t-shirts`.  
+例如， `app/shop/[[...slug]]/page.js`除了`/shop/clothes` 、 `/shop/clothes/tops` 、 `/shop/clothes/tops/t-shirts`之外，**还将**匹配`/shop` 。
+
+The difference between **catch-all** and **optional catch-all** segments is that with optional, the route without the parameter is also matched (`/shop` in the example above).  
+**catch-all**和**可选的 catch-all**段之间的区别在于，如果是可选的，则不带参数的路由也会匹配（上例中的`/shop` ）。
+
+| Route 路线                       | Example URL 示例网址 | `params`                    |
+| ------------------------------ | ---------------- | --------------------------- |
+| `app/shop/[[...slug]]/page.js` | `/shop`          | `{ slug: undefined }`       |
+| `app/shop/[[...slug]]/page.js` | `/shop/a`        | `{ slug: ['a'] }`           |
+| `app/shop/[[...slug]]/page.js` | `/shop/a/b`      | `{ slug: ['a', 'b'] }`      |
+| `app/shop/[[...slug]]/page.js` | `/shop/a/b/c`    | `{ slug: ['a', 'b', 'c'] }` |
+
+
+
 
 ```
 npx create-next-app@latest
@@ -188,6 +280,23 @@ npx create-next-app@latest
 pnpm create next-app
 ```
 
+
+### 添加Authentication
+
+https://nextjs.org/learn/dashboard-app/adding-authentication
+
+
+### Middleware 中间件
+
+Middleware allows you to run code before a request is completed. Then, based on the incoming request, you can modify the response by rewriting, redirecting, modifying the request or response headers, or responding directly.  
+中间件允许您在请求完成之前运行代码。然后，根据传入的请求，您可以通过重写、重定向、修改请求或响应标头或直接响应来修改响应。
+
+Middleware runs before cached content and routes are matched. See [Matching Paths](https://nextjs.org/docs/app/building-your-application/routing/middleware#matching-paths) for more details.  
+中间件在**缓存内容和路由**匹配之前运行。有关更多详细信息，请参阅[匹配路径](https://nextjs.org/docs/app/building-your-application/routing/middleware#matching-paths)。
+
+
+Use the file `middleware.ts` (or `.js`) in the root of your project to define Middleware. For example, at the same level as `pages` or `app`, or inside `src` if applicable.  
+使用项目根目录中的文件`middleware.ts` （或`.js` ）来定义中间件。例如，与`pages`或`app`处于同一级别，或者在`src`内部（如果适用）。
 
 ## React & Redux
 
@@ -275,6 +384,40 @@ const store = createStore(rootReducer, initialState, enhancer);
 **Does `useEffect` run after every render?** Yes! By default, it runs both after the first render _and_ after every update. (We will later talk about [how to customize this](https://legacy.reactjs.org/docs/hooks-effect.html#tip-optimizing-performance-by-skipping-effects).) Instead of thinking in terms of “mounting” and “updating”, you might find it easier to think that effects happen “after render”. React guarantees the DOM has been updated by the time it runs the effects.  
 是否在每次渲染后 `useEffect` 运行？是的！默认情况下，它在第一次渲染后和每次更新后都运行。（我们稍后将讨论如何自定义它。与其从“挂载”和“更新”的角度来思考，不如认为效果发生在“渲染之后”更容易。React 保证 DOM 在运行效果时已更新。
 
+https://react.dev/learn/synchronizing-with-effects
+
+The behaviors without the dependency array and with an _empty_ `[]` dependency array are different:
+
+```js
+useEffect(() => {  // This runs after every render
+});
+useEffect(() => {  // This runs only on mount (when the component appears)
+}, []);
+useEffect(() => {  // This runs on mount *and also* if either a or b have changed since the last render
+}, [a, b]);
+```
+
+
+When you choose whether to put some logic into an event handler or an Effect, the main question you need to answer is _what kind of logic_ it is from the user’s perspective. If this logic is caused by a particular interaction, keep it in the event handler. If it’s caused by the user _seeing_ the component on the screen, keep it in the Effect.
+
+
+在开发时，useEffect会触发两次的问题的官方建议，从原理上来说这是没办法的，但是在生产环境，绝对不会触发两次。
+https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
+
+
+#### Ref and State
+
+##### Differences between refs and state
+
+Perhaps you’re thinking refs seem less “strict” than state—you can mutate them instead of always having to use a state setting function, for instance. But in most cases, you’ll want to use state. Refs are an “escape hatch” you won’t need often. Here’s how state and refs compare:
+
+| refs                                                                                  | state                                                                                                                                                    |
+| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useRef(initialValue)` returns `{ current: initialValue }`                            | `useState(initialValue)` returns the current value of a state variable and a state setter function ( `[value, setValue]`)                                |
+| Doesn’t trigger re-render when you change it.                                         | Triggers re-render when you change it.                                                                                                                   |
+| Mutable—you can modify and update `current`’s value outside of the rendering process. | ”Immutable”—you must use the state setting function to modify state variables to queue a re-render.                                                      |
+| You shouldn’t read (or write) the `current` value during rendering.                   | You can read state at any time. However, each render has its own [snapshot](https://react.dev/learn/state-as-a-snapshot) of state which does not change. |
+
 
 
 
@@ -310,11 +453,13 @@ $ npm view webpack versions --json
 
 ## pnpm 命令
 
-|command|npm|yarn|yarn (berry)|pnpm|bun|
-|---|---|---|---|---|---|
-|run package|{% raw %}`npx <package>`|`yarn dlx <package>`|`yarn dlx <package>`|`pnpm dlx <package>`|`bunx <package>`|
+| command     | npm             | yarn                 | yarn (berry)         | pnpm                 | bun              |
+| ----------- | --------------- | -------------------- | -------------------- | -------------------- | ---------------- |
+| run package | `npx <package>` | `yarn dlx <package>` | `yarn dlx <package>` | `pnpm dlx <package>` | `bunx <package>` |
 
+## Node Packages
 
+[Zod](https://www.npmjs.com/package/zod) 是常用的校验 validation framework
 
 
 # Selector
@@ -990,8 +1135,47 @@ https://vant-ui.github.io/vant/#/zh-CN/sticky
 
 
 
-### 参考的开源项目
-https://github.com/atinux/atidone/blob/main/app/pages/todos.vue
+
+
+# Prisma
+默认安装的Prisma，会在nuxt启动的setup阶段提示你要不要运行migration,要不要安装 Prisma Studio,你必须选择Y/N，这会打断nuxt项目的启动过程，非常烦人，你只要在`nuxt.config.tx`里加上配置，就能跳过这一过程。
+```ts
+export default defineNuxtConfig({
+
+	prisma: {	
+		// Options		
+		autoSetupPrisma: false	
+	}
+})
+```
+
+[Prevent hot reloading from creating new instances of `PrismaClient`](https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-connections#prevent-hot-reloading-from-creating-new-instances-of-prismaclient)
+
+nextjs的hot reload会导致too many clients的错误，Prisma官方也给出了解决方案，真是太贴心了。
+
+```js
+// client.ts
+import { PrismaClient } from '@prisma/client'
+
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+
+export const prisma =
+  globalForPrisma.prisma || new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+```
+
+
+
+
+
+如果使用Prisma生成的类型，我查看了官方的文档，没有看到，最后还是在sof上找到了答案
+https://stackoverflow.com/questions/73656963/how-to-access-prisma-generated-types
+
+```javascript
+import type { User } from '@prisma/client'
+```
+简直是太方便，太简单了。
 
 
 # 4. ECharts
@@ -1053,6 +1237,13 @@ series: [
 
 # Svelte 
 TODO
+
+
+
+# 微信小程序
+
+数据双向绑定
+https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html
 
 
 # Yarn 使用淘宝源
