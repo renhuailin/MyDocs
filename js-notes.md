@@ -181,6 +181,165 @@ const [first, ...others2] = [1, 2, 3];
 console.log(others2); // [2, 3]
 
 ```
+
+
+
+### [Tagged templates](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates)
+
+我今天看到一行奇怪的typescript代码: const result = await prisma.$queryRaw<User[]>`SELECT * FROM User`; 为什么后面可以直接是一个字符串，没有用()包围的字符串，这是什么语法？
+
+下面是Gemini给出的答案：
+
+你看到的 `const result = await prisma.$queryRaw<User[]>`SELECT * FROM User`;` 这种写法是使用了 TypeScript 的 **标记模板字面量 (Tagged Template Literals)** 特性，结合 Prisma 的 `Prisma.sql` 模板标签函数，而不是普通的字符串字面量。
+
+**普通模板字面量 (Template Literals)**
+
+首先回顾一下普通的模板字面量，它使用反引号 (\`) 包围字符串，并且允许在字符串中嵌入表达式：
+
+
+```ts
+const name = 'Alice';
+const greeting = `Hello, ${name}!`; // Hello, Alice!
+```
+
+**标记模板字面量 (Tagged Template Literals)**
+
+标记模板字面量则更进一步，它允许你在模板字面量前面添加一个 _函数_ (称为“标签函数”)，这个函数会接收模板字面量的各个部分，并允许你自定义处理这些部分。
+
+语法如下：
+
+```ts
+const result = tagFunction`string parts ${expression} string parts`;
+```
+
+在这个例子中：
+
+- `tagFunction` 是一个函数。
+- 反引号中的内容是模板字面量。
+
+**标签函数接收的参数：**
+
+标签函数接收的第一个参数是一个 _字符串数组_，包含模板字面量中所有静态的字符串部分。后面的参数是所有嵌入的表达式的值。
+
+例如：
+
+TypeScript
+
+```
+function tagFunction(strings, ...values) {
+  console.log(strings); // ["SELECT * FROM User WHERE id = ", " AND name = ", "", raw: Array(3)]
+  console.log(values); // [123, "Bob"]
+  // ... 自定义处理 ...
+  return 'result'
+}
+
+const id = 123;
+const name = 'Bob';
+const result = tagFunction`SELECT * FROM User WHERE id = ${id} AND name = ${name}`;
+console.log(result) // result
+```
+
+**Prisma.sql 的作用**
+
+在你的例子中，`Prisma.sql` 就是一个标签函数。Prisma 使用它来安全地构建 SQL 查询。`Prisma.sql` 会接收模板字面量中的 SQL 字符串部分和嵌入的变量，进行处理，以防止 SQL 注入等安全问题。它会将变量进行转义，并构建一个参数化的 SQL 查询。
+
+**为什么可以省略括号？**
+
+当标记模板字面量用于调用函数时，如果模板字面量 _没有嵌入任何表达式_，则可以省略括号。这就是你看到的 `Prisma.sql`SELECT * FROM User`;` 的原因。由于 `SELECT * FROM User` 中没有任何 `${}` 嵌入的表达式，所以可以省略括号。它等价于：
+
+TypeScript
+
+```
+const result = await prisma.$queryRaw<User[]>(Prisma.sql`SELECT * FROM User`);
+```
+
+但是，如果查询中包含变量，就必须使用 `${}` 嵌入表达式：
+
+
+```ts
+const userId = 123;
+const result = await prisma.$queryRaw<User[]>(Prisma.sql`SELECT * FROM User WHERE id = ${userId}`);
+```
+
+在这种情况下，不能省略括号。
+
+**总结**
+
+- `Prisma.sql` 是一个标签函数，用于安全地构建 SQL 查询。
+- 当使用标记模板字面量且没有嵌入表达式时，可以省略调用函数的括号。
+- 使用 `${}` 嵌入表达式可以将变量安全地传递到 SQL 查询中，防止 SQL 注入。
+
+理解了标记模板字面量的概念，你就能明白为什么 `Prisma.sql` 后面可以直接跟字符串而不需要用括号包围。这是 TypeScript 提供的一种简洁而强大的语法特性，用于更灵活地处理字符串和构建 DSL（领域特定语言）。
+
+下面是Claude-3.5-Sonnet给出的回答，可以看出来，这个更合理。
+
+这是 JavaScript/TypeScript 中的标签模板字符串（Tagged Template Literals）语法。
+
+这是 ES6 引入的特性，允许我们在模板字符串前面添加一个函数（称为"标签"），这个函数可以对模板字符串进行处理。
+
+基本语法是：
+```typescript
+// 标签函数名`模板字符串`
+tagFunction`template string`
+```
+
+举些例子帮助理解：
+
+1. 最简单的例子：
+```typescript
+function myTag(strings: TemplateStringsArray, ...values: any[]) {
+    console.log(strings);
+    console.log(values);
+}
+
+const name = "Alice";
+const age = 25;
+myTag`Hello, ${name}! You are ${age} years old.`;
+
+// 输出：
+// ["Hello, ", "! You are ", " years old."]
+// ["Alice", 25]
+```
+
+2. SQL查询的例子（类似你看到的Prisma代码）：
+```typescript
+const userId = 123;
+const status = "active";
+
+// 使用标签模板字符串
+const query = sql`
+    SELECT * FROM users 
+    WHERE id = ${userId} 
+    AND status = ${status}
+`;
+
+// 等价于普通函数调用
+const sameThing = sql(["SELECT * FROM users WHERE id = ", " AND status = ", ""], userId, status);
+```
+
+3. 在Prisma中的实际应用：
+```typescript
+// Prisma的用法
+const minAge = 18;
+const result = await prisma.$queryRaw<User[]>`
+    SELECT * FROM "User" 
+    WHERE age >= ${minAge}
+`;
+
+// 这种写法可以帮助防止SQL注入，因为参数会被正确转义
+```
+
+标签模板字符串的主要优点：
+1. 更清晰的语法
+2. 自动处理参数转义
+3. 可以进行自定义的字符串处理
+4. 支持多行字符串
+5. 在SQL查询场景下特别有用，可以防止SQL注入
+
+需要我提供更多示例或详细解释吗？
+
+可见Gemini的回答是有误的，即使有嵌入的变量，也可以省略小括号的。 这个语法确实特别适合防止SQL注入，之前我还一直纳闷直接在SQL中嵌入了变量，如何防止SQL注入的，原来是通过这个机制来实现的。
+
 ## Regex 正则表达式
 特别好用的一个测试正则表达式的网站： https://regex101.com/
 
@@ -1176,6 +1335,155 @@ https://stackoverflow.com/questions/73656963/how-to-access-prisma-generated-type
 import type { User } from '@prisma/client'
 ```
 简直是太方便，太简单了。
+
+
+
+虽然prisma的官方文档里说prisma提供了泛型参数可以把queryRaw的结果转成prisma generated types，但是我在试过后发现还是不对。
+https://www.prisma.io/docs/orm/prisma-client/using-raw-sql/raw-queries#typing-queryraw-results
+之所以有转换，是因为我在设计数据库表时，字段名使用的snake case的。prisma generated type
+类型使用Camel case的field的。
+可是虽然我加上了泛型参数，返回的结果仍然是数据库中的snake case的，并不是转成prisma generated type。
+
+`PrismaPromise<T>` uses a [generic type parameter`T`](https://www.typescriptlang.org/docs/handbook/generics.html). You can determine the type of `T` when you invoke the `$queryRaw` method. In the following example, `$queryRaw` returns `User[]`:
+
+```ts
+// import the generated `User` type from the `@prisma/client` module
+import { User } from "@prisma/client";
+
+const result = await prisma.$queryRaw<User[]>`SELECT * FROM User`;
+// result is of type: `User[]`
+```
+
+
+来看还是要写个转换器，于是我让Claude 3.5给我写了一个。
+让我用一个具体的例子来展示如何使用这个转换器：
+
+```typescript
+import { Prisma, SimcardOrders } from '@prisma/client';
+
+// 定义转换器类型和选项
+interface ConverterOptions {
+    dateFields?: string[];
+    numberFields?: string[];
+    booleanFields?: string[];
+    customConverters?: {
+        [key: string]: (value: any) => any
+    }
+}
+
+// 创建转换器函数
+function createPrismaConverter<T>(
+    modelFields: Record<string, string>,
+    options: ConverterOptions = {}
+) {
+    const {
+        dateFields = [], //这些字段是在Generated type里的字段 ，比如数据库中的字段是user_id，在生成的type里是userId,在这里要填上userId。
+        numberFields = [],
+        booleanFields = [],
+        customConverters = {}
+    } = options;
+
+    return function convertRawResult(rawResults: any[]): T[] {
+        return rawResults.map(rawItem => {
+            const convertedItem: any = {};
+            
+            for (const [originalField, mappedField] of Object.entries(modelFields)) {
+                const dbField = originalField.toLowerCase();
+                let value = rawItem[dbField];
+                
+                if (value !== undefined) {
+                    if (customConverters[mappedField]) {
+                        value = customConverters[mappedField](value);
+                    }
+                    else if (dateFields.includes(mappedField)) {
+                        value = value ? new Date(value) : null;
+                    }
+                    else if (numberFields.includes(mappedField)) {
+                        value = value !== null ? Number(value) : null;
+                    }
+                    else if (booleanFields.includes(mappedField)) {
+                        value = Boolean(value);
+                    }
+                    
+                    convertedItem[mappedField] = value;
+                }
+            }
+            
+            return convertedItem as T;
+        });
+    };
+}
+
+// 使用示例
+async function getSimcardOrders(timezone: string) {
+    // 创建转换器实例
+    const converter = createPrismaConverter<SimcardOrders>(
+        Prisma.SimcardOrdersScalarFieldEnum,
+        {
+            dateFields: ['createdAt', 'updatedAt', 'activatedAt'],
+            numberFields: ['amount', 'quantity'],
+            booleanFields: ['isActive'],
+            customConverters: {
+                // 示例：自定义转换某些字段
+                orderStatus: (value) => value.toUpperCase(),
+                metadata: (value) => value ? JSON.parse(value) : null
+            }
+        }
+    );
+
+    // 执行原始查询
+    const rawResults = await prisma.$queryRaw`
+        SELECT * FROM "simcard_orders"
+        WHERE created_at AT TIME ZONE ${timezone} >= date_trunc('day', now() AT TIME ZONE ${timezone})
+        AND created_at AT TIME ZONE ${timezone} < date_trunc('day', now() AT TIME ZONE ${timezone}) + interval '30 day'
+    `;
+    
+    // 转换结果
+    return converter(rawResults);
+}
+
+// 使用方法
+async function main() {
+    try {
+        const orders = await getSimcardOrders('Asia/Shanghai');
+        console.log('转换后的订单数据:', orders);
+        
+        // 类型安全：可以直接访问 SimcardOrders 的属性
+        orders.forEach(order => {
+            console.log(`订单 ${order.orderId}:`, {
+                createdAt: order.createdAt, // 这是 Date 类型
+                amount: order.amount,    // 这是 number 类型
+                isActive: order.isActive // 这是 boolean 类型
+            });
+        });
+    } catch (error) {
+        console.error('查询错误:', error);
+    }
+}
+```
+
+使用这个转换器的主要优点：
+
+1. 类型安全：
+   - 使用 Prisma 生成的类型定义
+   - TypeScript 可以正确推断转换后的类型
+
+2. 自动类型转换：
+   - 日期字符串自动转换为 Date 对象
+   - 数字字符串自动转换为 number 类型
+   - 布尔值的自动转换
+
+3. 灵活性：
+   - 可以自定义字段转换逻辑
+   - 可以处理特殊的数据格式（如 JSON 字符串）
+
+4. 可重用性：
+   - 可以为不同的模型创建转换器
+   - 转换逻辑可以在整个应用中复用
+
+需要我解释某个具体部分，或者针对特定场景进行调整吗？
+
+
 
 
 # 4. ECharts
