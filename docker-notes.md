@@ -75,6 +75,15 @@ docker update --restart unless-stopped redis
 $ docker run -i -d ubuntu:18.04
 ```
 
+
+清理未使用的资源：
+```
+docker system prune -a --volumes
+```
+
+
+
+
 # 2 进入容器的bash
 
 可以用docker attach,但是docker attach是共享窗口的。

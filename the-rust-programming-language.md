@@ -182,10 +182,10 @@ If we have a string slice, we can pass that directly. If we have a String, we ca
 
 ```rust
 enum Message {
-Quit,
-Move { x: i32, y: i32 },
-Write(String),
-ChangeColor(i32, i32, i32),
+	Quit,
+	Move { x: i32, y: i32 },
+	Write(String),
+	ChangeColor(i32, i32, i32),
 }
 ```
 
@@ -196,11 +196,11 @@ Rust的enum有点像Java的，但又不太一样，又有些像C里面的union�
 ```rust
 let some_u8_value = Some(0u8);
 
- if let Some(3) = some_u8_value {
+if let Some(3) = some_u8_value {
 
- println!("three");
+	println!("three");
 
- }
+}
 ```
 
 这个跟swift的语法有些相似。
@@ -267,23 +267,23 @@ A crate will group related functionality together in a scope so the functionalit
 ```rust
 mod front_of_house {
 
-mod hosting {
+	mod hosting {
+	
+		fn add_to_waitlist() {}
+		
+		fn seat_at_table() {}
+	
+	}
 
-fn add_to_waitlist() {}
-
-fn seat_at_table() {}
-
-}
-
-mod serving {
-
-fn take_order() {}
-
-fn serve_order() {}
-
-fn take_payment() {}
-
-}
+	mod serving {
+	
+		fn take_order() {}
+		
+		fn serve_order() {}
+		
+		fn take_payment() {}
+	
+	}
 
 }
 ```
@@ -407,6 +407,8 @@ mod front_of_house {
  }
  }
 }
+```
+
 
 **Re-exporting Names with pub use** 用 **pub use**实现重新导出。
 
@@ -416,50 +418,41 @@ mod front_of_house {
 
 mod front_of_house {
 
- pub mod hosting {
+    pub mod hosting {
 
- pub fn add_to_waitlist() {
-
- println!(" add to wait list.")
-
- }
-
- }
-
+        pub fn add_to_waitlist() {
+            println!(" add to wait list.")
+        }
+    }
 }
 
 mod backend {
 
- pub use crate::front_of_house::hosting;
+    pub use crate::front_of_house::hosting;
 
- pub fn eat_at_restaurant() {
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist();
 
- hosting::add_to_waitlist();
+        hosting::add_to_waitlist();
 
- hosting::add_to_waitlist();
-
- hosting::add_to_waitlist();
-
- }
-
+        hosting::add_to_waitlist();
+    }
 }
 
 fn main() {
+    let string1 = String::from("abcd");
 
- let string1 = String::from("abcd");
+    let string2 = "xyz";
 
- let string2 = "xyz";
+    let result = longest(string1.as_str(), string2);
 
- let result = longest(string1.as_str(), string2);
+    println!("The longest string is {}", result);
 
- println!("The longest string is {}", result);
+    use crate::backend::hosting;
 
- use crate::backend::hosting;
+    backend::eat_at_restaurant();
 
- backend::eat_at_restaurant();
-
- hosting::add_to_waitlist();
-
+    hosting::add_to_waitlist();
 }
 ```
 
@@ -647,39 +640,26 @@ use std::fs::File;
 
 use std::io::ErrorKind;
 
-
-
 fn main() {
+    let f = File::open("hello.txt");
 
- let f = File::open("hello.txt");
+    let f = match f {
+        Ok(file) => file,
 
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
 
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
 
- let f = match f {
-
- Ok(file) => file,
-
- Err(error) => match error.kind() {
-
- ErrorKind::NotFound => match File::create("hello.txt") {
-
- Ok(fc) => fc,
-
- Err(e) => panic!("Problem creating the file: {:?}", e),
-
- },
-
- other_error => {
-
- panic!("Problem opening the file: {:?}", other_error)
-
- }
-
- },
-
- };
-
+            other_error => {
+                panic!("Problem opening the file: {:?}", other_error)
+            }
+        },
+    };
 }
+
 ```
 
 **Shortcuts for Panic on Error: unwrap and expect**
@@ -705,12 +685,8 @@ If the Result value is the Ok variant, unwrap will return the value inside
 ```rust
 use std::fs::File;
 
-
-
 fn main() {
-
- let f = File::open("hello.txt").expect("Failed to open hello.txt");
-
+	let f = File::open("hello.txt").expect("Failed to open hello.txt");
 }
 ```
 
@@ -720,48 +696,6 @@ fn main() {
 
 如：
 
-```
-use std::fs::File;
-
-use std::io;
-
-use std::io::Read;
-
-
-
-fn read_username_from_file() -> Result<String, io::Error> {
-
- let f = File::open("hello.txt");
-
-
-
- let mut f = match f {
-
- Ok(file) => file,
-
- Err(e) => return Err(e),
-
- };
-
-
-
- let mut s = String::new();
-
-
-
- match f.read_to_string(&mut s) {
-
- Ok(_) => Ok(s),
-
- Err(e) => Err(e),
-
- }
-
-}
-```
-
-这样写是不是太啰嗦了？rust提供了`?`操作符，以简化代码。
-
 ```rust
 use std::fs::File;
 
@@ -769,18 +703,38 @@ use std::io;
 
 use std::io::Read;
 
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
 
+    let mut f = match f {
+        Ok(file) => file,
+
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+
+        Err(e) => Err(e),
+    }
+}
+
+```
+
+这样写是不是太啰嗦了？rust提供了`?`操作符，以简化代码。
+
+```rust
+use std::fs::File;
+use std::io;
+use std::io::Read;
 
 fn read_username_from_file() -> Result<String, io::Error> {
-
- let mut f = File::open("hello.txt")?;
-
- let mut s = String::new();
-
- f.read_to_string(&mut s)?;
-
- Ok(s)
-
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&mut s)?;
+    Ok(s)
 }
 ```
 
@@ -791,19 +745,11 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 ```rust
 use std::error::Error;
-
 use std::fs::File;
 
-
-
 fn main() -> Result<(), Box<dyn Error>> {
-
- let f = File::open("hello.txt")?;
-
-
-
- Ok(())
-
+    let f = File::open("hello.txt")?;
+    Ok(())
 }
 ```
 
@@ -815,37 +761,25 @@ Traits are similar to a feature often called *interfaces* in other languages, 
 
 Traits很像java里的interface，虽然有一些不同。
 
-```
+```rust
 pub trait Summary {
-
- fn summarize(&self) -> String;
-
+    fn summarize(&self) -> String;
 }
-
-
 
 pub struct Tweet {
+    pub username: String,
 
- pub username: String,
+    pub content: String,
 
- pub content: String,
+    pub reply: bool,
 
- pub reply: bool,
-
- pub retweet: bool,
-
+    pub retweet: bool,
 }
 
-
-
 impl Summary for Tweet {
-
- fn summarize(&self) -> String {
-
- format!("{}: {}", self.username, self.content)
-
- }
-
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
 }
 ```
 
@@ -859,31 +793,25 @@ This restriction is part of a property of programs called *coherence*, and more
 
 ```rust
 pub trait Summary {
+    fn summarize_author(&self) -> String;
 
- fn summarize_author(&self) -> String;
-
-
-
- fn summarize(&self) -> String {
-
- format!("(Read more from {}...)", self.summarize_author())
-
- }
-
+    fn summarize(&self) -> String {
+        format!("(Read more from {}...)", self.summarize_author())
+    }
 }
 ```
 
 ### 10.3 Validating References with Lifetimes
 
-```
+```rust
 &i32 // a reference
 
 &'a i32 // a reference with an explicit lifetime
 
 &'a mut i32 // a mutable reference with an explicit lifetime
-
-One lifetime annotation by itself doesn’t have much meaning, because the annotations are meant to tell Rust how generic lifetime parameters of multiple references relate to each other. For example, let’s say we have a function with the parameter first that is a reference to an i32 with lifetime 'a. The function also has another parameter named second that is another reference to an i32 that also has the lifetime 'a. **The lifetime annotations indicate that the references first and second must both live as long as that generic lifetime.**
 ```
+One lifetime annotation by itself doesn’t have much meaning, because the annotations are meant to tell Rust how generic lifetime parameters of multiple references relate to each other. For example, let’s say we have a function with the parameter first that is a reference to an i32 with lifetime 'a. The function also has another parameter named second that is another reference to an i32 that also has the lifetime 'a. **The lifetime annotations indicate that the references first and second must both live as long as that generic lifetime.**
+
 
 注意最后一句话，参数first和second必须存活跟**generic lifetime**一样长才行。
 
@@ -891,17 +819,11 @@ One lifetime annotation by itself doesn’t have much meaning, because the annot
 
 ```rust
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-
- if x.len() > y.len() {
-
- x
-
- } else {
-
- y
-
- }
-
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
 ```
 
@@ -942,24 +864,21 @@ fn main() {
 在第4章的时候定义过一个函数，返回的也是引用，为什么没有用到lifetime annotation呢？
 
 Filename: src/lib.rs
-
+```rust
 fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
 
- let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
 
- for (i, &item) in bytes.iter().enumerate() {
-
- if item == b' ' {
-
- return &s[0..i];
-
- }
-
- }
-
- &s[..]
-
+    &s[..]
 }
+
+```
+
 
 这个函数没有用Lifetime但是也正常编译了。是什么原因呢？
 
@@ -1241,7 +1160,6 @@ test bench_search_for  ... bench:  19,620,300 ns/iter (+/- 915,700)
 test bench_search_iter ... bench:  19,234,900 ns/iter (+/- 657,200)
 ```
 
-## 
 
 ## 15. Smart Pointers
 
@@ -1487,7 +1405,7 @@ impl Iterator for Counter {
 
     fn next(&mut self) -> Option<Self::Item> {
 ```
-在Counter里，我们实现添加Iterator的实现时，为Item这个占位类型指定了具体的类型：u32. 于是next实际的返回类型就是Option<u32>了。
+在Counter里，我们实现添加Iterator的实现时，为Item这个占位类型指定了具体的类型：u32. 于是next实际的返回类型就是Option\<u32>了。
 
 有人会说，这跟泛型好像没有区别呀，泛型好像也可以实现类似的功能呀。比如：
 
@@ -1497,11 +1415,12 @@ pub trait Iterator<T> {
 }
 ```
 但是如果这样的定义一个Iterator，那么我们在实现它的时候必须指定具体的类型，因为使用了泛型，所以我们可以为一个类型，多次实现`Iterator` trait。
-比如我们可以实现一个Iterator<u32> for Counter,也可以再实现一个Iterator<String> for Counter.这样在调用Counter的next方法时，就要指定类型了，因为Counter有两个next方法。  使用Associated Types，我们不用在使用时标注类型。
+比如我们可以实现一个Iterator\<u32> for Counter,也可以再实现一个Iterator\<String> for Counter.这样在调用Counter的next方法时，就要指定类型了，因为Counter有两个next方法。  使用Associated Types，我们不用在使用时标注类型。
 
 
 下面就是例子，这是用泛型来实现的，所以在调用next的时候必须指定类型。
-```rust
+
+``` rust
 trait Test<T> {
     fn next(&mut self) -> Option<T>;
 }

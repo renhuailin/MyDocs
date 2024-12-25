@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "js-notes.md",
+                "file": "the-rust-programming-language.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "js-notes"
+              "title": "the-rust-programming-language"
             }
           }
         ],
@@ -88,7 +88,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -108,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "js-notes.md",
+                "file": "the-rust-programming-language.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +119,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for js-notes"
+              "title": "Backlinks for the-rust-programming-language"
             }
           },
           {
@@ -127,12 +128,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "js-notes.md",
+                "file": "the-rust-programming-language.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from js-notes"
+              "title": "Outgoing links from the-rust-programming-language"
             }
           },
           {
@@ -154,10 +155,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "js-notes.md"
+                "file": "the-rust-programming-language.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of js-notes"
+              "title": "Outline of the-rust-programming-language"
             }
           }
         ],
@@ -179,18 +180,18 @@
   },
   "active": "9420006349ed7f22",
   "lastOpenFiles": [
-    "typescript-notes.md",
+    "docker-notes.md",
     "js-notes.md",
+    "linux-notes.md",
+    "typescript-notes.md",
     "java-notes.md",
     "css-notes.md",
     "kotlin-notes.md",
     "postgresql-notes.md",
     "python-notes.md",
     "vscode-notes.md",
-    "docker-notes.md",
     "mac-tips.md",
     "mysql-notes.md",
-    "linux-notes.md",
     "java-style-guide.md",
     "git-notes.md",
     "images/Pasted-image-20240509221442.png",
