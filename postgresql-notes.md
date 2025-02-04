@@ -84,6 +84,11 @@ GRANT ALL PRIVILEGES ON DATABASE exampledb to dbuser;
 DROP DATABASE db_name WITH (FORCE);
 ```
 
+### 查看表
+```
+\d[S+]                 list tables, views, and sequences
+\dt                    list tables
+```
 
 ### 查看表结构
 ```
@@ -115,6 +120,7 @@ postgres-# \du+
 ```
 show hba_file;
 ```
+**注意：** 不要忘掉结尾的分号`;`。
 
 就会显示pg_hba.conf的绝对路径了。编辑它，加入下面的内容，重启postgresql的服务。
 
@@ -135,6 +141,12 @@ as a user, a group, or both.
 
 
 ## backup and restore
+
+### 备份数据库
+
+```
+pg_dump dbname > outfile
+```
 
 https://tembo.io/docs/postgres_guides/how-to-backup-and-restore-a-postgres-database
 

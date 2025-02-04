@@ -291,7 +291,8 @@ $ sudo hping3 -S -p 22 10.224.40.240
 
 请参考 ：   http://man.linuxde.net/hping3
 
-## 安装指定版本的包
+## apt命令参考
+### 安装指定版本的包
 
 有时候我们不希望安装最近版的某个软件，如docker,我可能希望安装特定版本的。      
 我需要先用下面的命令列出源里所有的docker版本
@@ -307,9 +308,18 @@ $ apt-cache madison docker-ce
 $ apt-get install docker-engine=1.12.6-0~ubuntu-xenial
 ```
 
-## dpkg -i安装无法自动安装依赖的问题
+### dpkg -i安装无法自动安装依赖的问题
 
 `dpkg -i` 安装的包有时会出现依赖没有安装上的问题，可以在运行完`dpkg -i` 后运行`apt-get -f install`来把相关的依赖安装上。
+
+## ffmpeg命令参考
+
+
+从视频中提取音频
+```
+ffmpeg -i input.mov -vn -acodec mp3 output.mp3
+```
+
 
 ## IP地址反查
 
@@ -483,7 +493,9 @@ ssh -L 1521:9.111.121.223:1521 root@9.111.121.223
 
 ### 把本地的某个端口映射到远程主机
 
-`ssh -R <remote port>:<localhost or local IP>:<local port> <SSH hostname>`
+```
+ssh -R <remote port>:<localhost or local IP>:<local port> <SSH hostname>
+```
 
 ```
 ssh -i ~/.ssh/<your_ssh_key> -R 8000:127.0.0.1:8000 ubuntu@132.226.6.25
@@ -565,7 +577,7 @@ $ tmux -CC
 $ tmux -CC attach
 ```
 
-# 生成自定义的证书
+## 生成自定义的证书
 
 一条命令就行了。
 $ openssl req \
@@ -576,7 +588,7 @@ $ openssl req \
 http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html
 http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
 
-# 命令行下的多线程下载工具 aria2c
+## 命令行下的多线程下载工具 aria2c
 
 ```
 # aria2c -x5  http://23.106.147.145/ubuntu-source-registry-ocata.tar.gz
@@ -584,14 +596,13 @@ http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
 
 文档： https://aria2.github.io/
 
-# IPMI
 
 # 翻墙
 
 shadowsocks + privoxy  
 网上推荐的什么polipo 根本不好使！还是privoxy好使。
 
-# Systemd
+## Systemd
 
 `systemctl list-unit-files | grep enabled` will list all enabled ones.
 
@@ -609,7 +620,23 @@ $ systemctl disable docker
 
 FragmentPath=/usr/lib/systemd/system/docker.service
 
-# letsencrypt.org
+# Letsencrypt  SSL证书
+
+
+在某些情况下，我的证书并不是给Web server用的，这时我需要使用`certonly`这个参数来获取和刷新证书。
+```
+sudo certbot certonly --standalone
+```
+
+这是关于standalone的解释
+```
+2: Runs an HTTP server locally which serves the necessary validation files under
+the /.well-known/acme-challenge/ request path. Suitable if there is no HTTP
+server already running. HTTP challenge only (wildcards not supported).
+(standalone)
+```
+意思就是你本地没有运行web server,certbot会帮你运行一个，并做相关的validate的工作。
+
 
 ```
 $ ./certbot-auto certonly -a webroot --webroot-path=/usr/share/nginx/html -d registry.xiangcloud.com.cn
@@ -774,21 +801,14 @@ Iptables Tutorial 1.2.1  里讲到可以通过 cat  `/proc/net/ip_conntrack`  �
 
 4. [网络地址转换NAT原理及应用-连接跟踪--端口转换](https://blog.csdn.net/tycoon1988/article/details/40782269)
 
-# PowerDNS
 
-用monitor mode启动.
-
-```
-# service pdns monitor
-```
-
-# 用wget来做压力测试
+## 用wget来做压力测试
 
 ```shell
 while true; do wget -q -O- http://9.112.190.95:32758/; done
 ```
 
-# curl
+## curl
 
 ```
 -f, --fail
@@ -851,7 +871,7 @@ $ curl -X GET \
 $ curl cip.cc
 ```
 
-# yum
+## yum
 
 ```
 $ yum list installed
@@ -884,6 +904,8 @@ docker-ce-cli-18.09.1-2.1.rc1.el7.x86_64
 ```
 $ rpm -ql docker-ce-18.09.1-2.1.rc1.el7.x86_64
 ```
+
+
 
 # Ubuntu
 
@@ -1077,6 +1099,15 @@ certbot现在用systemd timer做定时刷新证书
 ```
 $ systemctl list-timers
 ```
+
+# PowerDNS
+
+用monitor mode启动.
+
+```
+# service pdns monitor
+```
+
 
 # SSL 证书
 
