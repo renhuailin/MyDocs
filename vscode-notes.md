@@ -214,6 +214,10 @@ $ ssh -R 52698:localhost:52698 VIRTUAL_MACHINE_IP_ADDRESS
 ```
 
 
+## Add snippets
+
+![[Pasted image 20250214100736.png]]
+
 # Editor 设置
 
 ##  eslint 和 prettier   tabwidth冲突的问题

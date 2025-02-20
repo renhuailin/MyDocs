@@ -11,10 +11,14 @@
             "id": "343df74feda75e2f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "postgresql-notes.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "postgresql-notes"
             }
           }
         ]
@@ -36,7 +40,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -134,9 +139,14 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "postgresql-notes.md",
+                "followCursor": false,
+                "showSearch": true,
+                "searchQuery": "curl"
+              },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of postgresql-notes"
             }
           }
         ],
@@ -159,17 +169,18 @@
   "active": "343df74feda75e2f",
   "lastOpenFiles": [
     "linux-notes.md",
-    "css-notes.md",
+    "docker-notes.md",
     "postgresql-notes.md",
+    "css-notes.md",
+    "vscode-notes.md",
+    "images/Pasted image 20250214100736.png",
     "js-notes.md",
     "git-notes.md",
     "the-rust-programming-language.md",
-    "docker-notes.md",
     "typescript-notes.md",
     "java-notes.md",
     "kotlin-notes.md",
     "python-notes.md",
-    "vscode-notes.md",
     "mac-tips.md",
     "mysql-notes.md",
     "java-style-guide.md",

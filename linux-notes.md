@@ -833,6 +833,9 @@ follow redirect.
 ```
 $ curl -L http://www.google.com
 
+# 常用命令
+
+$ curl -fsSLo <filename> URL 
 ```
 
 通过-o/-O选项保存下载的文件到指定的文件中：

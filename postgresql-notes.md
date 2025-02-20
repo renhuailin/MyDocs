@@ -4,12 +4,34 @@
 
 ## 命令行工具
 
+在debian上首次安装后，需要使用`postgres`的身份进入`psql`，然后修改密码。
+
 ```
-$ psql
+$ sudo -u postgres psql
+
+postgres=# ALTER USER postgres WITH PASSWORD 'your_password';
+
+```
+
+
+
+```
+$ psql -U <用户名>
+
+#有时间会找不到本地的sock，可以用-h来指定主机
+$ psql -h 127.0.0.1 -U postgres
+
+# 
+$ psql -h 127.0.0.1 -U postgres
 
 #这就是进入以后的PG的命令行提示符,获取帮助请输入\?
 postgres-# \?
 ```
+
+
+
+
+
 
 ```
 \? [commands]          show help on backslash commands
