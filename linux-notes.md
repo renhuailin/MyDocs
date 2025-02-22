@@ -406,11 +406,37 @@ alias ll='ls -lh --time-style long-iso'
 export TIME_STYLE=long-iso
 ```
 
-# fc-match
+
+# 显示
+
+## 中文显示
+
+我们经常在debian或ubuntu中发现中文显示不正常的情况。
+这时，运行`locale`命令时，会提示：
+```
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+
+locale: Cannot set LC_ALL to default locale: No such file or directory
+```
+
+如果你发现你已经安装`en_US.UTF-8`，那就可以直接设置这两个变量了。如果没有任何的UTF-8的locale，你就需要重新生成，运行 `dpkg-reconfigure locales` 然后选择`en_US.UTF-8`，然后选择默认的locale是`en_US.UTF-8`。在你运行完`dpkg-reconfigure locales` 后，这两个变量可能还是没有设置好。你需要手动指定它。
+我推荐的方式是设置系统级的环境变量，编辑`/etc/environment`,然后添加下面的内容： 
+
+```
+LC_ALL="en_US.UTF-8"
+LANGUAGE="en_US.UTF-8"
+```
+退出你的会话，重新登录就可以了。
+
+## fc-match
 
 ```
 $ fc-match "Noto Sans CJK JP:style=Thin:lang=zh-cn"
 ```
+
+
+
+
 
 # CIDR IP
 
@@ -1023,7 +1049,8 @@ http://www.youdzone.com/signature.html
 
 证书请求一般采用.csr扩展名，但是其格式有可能是PEM也可能是DER格式，但都代表证书请求，只有经过CA签发后才能得到真正的证书。
 
-# Crontab
+# 定时任务
+## Crontab
 
 实例1：每1分钟执行一次myCommand
 
@@ -1097,6 +1124,8 @@ http://www.youdzone.com/signature.html
 0 23-7 * * * /etc/init.d/smb restart
 ```
 
+
+## systemd timer
 certbot现在用systemd timer做定时刷新证书
 
 ```

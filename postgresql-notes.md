@@ -21,8 +21,12 @@ $ psql -U <用户名>
 #有时间会找不到本地的sock，可以用-h来指定主机
 $ psql -h 127.0.0.1 -U postgres
 
-# 
-$ psql -h 127.0.0.1 -U postgres
+# 指定编码
+$ psql -U 用户名 -d 数据库名 -h 主机名 -p 端口号 -E 编码名称
+$ psql --username=用户名 --dbname=数据库名 --host=主机名 --port=端口号 --encoding=编码名称
+
+
+
 
 #这就是进入以后的PG的命令行提示符,获取帮助请输入\?
 postgres-# \?
@@ -140,7 +144,7 @@ postgres-# \du+
 然后执行
 
 ```
-show hba_file;
+postgres=# show hba_file;
 ```
 **注意：** 不要忘掉结尾的分号`;`。
 
@@ -150,6 +154,13 @@ show hba_file;
 # TYPE  DATABASE  USER  CIDR-ADDRESS  METHOD
 host  all  all 0.0.0.0/0 md5
 ```
+
+```sql
+postgres=#  SHOW config_file
+```
+
+
+
 
 ## 用户和角色
 
@@ -171,6 +182,9 @@ pg_dump dbname > outfile
 ```
 
 https://tembo.io/docs/postgres_guides/how-to-backup-and-restore-a-postgres-database
+
+
+### 恢复数据库
 
 PG backup生成的备份文件里不会生成`drop database`这样的命令,如果要恢复到一个已存在的数据库，需要在使用`pg_restore`恢复时指定`--clean`参数。
 ```

@@ -347,6 +347,15 @@ In the case of `devicemapper`:
 - `/var/lib/docker/devicemapper/devicemapper/metadata` the metadata
 - Note these files are thin provisioned "sparse" files so aren't as big as they seem.
 
+
+
+## 8.4 修改image的tag
+
+```
+$ docker tag hello-world:latest localhost:5000/hello-mine:latest
+```
+
+
 # 9  Dockerfile
 
 ### ADD 更高级的复制文件
