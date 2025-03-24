@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docker-notes.md",
+                "file": "js-notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "docker-notes"
+              "title": "js-notes"
             }
           }
         ],
@@ -89,7 +89,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -155,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docker-notes.md",
+                "file": "js-notes.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of docker-notes"
+              "title": "Outline of js-notes"
             }
           }
         ],
@@ -181,16 +182,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f548d74676acba3f",
+  "active": "5ea64c75e93272ef",
   "lastOpenFiles": [
     "linux-notes.md",
     "postgresql-notes.md",
+    "swift-notes.md",
+    "iptables-notes.md",
+    "git-notes.md",
+    "font-Config.md",
+    "English-Notes.md",
+    "emacs-notes.md",
     "docker-notes.md",
     "css-notes.md",
     "vscode-notes.md",
     "images/Pasted image 20250214100736.png",
     "js-notes.md",
-    "git-notes.md",
     "the-rust-programming-language.md",
     "typescript-notes.md",
     "java-notes.md",

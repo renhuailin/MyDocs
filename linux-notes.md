@@ -409,7 +409,7 @@ export TIME_STYLE=long-iso
 
 # 显示
 
-## 中文显示
+## 正确设置locale以显示中文
 
 我们经常在debian或ubuntu中发现中文显示不正常的情况。
 这时，运行`locale`命令时，会提示：

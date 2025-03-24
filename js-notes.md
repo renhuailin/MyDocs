@@ -1,6 +1,7 @@
 Javascript notes
 --------
 
+# 1. 语言基础
 用`var`声明的变量和不用`var`声明的变量是不一样的
 
 ```js
@@ -15,9 +16,9 @@ delete this.fakevar2 // => true: variable deleted
 ### Object.create()
 `Object.create()` 静态方法以一个现有对象作为原型，创建一个新对象。这样做的好处是可以保护原来的对象，以防止非恶意的修改。
 
-# 4. Expressions and Operators
+## 4. Expressions and Operators
 
-# 4.9 Relational Expressions
+### 4.9 Relational Expressions
 
 The strict equality operator === evaluates its operands, and then compares the two values as follows, performing no type conversion: 
 
@@ -343,7 +344,192 @@ const result = await prisma.$queryRaw<User[]>`
 ## Regex 正则表达式
 特别好用的一个测试正则表达式的网站： https://regex101.com/
 
-# React
+
+
+Selector
+
+## xpath selector
+
+在chrome中测试
+
+**chrome console**
+
+F12->
+
+```
+$x(“//title”)
+```
+
+## document.querySelector()
+
+## ES6
+
+### Generator
+
+```js
+function* gen1() {
+    console.log(" run into generate ...");
+    for (var i = 0; true; i++) {
+        console.log(" run into for ...");
+        var reset = yield i;
+        console.log(`reset : ${reset}`)
+        if (reset) i = -1;
+    }
+}
+```
+
+在node的REPL里粘贴上面的代码。
+
+```
+> var g = gen1();
+undefined
+```
+
+我们引用这个generator时，generator里的代码并没有执行。
+
+```
+> g.next();
+ run into generate ...
+ run into for ...
+{ value: 0, done: false }
+```
+
+接下来我们调用`next`,代码开始执行并在 `var reset = yield i;`这一行停下来。 把`yield`后面的表达式求值，做为`next`方法的返回值。
+
+接下来我们调用再`next`。
+
+```
+> g.next();
+reset : undefined
+ run into for ...
+{ value: 1, done: false }
+```
+
+我们可以看到`reset`的值为`undefined`。
+这里大家一定注意`var reset = yield i;`这条语句，要区分`yield`的返回值和`next`方法的返回值。`yield`关键字把它后面的表达式求值后做为`next`方法的返回值。而本身的返回值为`undefined`;
+
+下面为`yield`操作符的语法：
+
+```
+[rv] = yield [expression];
+```
+
+* expression      
+    Defines the value to return from the generator function via the iterator protocol. If omitted, undefined is returned instead.
+* rv     
+    Returns the optional value passed to the generator's next() method to resume its execution.
+
+如果我们没有给`next`传递参数，那`yield`返回值就是`undefined`,如果传了一个值给`next`方法，这个值就会做为`yield`的返回值，注意不是`next`的返回值！
+
+关于`yield`更多信息请参见[这里](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield)
+
+### Promise
+
+```js
+var getJSON = function(url) {
+    var promise = new Promise(function(resolve, reject) {
+        var client = new XMLHttpRequest();
+        client.open("GET", url);
+        client.onreadystatechange = handler;
+        client.responseType = "json";
+        client.setRequestHeader("Accept", "application/json");
+        client.send();
+
+        function handler() {
+            if (this.status === 200) {
+                resolve(this.response);
+            } else {
+                reject(new Error(this.statusText));
+            }
+        };
+    });
+    return promise;
+};
+
+getJSON("/posts.json").then(function(json) {
+    console.log('Contents: ' + json);
+}, function(error) {
+    console.error('出错了', error);
+});
+```
+
+### async await 关键字
+
+The await expression causes async function execution to pause, to wait for the Promise's resolution, and to resume the async function execution when the value is resolved. It then returns the resolved value. If the value is not a Promise, it's converted to a resolved Promise.
+
+If the Promise is rejected, the await expression throws the rejected value.
+
+`await`会暂停async函数的调用,等待Promise resolution.当值被解析后继续执行async函数,如果await后面接不是Promise,await会反它转成一个`resolved Promise`.
+
+```js
+var fetchDoubanApi = function() {  
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          var response;
+          try {
+            response = JSON.parse(xhr.responseText);
+          } catch (e) {
+            reject(e);
+          }
+          if (response) {
+            resolve(response, xhr.status, xhr);
+          }
+        } else {
+          reject(xhr);
+        }
+      }
+    };
+    xhr.open('GET', 'https://api.douban.com/v2/user/aisk', true);
+    xhr.setRequestHeader("Content-Type", "text/plain");
+    xhr.send(data);
+  });
+};
+
+(async function() {
+  try {
+    let result = await fetchDoubanApi();
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+})();
+```
+
+注意async 方法返回是Promise,不能直接返回一个value,
+
+```js
+function resolveAfter2Seconds(x) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x);
+    }, 2000);
+  });
+}
+
+async function add1(x) {
+  var a = resolveAfter2Seconds(20);
+  var b = resolveAfter2Seconds(30);
+  return x + await a + await b;
+}
+
+//我们不能这样使用async
+let result = add1(10);
+//这时result就是Promise.正确的使用方法是调用Promise的then方法.
+
+add1(10).then(v => {
+  console.log(v);  // prints 60 after 2 seconds.
+});
+```
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
+
+[TypeScript 1.7](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-7.html) 就已经支持async await了.
+
+
+# 2. React
 
 ## jsx tsx 
 我在tsx里使用forEach，结果发现不输出任何东西，我改成map就行了。
@@ -579,12 +765,40 @@ Perhaps you’re thinking refs seem less “strict” than state—you can mutat
 
 
 
+### Display HTML Content 
 
-# NodeJS
+```tsx
+<div dangerouslySetInnerHTML={{ __html: descHTML }} />
+```
+
+
+
+# 3. NodeJS
 
 ## @符号的含义
 
 [https://docs.npmjs.com/using-npm/scope.html](https://docs.npmjs.com/using-npm/scope.html)
+
+## 使用淘宝源
+
+```
+$ yarn config set registry 'https://registry.npmmirror.com'
+
+# use taobao registry
+$ npm install --registry=https://registry.npmmirror.com
+```
+
+## CLI
+
+A simple HTTP Server
+
+```shell
+$ npm install -g http-server
+# To run:
+$ http-server & 
+```
+
+
 
 ## npm 命令
 
@@ -620,195 +834,7 @@ $ npm view webpack versions --json
 
 [Zod](https://www.npmjs.com/package/zod) 是常用的校验 validation framework
 
-
-# Selector
-
-## xpath selector
-
-在chrome中测试
-
-**chrome console**
-
-F12->
-
-```
-$x(“//title”)
-```
-
-## document.querySelector()
-
-# ES6
-
-## Generator
-
-```js
-function* gen1() {
-    console.log(" run into generate ...");
-    for (var i = 0; true; i++) {
-        console.log(" run into for ...");
-        var reset = yield i;
-        console.log(`reset : ${reset}`)
-        if (reset) i = -1;
-    }
-}
-```
-
-在node的REPL里粘贴上面的代码。
-
-```
-> var g = gen1();
-undefined
-```
-
-我们引用这个generator时，generator里的代码并没有执行。
-
-```
-> g.next();
- run into generate ...
- run into for ...
-{ value: 0, done: false }
-```
-
-接下来我们调用`next`,代码开始执行并在 `var reset = yield i;`这一行停下来。 把`yield`后面的表达式求值，做为`next`方法的返回值。
-
-接下来我们调用再`next`。
-
-```
-> g.next();
-reset : undefined
- run into for ...
-{ value: 1, done: false }
-```
-
-我们可以看到`reset`的值为`undefined`。
-这里大家一定注意`var reset = yield i;`这条语句，要区分`yield`的返回值和`next`方法的返回值。`yield`关键字把它后面的表达式求值后做为`next`方法的返回值。而本身的返回值为`undefined`;
-
-下面为`yield`操作符的语法：
-
-```
-[rv] = yield [expression];
-```
-
-* expression      
-    Defines the value to return from the generator function via the iterator protocol. If omitted, undefined is returned instead.
-* rv     
-    Returns the optional value passed to the generator's next() method to resume its execution.
-
-如果我们没有给`next`传递参数，那`yield`返回值就是`undefined`,如果传了一个值给`next`方法，这个值就会做为`yield`的返回值，注意不是`next`的返回值！
-
-关于`yield`更多信息请参见[这里](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield)
-
-## Promise
-
-```js
-var getJSON = function(url) {
-    var promise = new Promise(function(resolve, reject) {
-        var client = new XMLHttpRequest();
-        client.open("GET", url);
-        client.onreadystatechange = handler;
-        client.responseType = "json";
-        client.setRequestHeader("Accept", "application/json");
-        client.send();
-
-        function handler() {
-            if (this.status === 200) {
-                resolve(this.response);
-            } else {
-                reject(new Error(this.statusText));
-            }
-        };
-    });
-    return promise;
-};
-
-getJSON("/posts.json").then(function(json) {
-    console.log('Contents: ' + json);
-}, function(error) {
-    console.error('出错了', error);
-});
-```
-
-## async await 关键字
-
-The await expression causes async function execution to pause, to wait for the Promise's resolution, and to resume the async function execution when the value is resolved. It then returns the resolved value. If the value is not a Promise, it's converted to a resolved Promise.
-
-If the Promise is rejected, the await expression throws the rejected value.
-
-`await`会暂停async函数的调用,等待Promise resolution.当值被解析后继续执行async函数,如果await后面接不是Promise,await会反它转成一个`resolved Promise`.
-
-```js
-var fetchDoubanApi = function() {  
-  return new Promise((resolve, reject) => {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          var response;
-          try {
-            response = JSON.parse(xhr.responseText);
-          } catch (e) {
-            reject(e);
-          }
-          if (response) {
-            resolve(response, xhr.status, xhr);
-          }
-        } else {
-          reject(xhr);
-        }
-      }
-    };
-    xhr.open('GET', 'https://api.douban.com/v2/user/aisk', true);
-    xhr.setRequestHeader("Content-Type", "text/plain");
-    xhr.send(data);
-  });
-};
-
-(async function() {
-  try {
-    let result = await fetchDoubanApi();
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
-})();
-```
-
-注意async 方法返回是Promise,不能直接返回一个value,
-
-```js
-function resolveAfter2Seconds(x) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(x);
-    }, 2000);
-  });
-}
-
-async function add1(x) {
-  var a = resolveAfter2Seconds(20);
-  var b = resolveAfter2Seconds(30);
-  return x + await a + await b;
-}
-
-//我们不能这样使用async
-let result = add1(10);
-//这时result就是Promise.正确的使用方法是调用Promise的then方法.
-
-add1(10).then(v => {
-  console.log(v);  // prints 60 after 2 seconds.
-});
-```
-
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
-
-[TypeScript 1.7](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-7.html) 就已经支持async await了.
-
-# Webpack
-
-多页面设置
-https://webpack.github.io/docs/optimization.html#multi-page-app
-
-# JQuery
+# 4. JQuery
 
 ## jQuery操作select总结
 
@@ -1125,7 +1151,7 @@ dataType : "json"
 });
 ```
 
-# 3. Vue
+# 5. Vue
 
 Vscode debugging 
 
@@ -1296,7 +1322,7 @@ https://vant-ui.github.io/vant/#/zh-CN/sticky
 
 
 
-# Prisma
+# 6. Prisma
 默认安装的Prisma，会在nuxt启动的setup阶段提示你要不要运行migration,要不要安装 Prisma Studio,你必须选择Y/N，这会打断nuxt项目的启动过程，非常烦人，你只要在`nuxt.config.tx`里加上配置，就能跳过这一过程。
 ```ts
 export default defineNuxtConfig({
@@ -1325,10 +1351,7 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 ```
 
 
-
-
-
-如果使用Prisma生成的类型，我查看了官方的文档，没有看到，最后还是在sof上找到了答案
+如何使用Prisma生成的类型，我查看了官方的文档，没有看到，最后还是在sof上找到了答案
 https://stackoverflow.com/questions/73656963/how-to-access-prisma-generated-types
 
 ```javascript
@@ -1483,10 +1506,27 @@ async function main() {
 
 需要我解释某个具体部分，或者针对特定场景进行调整吗？
 
+## 常用命令
 
+```
+pnpm i --save-dev prisma@latest
+pnpm i @prisma/client@latest
+```
 
+如果你在项目中安装了`prisma`和`@prisma/client`，就可以使用exec来执行prisma命令。如果用`pnpm dlx prisma`需要每次都下载它然后再执行，速度会非常慢。
 
-# 4. ECharts
+```bash
+# 从数据库生成prisma models，并生成相关typescript代码。
+pnpm exec prisma db pull && pnpm exec prisma generate
+```
+
+在开发环境我们修改了数据库后，比如添加了新列，并执行了`prisma db pull`生成了`schema.prisma`后，在生产环境只需要执行`prisma db push`就可以把修改同步到生产环境的数据库中。
+
+```
+pnpm exec prisma db push
+```
+
+# 7. ECharts
 
 默认并不是显示所有的x轴的标签的，如果要显示，需要设置`axisLabel`下的`interval`为0。
 
@@ -1543,35 +1583,12 @@ series: [
       ],
 ```
 
-# Svelte 
-TODO
-
-
-
 # 微信小程序
 
 数据双向绑定
 https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html
 
 
-# Yarn 使用淘宝源
-
-```
-$ yarn config set registry 'https://registry.npmmirror.com'
-
-# use taobao registry
-$ npm install --registry=https://registry.npmmirror.com
-```
-
-# CLI
-
-A simple HTTP Server
-
-```shell
-$ npm install -g http-server
-# To run:
-$ http-server & 
-```
 
 
 React的组件库
