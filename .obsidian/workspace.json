@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "postgresql-notes.md",
-                "mode": "source",
+                "file": "vim-notes.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "postgresql-notes"
+              "title": "vim-notes"
             }
           },
           {
@@ -150,13 +150,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "postgresql-notes.md",
+                "file": "vim-notes.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of postgresql-notes"
+              "title": "Outline of vim-notes"
             }
           }
         ],
