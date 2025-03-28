@@ -137,29 +137,107 @@ postgres-# \du+
 
 在MySQL中，如果我们想让MySQL可以远程访问，需要修改配置文件，让MySQL的进程监听在0.0.0.0上。同时需要创建一个远程用户。
 
-跟MySQL不同，PostgreSQL没有远程用户这个说法，它的用户是不区分本地或是远程的。如果要允许远程连接，除了要监听在`0.0.0.0`上,还要修改`pg_hba.conf`。
+跟MySQL不同，PostgreSQL没有远程用户这个说法，它的用户是不区分本地或是远程的。
 
-首先登录到psql上。
+如果要允许远程连接或允许从容器里访问，首先要修改pg的配置，不能让它监听在`127.0.0.1`或`localhost`上,要监听在本地IP上。同时还要修改`pg_hba.conf`。
 
-然后执行
 
+首先登录到psql上，找到配置文件的位置。
+
+```
+postgres=#  SHOW config_file;
+               config_file
+-----------------------------------------
+ /etc/postgresql/15/main/postgresql.conf
+(1 row)
+```
+
+
+默认pg是监听在localhost上的,在配置文件中找到下面一行：
+```
+#listen_addresses = 'localhost'
+```
+去掉注释，改为本地IP，多个IP要使用逗号来分隔。
+```
+listen_addresses = 'localhost,127.0.0.1,192.168.1.2'
+```
+
+
+接下来要修改hba文件。
 ```
 postgres=# show hba_file;
 ```
 **注意：** 不要忘掉结尾的分号`;`。
 
-就会显示pg_hba.conf的绝对路径了。编辑它，加入下面的内容，重启postgresql的服务。
-
+就会显示pg_hba.conf的绝对路径了。
+可以先查看一下它的内容
 ```
+# This file controls: which hosts are allowed to connect, how clients
+# are authenticated, which PostgreSQL user names they can use, which
+# databases they can access.  Records take one of these forms:
+#
+# local         DATABASE  USER  METHOD  [OPTIONS]
+# host          DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostssl       DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostnossl     DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostgssenc    DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostnogssenc  DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# (The uppercase items must be replaced by actual values.)
+#
+# The first field is the connection type:
+# - "local" is a Unix-domain socket
+# - "host" is a TCP/IP socket (encrypted or not)
+# - "hostssl" is a TCP/IP socket that is SSL-encrypted
+# - "hostnossl" is a TCP/IP socket that is not SSL-encrypted
+# - "hostgssenc" is a TCP/IP socket that is GSSAPI-encrypted
+# - "hostnogssenc" is a TCP/IP socket that is not GSSAPI-encrypted
+#
+# DATABASE can be "all", "sameuser", "samerole", "replication", a
+# database name, or a comma-separated list thereof. The "all"
+# keyword does not match "replication". Access to replication
+# must be enabled in a separate record (see example below).
+#
+# USER can be "all", a user name, a group name prefixed with "+", or a
+# comma-separated list thereof.  In both the DATABASE and USER fields
+# you can also write a file name prefixed with "@" to include names
+# from a separate file.
+#
+# ADDRESS specifies the set of hosts the record matches.  It can be a
+# host name, or it is made up of an IP address and a CIDR mask that is
+# an integer (between 0 and 32 (IPv4) or 128 (IPv6) inclusive) that
+# specifies the number of significant bits in the mask.  A host name
+# that starts with a dot (.) matches a suffix of the actual host name.
+# Alternatively, you can write an IP address and netmask in separate
+# columns to specify the set of hosts.  Instead of a CIDR-address, you
+# can write "samehost" to match any of the server's own IP addresses,
+# or "samenet" to match any address in any subnet that the server is
+# directly connected to.
+#
+# METHOD can be "trust", "reject", "md5", "password", "scram-sha-256",
+# "gss", "sspi", "ident", "peer", "pam", "ldap", "radius" or "cert".
+# Note that "password" sends passwords in clear text; "md5" or
+# "scram-sha-256" are preferred since they send encrypted passwords.
+#
+# OPTIONS are a set of options for the authentication in the format
+# NAME=VALUE.  The available options depend on the different
+# authentication methods -- refer to the "Client Authentication"
+# section in the documentation for a list of which options are
+# available for which authentication methods.
+#
+# Database and user names containing spaces, commas, quotes and other
+# special characters must be quoted.  Quoting one of the keywords
+# "all", "sameuser", "samerole" or "replication" makes the name lose
+# its special character, and just match a database or username with
+# that name.
+
 # TYPE  DATABASE  USER  CIDR-ADDRESS  METHOD
 host  all  all 0.0.0.0/0 md5
 ```
 
-```sql
-postgres=#  SHOW config_file
-```
+这个文件的注释部分详细介绍了这个文件的格式。
+要注意，第一列和第四列是配合着使用的。
 
-
+编辑它，加入下面的内容，重启postgresql的服务。
 
 
 ## 用户和角色
