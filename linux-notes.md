@@ -321,12 +321,13 @@ ffmpeg -i input.mov -vn -acodec mp3 output.mp3
 ```
 
 
+# 网络工具
 ## IP地址反查
 
 $ dig -x 8.8.8.8 +short
 大多数的邮件服务器会查询 PTR record of an IP address it receives email from. 如果没有查询到 PTR record ，可能会把邮件当做垃圾邮件。
 
-# ethtool 查看本地网卡情况
+## ethtool 查看本地网卡情况
 
 ```
 # ethtool bond0
@@ -347,6 +348,14 @@ Settings for bond0:
     Link detected: yes
 ```
 
+
+现代linux 发行都开始用ss来替代netstat了。
+
+```
+ss -anplt
+```
+
+# 磁盘工具
 ## 统计当目录下的所有目录的大小
 
 ```
