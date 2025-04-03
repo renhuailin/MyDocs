@@ -74,11 +74,12 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "94421dcfa62127d0",
@@ -166,13 +167,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6f29fa3db64fd21f",
+  "active": "5ea64c75e93272ef",
   "lastOpenFiles": [
+    "mysql-notes.md",
+    "mac-tips.md",
+    "postgresql-notes.md",
     "linux-notes.md",
+    "docker-notes.md",
     "python-notes.md",
     "vim-notes.md",
-    "postgresql-notes.md",
-    "mac-tips.md",
     "light-table-note.md",
     "java-notes.md",
     "js-notes.md",
@@ -182,14 +185,12 @@
     "font-Config.md",
     "English-Notes.md",
     "emacs-notes.md",
-    "docker-notes.md",
     "css-notes.md",
     "vscode-notes.md",
     "images/Pasted image 20250214100736.png",
     "the-rust-programming-language.md",
     "typescript-notes.md",
     "kotlin-notes.md",
-    "mysql-notes.md",
     "java-style-guide.md",
     "images/Pasted-image-20240509221442.png",
     "images/Pasted.md",

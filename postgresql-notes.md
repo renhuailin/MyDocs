@@ -8,9 +8,7 @@
 
 ```
 $ sudo -u postgres psql
-
 postgres=# ALTER USER postgres WITH PASSWORD 'your_password';
-
 ```
 
 
@@ -274,8 +272,19 @@ $ pg_restore -U <username> -d <database> --clean  xxxxxx.tar
 
 默认的user:`postgres`,默认的密码需要在启动时指定。
 
-## Migrate data from MySQL to PostgreSQL
+# Migrate data from MySQL to PostgreSQL
 
 [pgLoader](https://github.com/dimitri/pgloader)
 我现在用的20.04自带的pgLoader有问题，无法支持PG14，13.x都可以。
 https://techdocs.broadcom.com/us/en/ca-enterprise-software/layer7-api-management/api-developer-portal/4-5/install-configure-and-upgrade/install-portal-on-docker-swarm/migrating-portal-data-from-postgresql-to-mysql.html
+
+可以使用pgLoader的docker image
+
+下面的使用就可以一键把MySQL的库迁移到PostgreSQL中。
+```
+pgloader mysql://<Mysql user>:<password>@<ip or hostname >/<dbname> pgsql://<pg user>:<password>@<ip or hostname >/<pg database>
+
+
+pgloader mysql://billgates:m!cr0soft@192.168.1.44/mydb pgsql://billgates:m!cr0soft@192.168.1.44/mydb
+```
+

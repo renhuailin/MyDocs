@@ -44,11 +44,18 @@ Build and install [Typescript Bundle for Textmate](https://www.chrisjmendez.com/
 
 # 3 常用命令
 
-## 3.1 查看商品占用
+## 3.1 查看端口占用
 
 1. 输入命令 `lsof -i :端口号`，其中“端口号”是需要查看的端口号，例如要查看端口号为8080的情况，可以输入 `lsof -i :8080`。
 2. 如果没有占用则无输出结果。
 3. 也可以用netstat，不过不支持`p`这个选项。
 ```
 netstat -anv|grep 80 |grep LIST
+```
+
+
+## 3.2  创建带密码的压缩文件
+
+```
+zip -e archivename.zip filetoprotect.txt
 ```
