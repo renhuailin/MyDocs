@@ -834,6 +834,12 @@ Version 2 files are supported by **Compose 1.6.0+** and require a Docker Engine 
 
 具体的版本详情请参见：[Compose file versions and upgrading | Docker Documentation](https://docs.docker.com/compose/compose-file/compose-versioning/)
 
+
+## go version
+
+从`https://github.com/docker/compose`这个项目下载软件。
+Rename the relevant binary for your OS to `docker-compose` and copy it to `$HOME/.docker/cli-plugins`
+
 # 12.  Swarm
 
 可以在[这个网站]([https://labs.play-with-docker.com/](https://labs.play-with-docker.com/)实验swarm：https://labs.play-with-docker.com/
