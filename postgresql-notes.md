@@ -255,6 +255,9 @@ as a user, a group, or both.
 
 ```
 pg_dump dbname > outfile
+
+
+pg_dump -h 127.0.0.1  -U postgres -d qianshou > qianshou.bak
 ```
 
 https://tembo.io/docs/postgres_guides/how-to-backup-and-restore-a-postgres-database
@@ -266,6 +269,41 @@ PG backup生成的备份文件里不会生成`drop database`这样的命令,如�
 ```
 $ pg_restore -U <username> -d <database> --clean  xxxxxx.tar
 ```
+
+
+## 查询
+psql默认使用了分页器（pager），通常是 less 或 more，来显示查询结果，特别是当结果超过一屏时。这在浏览大量数据时很有用，但在你描述的场景下（比如想边看主键边写 DELETE 语句）确实不方便。
+
+有几种方法可以禁止 psql 使用分页器，让结果直接输出到命令行窗口：
+
+1. **在 psql 会话中临时关闭分页器：**  
+    这是最常用的方法，只在当前会话中生效。
+    
+    ```
+    \pset pager off
+    -- 或者
+    \pset pager 0
+    ```
+    
+    执行这个命令后，后续的查询结果就会直接打印到屏幕上。  
+    如果你想再次启用分页器（比如之后要查一个非常大的表），可以执行：
+    
+    ```
+    \pset pager on
+    -- 或者
+    \pset pager 1
+    ```
+
+
+### Rename table name
+
+```sql
+ALTER TABLE "OldTable" RENAME TO "NewTable";
+```
+
+
+
+
 
 
 ## docker image

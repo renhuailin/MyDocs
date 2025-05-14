@@ -59,3 +59,70 @@ netstat -anv|grep 80 |grep LIST
 ```
 zip -e archivename.zip filetoprotect.txt
 ```
+
+# 4 Homebrew
+
+```bash
+
+# List all installed formulae.
+brew list
+```
+
+### install
+```
+brew install mysql-client
+```
+
+
+### search formulae
+
+```
+brew search node@22
+```
+
+
+### 查看配置
+```
+brew config
+```
+
+
+### Display formula’s name and one-line description. The cache is created on the first search, making that search slower than subsequent ones.
+```
+brew desc node@20
+```
+
+
+### Display brief statistics for your Homebrew installation. If a _`formula`_ or _`cask`_ is provided, show summary of information about it.
+```
+brew info node@20
+```
+
+### `uninstall`, `remove`, `rm` [_`options`_] _`installed_formula`_|_`installed_cask`_ […]
+Uninstall a _`formula`_ or _`cask`_.
+```
+brew uninstall
+brew remove
+brew rm
+```
+
+
+### `upgrade` [_options_]     [_installed_formula_|_installed_cask_ …]
+Upgrade outdated casks and outdated, unpinned formulae using the same options they were originally installed with, plus any appended brew formula options. If _`cask`_ or _`formula`_ are specified, upgrade only the given _`cask`_ or _`formula`_ kegs (unless they are pinned; see `pin`, `unpin`).
+
+Unless `$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK` is set, `brew upgrade` or `brew reinstall` will be run for outdated dependents and dependents with broken linkage, respectively.
+
+Unless `$HOMEBREW_NO_INSTALL_CLEANUP` is set, `brew cleanup` will then be run for the upgraded formulae or, every 30 days, for all formulae.
+
+### `outdated` [_`options`_] [_`formula`_|_`cask`_ …]
+
+List installed casks and formulae that have an updated version available. By default, version information is displayed in interactive shells and suppressed otherwise.
+
+
+### `link`, `ln` [_`options`_] _`installed_formula`_ […]
+
+Symlink all of _`formula`_’s installed files into Homebrew’s prefix. This is done automatically when you install formulae but can be useful for manual installations.
+
+```
+brew link node@22
+```

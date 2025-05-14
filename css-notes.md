@@ -184,6 +184,51 @@ https://css-tricks.com/snippets/css/complete-guide-grid/
 
 https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Grids#positioning_with_grid-template-areas
 
+在没使用css grid之前，如果我们的页面分成三行，header ,content 和 footer, 其中通常header和footer会是fixed size，但是我们希望content要自动占满剩下空间，主要是高度的方向。在这之前我会通过api来查询当前的视图可用的空间是多少，然后用js脚本来设置content的高度，但是这样有时候会有一些兼容上的问题的，比如在微信浏览器里。
+但是有了css grid，这一切变得简单了。我们只要设置content的 size为`1fr`，css系统会计算剩余的空间，并占满它。实在是太方便了。
+```css
+.layoutContainer {
+
+	/* 布局容器样式 */
+	
+	display: grid;
+	
+	/* 将 layout-container 设置为 Grid 容器 */
+	
+	grid-template-rows: $navigationBarHeight 1fr $tabBarHeight;
+	
+	/* 定义三行的高度：导航栏 200px，标签栏 250px，内容区 1fr */
+	
+	grid-template-areas:
+	
+	"header"
+	
+	"content"
+	
+	"footer";
+	
+	grid-row-gap: 0;
+	
+	/* 行间距设置为 0 */
+	
+	height: 100vh;
+	
+	/* 关键：设置布局容器高度为视口高度 */
+	
+	width: 100vw;
+	
+	/* 设置布局容器宽度为视口宽度 */
+
+}
+```
+
+
+
+
+
+
+
+
 
 
 [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) [pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes)

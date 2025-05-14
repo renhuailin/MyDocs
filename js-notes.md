@@ -819,9 +819,11 @@ $ npm i ---save-dev @types/express-session
 # 列出全局安装的包
 $ npm list -g --depth=0
 
+#查看当前项目已经安装的依赖包的版本号
+$ npm list --depth=0
+
 # 查看某个包的所有versions.
 $ npm view webpack versions --json
-
 ```
 
 ## pnpm 命令
