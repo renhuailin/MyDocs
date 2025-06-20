@@ -1,8 +1,128 @@
 # PostgreSQL
 
 ------
+## 1. 数据类型
 
-## 命令行工具
+### 1.1 json和jsonb
+
+简单来说，**`json` 存储原始文本，`jsonb` 存储优化过的二进制格式**。这导致了它们在性能、功能和存储上的核心差异。
+
+#### 核心区别总结
+
+| 特性 (Feature) | `json` 类型                               | `jsonb` 类型                                                              |
+| :----------- | :-------------------------------------- | :---------------------------------------------------------------------- |
+| **存储格式**     | **纯文本 (Text)**                          | **二进制 (Binary)**                                                        |
+| **输入/写入速度**  | **更快**。因为它只检查JSON是否合法，然后原样存入。           | **稍慢**。因为它需要解析JSON文本，转换为优化的二进制格式再存入。                                    |
+| **处理/查询速度**  | **慢得多**。每次查询都需要重新解析整个JSON文本。            | **快得多**。因为数据已是预解析的二进制格式，查询时无需重复解析。                                      |
+| **索引支持**     | 有限。只能在整个JSON文档上创建B-tree索引（用于精确匹配）或哈希索引。 | **非常强大**。支持 **GIN** (Generalized Inverted Index) 索引，可以高效地索引JSON内的所有键和值。 |
+| **格式保留**     | **保留**。会完整保留原始JSON的空格、键的顺序和重复的键。        | **不保留**。会移除空格，不保证键的顺序，且如果存在重复的键，**只会保留最后一个**。                           |
+| **验证**       | 仅验证是否是合法的JSON。                          | 验证并进行语义解析，例如对重复键进行处理。                                                   |
+
+---
+
+#### 详细解析与类比
+
+你可以这样理解：
+
+*   **`json` 类型**：就像你把一份合同（JSON字符串）的 **扫描件（图片）** 存入档案柜。
+    *   **存入快**：扫描一下直接放进去就行。
+    *   **查找慢**：当你需要找合同里 "条款A" 的内容时，你必须把每份扫描件都拿出来，用眼睛从头到尾阅读一遍，才能找到。
+    *   **保真**：扫描件和你手里的原件一模一样，包括排版、签名位置等。
+
+*   **`jsonb` 类型**：就像你把合同里的所有信息 **录入到一个结构化的数据库系统** 里。
+    *   **存入慢**：你需要花时间阅读合同，把“甲方”、“乙方”、“金额”、“条款A”、“条款B”等信息分门别类地录入系统。这个过程就是解析和转换。
+    *   **查找极快**：当你需要找 "条款A" 的内容时，你直接在系统里查询 `条款A` 字段，系统能瞬间定位到结果。尤其是你给这个字段建了索引之后。
+    *   **不保真**：录入系统后，原始合同的排版、字体、空格就都丢失了，只保留了核心数据。如果合同里有两个叫 "备注" 的条款，录入系统时可能只会保留最后一个。
+
+---
+
+#### 应用场景 (When to use which?)
+
+根据上述区别，选择就变得很清晰了。
+
+#### 使用 `json` 的场景（非常少见）
+
+你应该只在以下特定情况下才考虑使用 `json`：
+
+1.  **严格需要保留原始格式**：
+    你的应用是一个日志系统、审计系统或数据中转站，必须保证存入的 JSON 和取出的 JSON 在文本上一字不差，包括空格、键的顺序、甚至重复的键。某些旧系统可能对 JSON 键的顺序有依赖（虽然这是不好的设计）。
+
+2.  **写多读少，且不关心内部数据**：
+    你只是把 PostgreSQL 当作一个 JSON 文档的“存储桶”，写入操作非常频繁，但几乎从不对 JSON 内部的键值进行查询、过滤或分析。在这种情况下，`json` 的写入性能优势可能会体现出来。
+
+**总结：除非你有“必须保存原始文本”的硬性要求，否则基本不用 `json`。**
+
+#### 使用 `jsonb` 的场景（绝大多数情况）
+
+**在99%的情况下，`jsonb` 都是更好的选择。**
+
+1.  **需要对 JSON 数据进行查询**：
+    这是最常见的场景。你需要根据 JSON 对象中的某个键的值来过滤数据，例如：`WHERE user_profile->>'city' = '北京'`。`jsonb` 在这种查询上性能远超 `json`。
+
+2.  **需要为 JSON 的键值创建索引**：
+    如果你的数据量很大，并且查询频繁，那么索引是必不可少的。`jsonb` 支持强大的 GIN 索引，可以极大地加速查询。这是 `jsonb` 的“杀手级”特性。
+    ```sql
+    -- 为 user_profile 字段中的所有键值对创建 GIN 索引
+    CREATE INDEX idx_gin_user_profile ON users USING GIN (user_profile);
+    
+    -- 为特定的路径创建索引，提高特定查询的效率（PG 12+）
+    CREATE INDEX idx_gin_user_city ON users USING GIN ((user_profile->'city'));
+    ```
+
+3.  **需要对 JSON 数据进行更新和操作**：
+    PostgreSQL 提供了丰富的函数来操作 `jsonb` 类型，如添加键值对 (`jsonb_set`)、删除键 (`-`) 等。这些操作在 `jsonb` 上更高效。
+
+4.  **数据清洗和规范化**：
+    由于 `jsonb` 会去除不必要的空格并处理重复键，它自然地对数据进行了一层清洗和规范化，确保了存储的数据结构更加一致。
+
+---
+
+#### 示例代码
+
+让我们看一个实际的例子来感受区别：
+
+```sql
+-- 创建一个表，同时包含 json 和 jsonb 类型的列
+CREATE TABLE test_json (
+    id serial primary key,
+    data_json json,
+    data_jsonb jsonb
+);
+
+-- 插入一个带有额外空格、特定顺序和重复键的 JSON 字符串
+INSERT INTO test_json (data_json, data_jsonb)
+VALUES
+(
+  '{ "name": "Alice", "active": true, "items": [1, 2], "name": "Bob"  }',
+  '{ "name": "Alice", "active": true, "items": [1, 2], "name": "Bob"  }'
+);
+
+-- 查询并查看结果
+SELECT * FROM test_json;
+```
+
+**查询结果：**
+
+| id | data_json | data_jsonb |
+| :-- | :--- | :--- |
+| 1 | `{ "name": "Alice", "active": true, "items": [1, 2], "name": "Bob"  }` | `{"name": "Bob", "items": [1, 2], "active": true}` |
+
+**观察结果：**
+
+*   `data_json` 列：**原封不动**地保留了所有内容，包括结尾的空格和两个 `"name"` 键。
+*   `data_jsonb` 列：
+    *   多余的空格被**移除**了。
+    *   键的顺序被**重排**了（按字母或长度等内部规则）。
+    *   重复的 `"name"` 键，只**保留了最后一个** `"name": "Bob"`。
+
+#### 最终建议
+
+**经验法则：始终默认使用 `jsonb`**，除非你有一个非常明确且强烈的理由去使用 `json` 来保留原始文本。`jsonb` 提供的查询性能和索引能力对于绝大多数应用来说都是至关重要的。
+
+#### 参考文献
+[An introduction to working with JSON data in PostgreSQL](https://medium.com/@suffyan.asad1/an-introduction-to-working-with-json-data-in-postgresql-730aa889c5d3)
+
+## 2. 命令行工具
 
 在debian上首次安装后，需要使用`postgres`的身份进入`psql`，然后修改密码。
 
@@ -263,6 +383,20 @@ pg_dump -h 127.0.0.1  -U postgres -d qianshou > qianshou.bak
 https://tembo.io/docs/postgres_guides/how-to-backup-and-restore-a-postgres-database
 
 
+To dump a single table named `mytab`:
+
+```
+$ pg_dump -t mytab mydb > db.sql 
+```
+
+`-a`  
+`--data-only`
+
+
+```
+$ pg_dump  -a -t mytab mydb > db.sql 
+```
+
 ### 恢复数据库
 
 PG backup生成的备份文件里不会生成`drop database`这样的命令,如果要恢复到一个已存在的数据库，需要在使用`pg_restore`恢复时指定`--clean`参数。
@@ -293,6 +427,29 @@ psql默认使用了分页器（pager），通常是 less 或 more，来显示
     -- 或者
     \pset pager 1
     ```
+
+
+## 更新
+### 使用触发器自动更新updateAt列
+
+```sql
+-- 首先要定义一个function,
+BEGIN
+    NEW."updatedAt" = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+
+-- 然后在一个表上创建触发器，调用这个function.
+CREATE TRIGGER trg_update_updated_at_column
+BEFORE UPDATE ON public."SecondCarLeads"
+FOR EACH ROW                          -- 对每一行受影响的行执行
+EXECUTE FUNCTION update_updated_at_column();
+
+```
+
+
+
+
 
 
 ### Rename table name

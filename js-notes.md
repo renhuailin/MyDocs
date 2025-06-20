@@ -1585,7 +1585,7 @@ series: [
       ],
 ```
 
-# 微信小程序
+# 8 微信小程序
 
 数据双向绑定
 https://developers.weixin.qq.com/miniprogram/dev/framework/view/two-way-bindings.html

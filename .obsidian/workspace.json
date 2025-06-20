@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "css-notes.md",
+                "file": "postgresql-notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "css-notes"
+              "title": "postgresql-notes"
             }
           }
         ]
@@ -140,13 +140,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "css-notes.md",
+                "file": "postgresql-notes.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of css-notes"
+              "title": "Outline of postgresql-notes"
             }
           }
         ],
@@ -166,18 +166,21 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6f29fa3db64fd21f",
+  "active": "f5133bb23afb71d4",
   "lastOpenFiles": [
+    "mac-tips.md",
     "postgresql-notes.md",
+    "js-notes.md",
+    "docker-notes.md",
+    "redis-notes.md",
+    "OpenStack-Notes.md",
+    "css-notes.md",
     "puppet-notes.md",
     "README.md",
-    "docker-notes.md",
     "linux-notes.md",
     "sqlite.md",
-    "js-notes.md",
     "kotlin-notes.md",
     "vscode-notes.md",
-    "mac-tips.md",
     "python-notes.md",
     "mysql-notes.md",
     "vim-notes.md",
@@ -189,13 +192,10 @@
     "font-Config.md",
     "English-Notes.md",
     "emacs-notes.md",
-    "css-notes.md",
     "images/Pasted image 20250214100736.png",
     "the-rust-programming-language.md",
     "typescript-notes.md",
-    "java-style-guide.md",
     "images/Pasted-image-20240509221442.png",
-    "images/Pasted.md",
     "images/Pasted image 20240509221442 1.png",
     "images/WX20211128-111446@2x.png",
     "Pasted image 20240509221442.png"
