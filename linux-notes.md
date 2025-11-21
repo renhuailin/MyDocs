@@ -359,7 +359,7 @@ ss -anplt
 ## 统计当目录下的所有目录的大小
 
 ```
-$ du -d 1 -h
+$ du -d 1 -hç
 ```
 
 # 查看配置文件
@@ -657,7 +657,16 @@ FragmentPath=/usr/lib/systemd/system/docker.service
 
 # Letsencrypt  SSL证书
 
+## Nginx
 
+首先，在 nginx 的配置文件里添加一个新配置，然后运行下面的命令。它会自动列出需要添加证书的新域名。
+
+```
+sudo certbot --nginx
+```
+
+
+## For App
 在某些情况下，我的证书并不是给Web server用的，这时我需要使用`certonly`这个参数来获取和刷新证书。
 ```
 sudo certbot certonly --standalone

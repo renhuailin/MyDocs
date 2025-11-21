@@ -93,6 +93,74 @@ docker version > 1.3，我们还可以使用
 # 3 docker exec -it <container id or name> bash
 ```
 
+# 3.  网络 Networking 
+
+最近发现每创建一个 docker compose ，我都需要为我的 PostgreSQL 重新授权一次。 后来我发现，docker 会为每个docker compose创建一个 network.
+
+```
+# docker network ls
+NETWORK ID     NAME                           DRIVER    SCOPE
+84128a3aacef   adminxianzhimaonet_default     bridge    local
+3371aab3b569   bridge                         bridge    local
+8bd2d9741622   compose-files_default          bridge    local
+3cee9617d121   host                           host      local
+5e65153cf542   none                           null      local
+a539924624fe   partnerxianzhimaonet_default   bridge    local
+17fe125ee136   redis_default                  bridge    local
+5ef7e452ab3e   static_resources_default       bridge    local
+8f826b080667   worker_default                 bridge    local
+```
+我们可以查看每个网络的具体子网配置。
+```
+# docker network inspect a539924624fe
+[
+    {
+        "Name": "partnerxianzhimaonet_default",
+        "Id": "a539924624fed2c896d3cab8f5b5c54b714c5c5209f9f6af36f2d66cbefcd3d2",
+        "Created": "2025-11-16T21:37:44.77124137+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.23.0.0/16",
+                    "Gateway": "172.23.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "a037f095f7d588dfe7163b6e77cd87cd304cff081977ee5ab951e47ff746cc90": {
+                "Name": "xianzhimao_partner",
+                "EndpointID": "d69e1ba5dd35cb5e867ae566573481bd0dc3fd13c028e875d7ddc905241e8e27",
+                "MacAddress": "02:42:ac:17:00:02",
+                "IPv4Address": "172.23.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.config-hash": "0f136814aed23397abb36b22ea2f3c42455f40f896d90419176927c457e3486f",
+            "com.docker.compose.network": "default",
+            "com.docker.compose.project": "partnerxianzhimaonet",
+            "com.docker.compose.version": "2.34.0"
+        }
+    }
+]
+```
+
+
+
+
 # 4 storage driver
 
 `--storage-driver=devicemapper`

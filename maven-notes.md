@@ -90,3 +90,10 @@ MAVEN_OPTS="-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall
 ```
 $ mvn archetype:generate -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true 
 ```
+
+
+查看依赖树
+
+```
+mvn dependency:tree
+```

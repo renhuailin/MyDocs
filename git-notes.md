@@ -533,10 +533,20 @@ https://www.git-tower.com/learn/git/ebook/cn/command-line/advanced-topics/git-fl
 
 
 # 5. Submodule
+为一个现有的git仓库添加一个submodule。
 
 ```
+# Let’s start by adding an existing Git repository as a submodule of the repository
 $ git submodule add http://202.38.164.237/mep-vue/mep-vue-system.git system
+```
 
+
+当你把一个包含submodule的git仓库clone到本地时，它的submodule是不会自动clone下来的，你需要执行下面的命令来拉取submodule.
+You must run two commands from the main project: 
+* `git submodule init` to initialize your local configuration file, and 
+* `git submodule update` to fetch all the data from that project and check out the appropriate commit listed in your superproject:
+
+```
 $ git submodule init
 Submodule 'DbConnector' (https://github.com/chaconinc/DbConnector) registered for path 'DbConnector'
 
@@ -547,6 +557,16 @@ Cloning into 'DbConnector'...
 # 
 $ git submodule foreach 'git checkout -f dev && git pull'
 ```
+
+如果你希望接取主项目的时候，把各种submodule都拉下来。
+
+```console
+git clone --recurse-submodules https://github.com/chaconinc/MainProject
+```
+
+如果你已经把主项目拉下来了，但是忘了加`--recurse-submodules`,那你可以在主项目目录里运行下面的命令把所有的submodule拉下来。
+`git submodule update --init --recursive`.
+这其实就是结合上面的 `git submodule init`和`git submodule update`。
 
 # 5 Archive 归档
 

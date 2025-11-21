@@ -837,14 +837,31 @@ fn main() {
 
 Rust的Borrow和Lifetime虽然有一点难理解，但请相信，一旦弄懂并开始coding,你会爱上它，：D。
 
+
+
+```rust
+// 对应 C++ 的 CloseAudioChannel
+pub fn close_audio_channel(&mut self) {
+	// take() 方法会取出 Some(value) 中的 value，并留下 None
+	// 当取出的 Box<EspWebSocketClient> 离开这个作用域时，
+	// 它的 Drop trait 会被调用，从而自动释放内存（等同于 delete）
+	if let Some(ws) = self.websocket.take() {
+		log::info!("Closing and dropping websocket client.");
+		// 你甚至可以显式调用 drop，但通常没有必要，因为上面调用的是 take，所以其实是把拥有了它的所有权。
+		// drop(ws);
+	}
+	// self.websocket 现在一定是 None
+}
+```
+
 # 5.23 Trait Object
 
 Trait Object其实是Trait指针。  有了多态就要动态dispatch,所以有了Trait Object.
 
-Trait objects, like &Foo or Box<Foo>.
+Trait objects, like` &Foo or Bo<Foo>.`
 
 ```
-A trait object can be obtained from a pointer to a concrete type that implements the trait by casting it (e.g. &x as &Foo) or coercing it (e.g. using &x as an argument to a function that takes &Foo).
+A trait object can be obtained from a pointer to a concrete type that implements the trait by casting it (e.g. \&x as \&Foo) or coercing it (e.g. using \&x as an argument to a function that takes \&Foo).
 ```
 
 其实它就是Trait指针嘛
@@ -861,12 +878,33 @@ A trait object can be obtained from a pointer to a concrete type that implements
 
 [Error Handling in Rust](http://blog.burntsushi.net/rust-error-handling/) 对rust错误处理讲得比较详细
 
+
+
+### debug trait 
+
+字符串格式化，可以写一篇博客。
+https://doc.rust-lang.org/std/fmt/index.html
+
+
+# Cargo
+
+
+查看一个包的文档
+```
+cargo doc --open --package mipidsi
+```
+
+
 # Rust 宏
 
 Kleene star 克林星号
 
-unwrap
-Rc<T> and Arc<T>
+`unwrap`
+`Rc<T> and Arc<T>`
+
+
+
+
 
 # unsafe
 
@@ -927,3 +965,67 @@ rm -f  .package-cache
     主要是因为内存管理方式的不同。
 [疯狂字符串](https://course.rs/difficulties/string.html)
 [Exploring Strings in Rust](https://betterprogramming.pub/strings-in-rust-28c08a2d3130) 把string讲解得非常清楚
+
+
+
+## Turbofish
+https://doc.rust-lang.org/reference/glossary.html#turbofish
+
+
+在您提供的 Rust 代码段中：
+
+```rust
+let _subscription = sys_loop.subscribe::<CustomEvent, _>(|event| {
+        info!("[Subscribe callback] Got event: {event:?}");
+    })?;
+```
+
+这里的 `::<CustomEvent, _>` 语法，通常被 Rust 社区昵称为 "turbofish"（涡轮鱼），它是一种显式地为函数或方法调用提供泛型类型参数的语法。
+
+下面我们来分解这个语法，并解释双冒号 `::` 在这里的作用。
+
+### Turbofish `::<>` 语法的含义
+
+这个语法主要用于解决编译器无法自动推断出泛型类型时的歧义。
+
+1.  **泛型函数/方法**: `subscribe` 方法是一个泛型方法。它的定义可能类似于：
+    ```rust
+    fn subscribe<T, F>(&self, callback: F) -> Result<Subscription, Error>
+    where
+        T: Event, // T 是一个泛型参数，代表事件类型
+        F: Fn(T),   // F 是另一个泛型参数，代表回调闭包
+    {
+        // ...
+    }
+    ```
+    这个方法需要知道两件事：
+    *   `T`: 要订阅的事件类型是什么？
+    *   `F`: 传入的回调闭包的具体类型是什么？
+
+2.  **显式指定泛型参数**: `::<CustomEvent, _>` 的作用就是告诉编译器：
+    *   第一个泛型参数 `T`，我们显式地指定为 `CustomEvent`。
+    *   第二个泛型参数 `F`，我们使用 `_` (下划线) 作为占位符，让编译器自行推断。编译器可以通过你传入的闭包 `|event| { ... }` 的类型来准确地推断出 `F` 的类型。在许多情况下，显式写出闭包的类型是非常繁琐的，所以使用 `_` 很方便。
+
+### 双冒号 `::` 在这里的作用
+
+您说的很对，双冒号 `::` 通常是作为路径分隔符，用来访问模块、类型、或者关联函数/类型。例如 `std::collections::HashMap`。
+
+在这个 "turbofish" 语法中，双冒号的用法可以理解为其基本语义的延伸，它起到**消除歧义**的作用，帮助解析器（Parser）区分**泛型参数**和**小于号 `<` 运算符**。
+
+想象一下，如果没有 `::`，代码会是这样：
+`sys_loop.subscribe<CustomEvent, _>(...)`
+
+在某些复杂的表达式中，Rust 的解析器可能会把 `<` 误解为“小于”比较运算符。例如 `foo < a, b > (c)` 可能会被解析成 `(foo < a)` 和 `(b > c)` 两个比较操作。
+
+为了从语法上明确地告诉编译器，这里的 `<...>` 不是一个比较操作，而是用于实例化泛型参数的，Rust 引入了 `::<>` 这种语法。双冒号在这里作为一个明确的信号，表示“我们正在为接下来的方法调用(`subscribe`)提供泛型参数列表”。
+
+所以，`::` 在这里**并不是有了一个全新的特殊含义**，它仍然与“路径”和“标识符”相关联，可以看作是**在方法调用路径上附加泛型参数**的一种明确方式。它将泛型参数与方法名紧密地关联起来，消除了可能的语法歧义。
+
+### 总结
+
+*   **`::<...>` (Turbofish)**: 这是一种在调用函数或方法时，显式指定泛型类型参数的语法。
+*   **为什么需要它?**: 当编译器无法从上下文（例如函数参数或返回值）中自动推断出所有泛型类型时，就需要使用这种语法来明确指定。
+*   **`::` 的角色**: 双冒号在这里是为了帮助解析器消除歧义，明确 `<...>` 是泛型参数列表，而不是小于/大于比较运算符。它将泛型参数绑定到 `subscribe` 这个方法上。
+*   **`_` (下划线)**: 它是一个类型占位符，意思是“让编译器自己推断这个位置的类型”。
+
+因此，您的这行代码的完整意思是：调用 `sys_loop` 上的 `subscribe` 方法，并明确告诉编译器，我要订阅的事件类型是 `CustomEvent`，而回调函数的具体类型请你自行推断。

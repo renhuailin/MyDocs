@@ -253,6 +253,16 @@ postgres-# \du+
 
 ### 允许远程访问
 
+先查看一下日志，看看你的容器的 IP 是多少
+
+```
+tail -f /var/log/postgresql/postgresql-15-main.log
+```
+通常我们会看到类似下面的内容
+```
+postgres@qianshou FATAL:  no pg_hba.conf entry for host "172.23.0.2", user "xxxxx", database "qianshou", SSL encryption
+```
+
 在MySQL中，如果我们想让MySQL可以远程访问，需要修改配置文件，让MySQL的进程监听在0.0.0.0上。同时需要创建一个远程用户。
 
 跟MySQL不同，PostgreSQL没有远程用户这个说法，它的用户是不区分本地或是远程的。
@@ -284,6 +294,10 @@ listen_addresses = 'localhost,127.0.0.1,192.168.1.2'
 接下来要修改hba文件。
 ```
 postgres=# show hba_file;
+
+ hba_file
+-------------------------------------
+ /etc/postgresql/15/main/pg_hba.conf
 ```
 **注意：** 不要忘掉结尾的分号`;`。
 

@@ -1,6 +1,5 @@
 Kotlin notes for java developer.
 --------
-
 # 1. Control flow
 
 ## 1.1 Conditionals
@@ -311,5 +310,15 @@ Kotlin支持类型别名了.
 
 Kotlin Native的GC更新
 https://blog.jetbrains.com/kotlin/2021/05/kotlin-native-memory-management-update/
+
+
+
+# Mixing Java and Kotlin in one project – tutorial
+https://kotlinlang.org/docs/mixing-java-kotlin-intellij.html
+
+
+
+
+
 
 

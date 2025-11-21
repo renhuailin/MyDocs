@@ -650,13 +650,52 @@ That’s why in TypeScript 3.5, when assigning to types with discriminant proper
 
 For more details, you can [see the original pull request on GitHub](https://github.com/microsoft/TypeScript/pull/30779).
 
+# ts config 
 
 
-# JSDoc-style
+##  `noEmit`
+`noEmit` 是 TypeScript 编译器的一项编译选项，它位于 `tsconfig.json` 文件的 `compilerOptions` 对象内。该选项的作用是控制 TypeScript 编译器是否生成输出文件。具体来说：
 
-JSDoc-style type annotations : [Get the advantages of TypeScript without transpiling](http://seg.phault.net/blog/2017/10/typescript-without-transpiling/?utm_content=buffer8a673&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer)
+**`noEmit: true`**
+
+当 `noEmit` 设置为 `true` 时，TypeScript 编译器在执行编译时将不会生成任何输出文件。这意味着：
+
+- **不会生成 JavaScript 文件**：即使你的 TypeScript 代码中包含 `.ts` 或 `.tsx` 文件，编译器也不会将它们编译为对应的 `.js` 或 `.jsx` 文件。
+- **不会生成 declaration 文件**（`.d.ts`）：如果项目配置中启用了 `declaration` 选项，编译器在 `noEmit: true` 时也不会生成类型声明文件。
+- **不会生成 map 文件**（`.map`）：即使启用了 `sourceMap` 选项，编译器也不会生成源码映射文件。
+
+启用 `noEmit` 主要适用于以下场景：
+
+- **类型检查阶段**：当你只需要进行类型检查，确保代码符合 TypeScript 类型系统的要求，而不需要实际生成可供运行的 JavaScript 文件时。  
+    这对于持续集成（CI）流程中的类型检查步骤、代码审查期间的静态分析，或是专注于类型层面的重构工作尤为有用。
+- **开发环境调试**：在某些开发环境下，你可能希望利用 TypeScript 的类型系统进行编辑器内的智能提示和错误检查，但实际的编译和打包过程由其他工具（如 Webpack、Rollup、Vite 等）接管。  
+    此时，TypeScript 编译器只需负责提供类型信息，无需生成实际的输出文件。
+
+**`noEmit: false` 或未指定 `noEmit`**
+
+当 `noEmit` 未指定（默认值）或显式设置为 `false` 时，TypeScript 编译器将根据项目配置生成相应的输出文件。具体包括：
+
+- 将 TypeScript 源文件编译为相应的 JavaScript 文件。
+- 如果启用了 `declaration`，还会生成类型声明文件。
+- 如果启用了 `sourceMap`，还会生成源码映射文件。
+
+这是最常见的配置，适用于大部分开发和构建场景，特别是在需要将 TypeScript 代码编译为可执行 JavaScript 以部署到生产环境或进行本地测试时。
+
+总结起来，`noEmit` 选项控制着 TypeScript 编译器是否生成任何输出文件。  
+设置为 `true` 时，编译器仅进行类型检查，不产生任何实际的编译产物；设置为 `false` 或未指定时，编译器不仅进行类型检查，还会根据项目配置生成相应的 JavaScript、类型声明和源码映射文件。
+
+参考： https://www.cnblogs.com/longmo666/p/18119672
 
 
+
+## declaration
+**如何让 TypeScript 自动生成 .d.ts 文件？**
+
+你需要在 **tsconfig.json** 的 compilerOptions 中确保以下两个选项是 true：
+
+1. **"declaration": true**: 这是**主开关**。它告诉 tsc 在生成 .js 文件的同时，为每个 .ts 文件生成一个对应的 .d.ts 文件。
+    
+2. **"declarationMap": true (推荐但可选)**: 这个选项会为 .d.ts 文件生成 Source Map (.d.ts.map)。这对于 IDE 来说非常有用，当你在 api 包中按住 Cmd/Ctrl 并点击一个从 shared 导入的函数时，IDE 可以直接跳转到 shared 包中的**原始 .ts 源码文件**，而不是跳转到生成的 .d.ts 文件。这极大地提升了开发体验。
 
 # ts-node
 

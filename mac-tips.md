@@ -5,7 +5,7 @@ Mac的一些使用技巧
 ## 1.1 快捷键 shortcuts
 
 ### 1.1.1 切换窗口
-[apple + `]  在同一应用的不同windows
+[command + `]  在同一应用的不同windows
 
 ### 1.1.2录屏
 
@@ -52,6 +52,7 @@ Build and install [Typescript Bundle for Textmate](https://www.chrisjmendez.com/
 ```
 netstat -anv|grep 80 |grep LIST
 ```
+
 
 
 ## 3.2  创建带密码的压缩文件

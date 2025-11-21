@@ -20,9 +20,6 @@ https://users.rust-lang.org/t/why-does-thread-spawn-need-static-lifetime-for-gen
 ## 4. Understanding Ownership
 一定要先了解什么情况下会在堆里分配内存，什么情况下在栈里分配内存。只有在堆里分配的内存才需要手工释放。
 
-
-
-
 Ownership Rules
 
 First, let’s take a look at the ownership rules. Keep these rules in mind as we work through the examples that illustrate them:
@@ -174,6 +171,111 @@ A more experienced Rustacean would write the signature shown in Listing 4-9 inst
 fn first_word(s: &str) -> &str {
 ```
 If we have a string slice, we can pass that directly. If we have a String, we can pass a slice of the String or a reference to the String. This flexibility takes advantage of deref coercions, a feature we will cover in the “Implicit Deref Coercions with Functions and Methods” section of Chapter 15. Defining a function to take a string slice instead of a reference to a String makes our API more general and useful without losing any functionality。
+
+
+## 5. [Using Structs to Structure Related Data](https://doc.rust-lang.org/book/ch05-00-structs.html#using-structs-to-structure-related-data)
+
+
+### [Defining and Instantiating Structs](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#defining-and-instantiating-structs)
+```rust
+
+
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+
+fn main() {
+    let user1 = User {
+        active: true,
+        username: String::from("someusername123"),
+        email: String::from("someone@example.com"),
+        sign_in_count: 1,
+    };
+}
+```
+要注意初始化的语法，在 `{`之前要放Struct的名字，这样的方式在上面的代码中可能没什么感觉，但是在做为函数时还是有点奇怪的，要适应。
+
+
+### [Using the Field Init Shorthand](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#using-the-field-init-shorthand)
+
+快捷初始化，如果你的变量名称和struct的field的名称一致，可以使用便捷的方式来初始化。我感觉这就是借鉴了js/ts的语法糖，会js/ts的朋友应该都很熟悉了。不过这样的语法糖还是非常有用的，用过之后就会爱上，然后如果有语言不支持，就会感觉特别别扭。
+
+Because the parameter names and the struct field names are exactly the same in Listing 5-4, we can use the _field init shorthand_ syntax to rewrite `build_user` so it behaves exactly the same but doesn’t have the repetition of `username` and `email`, as shown in Listing 5-5.
+
+Filename: src/main.rs
+
+```rust
+fn build_user(email: String, username: String) -> User {
+    User {
+        active: true,
+        username,
+        email,
+        sign_in_count: 1,
+    }
+}
+```
+
+[Listing 5-5](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#listing-5-5): A `build_user` function that uses field init shorthand because the `username` and `email` parameters have the same name as struct fields
+
+Here, we’re creating a new instance of the `User` struct, which has a field named `email`. We want to set the `email` field’s value to the value in the `email` parameter of the `build_user` function. Because the `email` field and the `email` parameter have the same name, we only need to write `email` rather than `email: email`.
+
+
+### [Creating Instances from Other Instances with Struct Update Syntax](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax)
+
+**用`更新`语法从一个Struct实例创建一个新Struct实例**
+
+It’s often useful to create a new instance of a struct that includes most of the values from another instance, but changes some. You can do this using _struct update syntax_.
+
+First, in Listing 5-6 we show how to create a new `User` instance in `user2` regularly, without the update syntax. We set a new value for `email` but otherwise use the same values from `user1` that we created in Listing 5-2.
+
+我们在写代码时，经常会遇到下面的情况，
+
+Filename: src/main.rs
+
+```rust
+fn main() {
+    // --snip--
+
+    let user2 = User {
+        active: user1.active,
+        username: user1.username,
+        email: String::from("another@example.com"),
+        sign_in_count: user1.sign_in_count,
+    };
+}
+```
+
+[Listing 5-6](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#listing-5-6): Creating a new `User` instance using all but one of the values from `user1`
+
+Using struct update syntax, we can achieve the same effect with less code, as shown in Listing 5-7. The syntax `..` specifies that the remaining fields not explicitly set should have the same value as the fields in the given instance.
+
+这时就可以使用Rust的`struct update syntax`, 这个其实也是从js中借鉴的，不过大家要注意，在js中用的是三个点`...`，在Rust中是两个点`..`。
+
+Filename: src/main.rs
+
+```rust
+fn main() {
+    // --snip--
+
+    let user2 = User {
+        email: String::from("another@example.com"),
+        ..user1
+    };
+}
+```
+
+[Listing 5-7](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#listing-5-7): Using struct update syntax to set a new `email` value for a `User` instance but to use the rest of the values from `user1`
+
+The code in Listing 5-7 also creates an instance in `user2` that has a different value for `email` but has the same values for the `username`, `active`, and `sign_in_count` fields from `user1`. The `..user1` must come last to specify that any remaining fields should get their values from the corresponding fields in `user1`, but we can choose to specify values for as many fields as we want in any order, regardless of the order of the fields in the struct’s definition.
+
+与js/ts不同的是，`..user1` 必须放在最后面。
+
+
+Note that the struct update syntax uses `=` like an assignment; this is because it moves the data, just as we saw in the [“Variables and Data Interacting with Move”](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#variables-and-data-interacting-with-move) section. In this example, we can no longer use `user1` after creating `user2` because the `String` in the `username` field of `user1` was moved into `user2`. If we had given `user2` new `String` values for both `email` and `username`, and thus only used the `active` and `sign_in_count` values from `user1`, then `user1` would still be valid after creating `user2`. Both `active` and `sign_in_count` are types that implement the `Copy` trait, so the behavior we discussed in the [“Stack-Only Data: Copy”](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#stack-only-data-copy) section would apply. We can still use `user1.email` in this example, because its value was _not_ moved out.
+
 
 
 ## 6. Enums and Pattern Matching
@@ -412,7 +514,7 @@ mod front_of_house {
 
 **Re-exporting Names with pub use** 用 **pub use**实现重新导出。
 
-请看下面的例子，hosting是前台的一个module，在后台用pub use导出后，backend这个module也有了一个hosting。
+请看下面的例子，hosting是前台的一个module，在后台用`pub use`导出后，backend这个module也有了一个hosting。
 
 ```rust
 
@@ -483,7 +585,7 @@ use std::io::Write;
 use std::io::{self, Write};
 ```
 
-### 7.5 Separating Modules into Different Files**
+### 7.5 Separating Modules into Different Files
 
 前面的例子里，我们把module放在一个文件里，在现实中的项目中module可能很大，需要把它分散到多个文件中去。
 
@@ -723,20 +825,28 @@ fn read_username_from_file() -> Result<String, io::Error> {
 
 ```
 
+#### [A Shortcut for Propagating Errors: the `?` Operator](https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator)
+
 这样写是不是太啰嗦了？rust提供了`?`操作符，以简化代码。
 
 ```rust
 use std::fs::File;
-use std::io;
-use std::io::Read;
+use std::io::{self, Read};
 
 fn read_username_from_file() -> Result<String, io::Error> {
-    let mut f = File::open("hello.txt")?;
-    let mut s = String::new();
-    f.read_to_string(&mut s)?;
-    Ok(s)
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&mut username)?;
+    Ok(username)
 }
+
 ```
+
+The `?` placed after a `Result` value is defined to work in almost the same way as the `match` expressions we defined to handle the `Result` values in Listing 9-6. If the value of the `Result` is an `Ok`, the value inside the `Ok` will get returned from this expression, and the program will continue. If the value is an `Err`, the `Err` will be returned from the whole function as if we had used the `return` keyword so the error value gets propagated to the calling code.
+
+`Result` 值后面的 `?` 的定义方式与我们在示例 9-6 中定义的处理 `Result` 值的 `match` 表达式几乎相同。如果 `Result` 的值为 `Ok` ，则 `Ok` 中的值将从该表达式返回，程序将继续执行。如果值为 `Err` ，则整个函数将返回 `Err` ，就像我们使用了 `return` 关键字一样，因此错误值将传播到调用代码。
+
+
 
 要注意main()函数是特殊的，它的返回值是有限制的。 
 
@@ -1489,3 +1599,28 @@ Let’s try it! The println! macro call will now look like println!("rect1 is {:
 
 这里是rust里内置的一些attributes,当有不理解的attributes时，可以到这里查查看：
 [Built-in attributes index](https://doc.rust-lang.org/reference/attributes.html#built-in-attributes-index)
+
+
+## 20 高级特性
+
+### 20.4 函数指针
+
+函数会被强制转换为 `fn` 类型（小写 _f_ ），不要与 `Fn` 混淆。fn 类型被称为_函数指针_ 。使用函数指针传递函数，可以将函数 `fn` 参数传递给其他函数。
+```rust
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(arg) + f(arg)
+}
+
+fn main() {
+    let answer = do_twice(add_one, 5);
+
+    println!("The answer is: {answer}");
+}
+```
+
+Function pointers implement all three of the closure traits (`Fn`, `FnMut`, and `FnOnce`), meaning you can always pass a function pointer as an argument for a function that expects a closure. It’s best to write functions using a generic type and one of the closure traits so your functions can accept either functions or closures.  
+函数指针实现了所有三个闭包特性（ `Fn` 、 `FnMut` 和 `FnMut`）。  `FnOnce` 允许你始终将函数指针作为参数传递给需要闭包的函数。最好使用泛型类型和闭包特性之一来编写函数，这样你的函数就可以接受函数或闭包作为参数。

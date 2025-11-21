@@ -350,6 +350,102 @@ $ pip install pylibmc==blork
 Python PIP 使用笔记
 https://github.com/greatghoul/notes/blob/master/dev/python/pip.rst
 
+
+## UV
+
+### 管理 python 
+
+```
+uv python -h
+Manage Python versions and installations
+
+Usage: uv python [OPTIONS] <COMMAND>
+
+Commands:
+  list          List the available Python installations
+  install       Download and install Python versions
+  upgrade       Upgrade installed Python versions
+  find          Search for a Python installation
+  pin           Pin to a specific Python version
+  dir           Show the uv Python installation directory
+  uninstall     Uninstall Python versions
+  update-shell  Ensure that the Python executable directory is on the `PATH`
+
+Cache options:
+  -n, --no-cache               Avoid reading from or writing to the cache, instead using a temporary directory for the duration of the operation [env: UV_NO_CACHE=]
+      --cache-dir <CACHE_DIR>  Path to the cache directory [env: UV_CACHE_DIR=]
+
+Python options:
+      --managed-python       Require use of uv-managed Python versions [env: UV_MANAGED_PYTHON=]
+      --no-managed-python    Disable use of uv-managed Python versions [env: UV_NO_MANAGED_PYTHON=]
+      --no-python-downloads  Disable automatic downloads of Python. [env: "UV_PYTHON_DOWNLOADS=never"]
+
+Global options:
+  -q, --quiet...                                   Use quiet output
+  -v, --verbose...                                 Use verbose output
+      --color <COLOR_CHOICE>                       Control the use of color in output [possible values: auto, always, never]
+      --native-tls                                 Whether to load TLS certificates from the platform's native certificate store [env: UV_NATIVE_TLS=]
+      --offline                                    Disable network access [env: UV_OFFLINE=]
+      --allow-insecure-host <ALLOW_INSECURE_HOST>  Allow insecure connections to a host [env: UV_INSECURE_HOST=]
+      --no-progress                                Hide all progress outputs [env: UV_NO_PROGRESS=]
+      --directory <DIRECTORY>                      Change to the given directory prior to running the command
+      --project <PROJECT>                          Run the command within the given project directory [env: UV_PROJECT=]
+      --config-file <CONFIG_FILE>                  The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]
+      --no-config                                  Avoid discovering configuration files (`pyproject.toml`, `uv.toml`) [env: UV_NO_CONFIG=]
+  -h, --help                                       Display the concise help for this command
+```
+
+
+
+查看当前系统中安装的 python。
+
+```
+uv python list  --only-installed
+```
+
+
+安装指定版本 python 
+```
+uv python install 3.13
+```
+
+
+
+
+### Run a script
+
+```
+uv run example.py
+```
+
+
+### [Importing dependencies from requirements files](https://docs.astral.sh/uv/concepts/projects/dependencies/#importing-dependencies-from-requirements-files)
+```
+uv add -r requirements.txt
+```
+
+### Indexes ，安装源
+
+https://docs.astral.sh/uv/concepts/indexes/
+
+```toml
+[[tool.uv.index]]
+# Optional name for the index.
+name = "pytorch"
+# Required URL for the index.
+url = "https://download.pytorch.org/whl/cpu"
+```
+
+情况下uv会使用 the Python Package Index (PyPI) as the "default" index,  如果我们默认想使用清华的源，需要加上 default=true
+```toml
+[[tool.uv.index]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+```
+
+
+
 ## PDM
 一款高级、功能强大的包管理器。有人称是划时代的包管理器。
 [来了！划时代的 Python 包管理工具 -- PDM](https://zhuanlan.zhihu.com/p/468445226)
