@@ -119,8 +119,102 @@ SELECT * FROM test_json;
 
 **经验法则：始终默认使用 `jsonb`**，除非你有一个非常明确且强烈的理由去使用 `json` 来保留原始文本。`jsonb` 提供的查询性能和索引能力对于绝大多数应用来说都是至关重要的。
 
+
+#### 查询
+```sql
+SELECT 
+count(id)  as  "totalLeadCount",
+COUNT(*) FILTER (WHERE "synchronizationStatus"->'转接状态'->>'status' = '转接成功' ) AS "transferCount",
+COUNT(*) FILTER (WHERE "synchronizationStatus"['瓜子二手车']['leadState'] = '1'::jsonb) AS "validLeadsCount"
+FROM public."UsedCarLeads"
+where  
+-- -- and  "synchronizationStatus" ? '瓜子二手车'
+"submitter" = 47
+and "createdAt" >= '2025-11-28'::date
+```
+
 #### 参考文献
 [An introduction to working with JSON data in PostgreSQL](https://medium.com/@suffyan.asad1/an-introduction-to-working-with-json-data-in-postgresql-730aa889c5d3)
+
+### 日期 Datetime & Timestamp
+
+这是一个非常棒的思路！**把时间转换成 Unix Timestamp（时间戳）进行比对，是彻底消除“时区差”和“格式化”烦恼的终极手段。**
+
+因为 Unix 时间戳是一个绝对数值（从 1970年1月1日 UTC 到现在的秒数或毫秒数），它不携带任何时区信息，**全球统一**。
+
+
+在 PostgreSQL 中，使用 `EXTRACT(EPOCH FROM ...)` 函数可以将 `timestamp` 或 `timestamptz` 转换为 Unix 时间戳（**单位是秒**）。
+
+```sql
+-- 返回的是秒，带小数（微秒精度），例如: 1700452800.123456
+SELECT EXTRACT(EPOCH FROM "createdAt") FROM "User";
+```
+
+
+这里有一个关键的单位换算问题：
+*   **Postgres**: `EXTRACT(EPOCH ...)` 出来的单位是 **秒 (Seconds)**。
+*   **JavaScript**: `Date.getTime()` 或 `Date.now()` 出来的单位是 **毫秒 (Milliseconds)**。
+
+**你必须在其中一边做乘除法来对齐单位。**
+
+#### Prisma `queryRaw` 实战代码
+
+建议在 SQL 里把单位统一成**毫秒**（乘以 1000），这样可以直接跟 JS 的 `date.getTime()` 对比，也不会丢失毫秒级的精度。
+
+#### 场景：查询某个时间点之后创建的用户
+
+```typescript
+// 1. 获取 JS 时间的毫秒数 (Unix Timestamp in MS)
+const targetDate = new Date('2023-11-20 12:00:00');
+const targetTimestamp = targetDate.getTime(); // 例如 1700452800000
+
+// 2. 执行 Raw Query
+// 注意 SQL 中：EXTRACT(EPOCH FROM "createdAt") * 1000
+const users = await prisma.$queryRaw`
+  SELECT id, "createdAt"
+  FROM "User"
+  WHERE (EXTRACT(EPOCH FROM "createdAt") * 1000) > ${targetTimestamp}
+`;
+```
+
+#### 进阶：如果你想直接 SELECT 出数字
+
+如果你想让查询结果里直接包含时间戳数字，方便前端或其他逻辑处理：
+
+```typescript
+const result = await prisma.$queryRaw`
+  SELECT 
+    id, 
+    -- 强制转为 bigint 整数，去掉小数点，单位毫秒
+    CAST(EXTRACT(EPOCH FROM "createdAt") * 1000 AS BIGINT) as "createdAtTs"
+  FROM "User"
+`;
+
+// result[0].createdAtTs 将会是一个类似于 1700452800000 的数字 (BigInt)
+// 注意：在 JS 中 BigInt 不能直接 JSON.stringify，需要处理一下
+console.log(Number(result[0].createdAtTs)); 
+```
+
+####  关于性能的补充（索引优化）
+
+使用函数 `EXTRACT(EPOCH FROM ...)` 作为查询条件时，如果数据量极大（几百万行），标准的 `createdAt` 索引可能不会被高效利用。
+
+如果你非常依赖这种查询方式，可以在 Postgres 里加一个**函数索引**：
+
+```sql
+-- 在数据库里手动执行
+CREATE INDEX idx_user_createdat_epoch ON "User" ((EXTRACT(EPOCH FROM "createdAt")));
+```
+
+### 总结
+
+你的方法非常稳健：
+1.  **JS 端**：用 `date.getTime()` 获取毫秒整数。
+2.  **PG 端**：用 `EXTRACT(EPOCH FROM "createdAt") * 1000` 转成毫秒数值。
+3.  **比对**：直接比大小。
+
+**没有时区，没有字符串解析，只有纯粹的数字比较。完美！**
+
 
 ## 2. 命令行工具
 
