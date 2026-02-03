@@ -294,7 +294,7 @@ module.exports = {
 }
 ```
 
-**How to add more indentation in the explorer file tree structure?**
+# How to add more indentation in the explorer file tree structure?
 
 Workbench › Tree: Indent
 

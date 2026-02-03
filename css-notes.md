@@ -224,13 +224,6 @@ https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Grids#positioning_
 
 
 
-
-
-
-
-
-
-
 [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) [pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes)
 
 ```css

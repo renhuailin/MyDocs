@@ -13,15 +13,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "postgresql-notes.md",
+                "file": "rust-notes.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "rust-notes"
+            }
+          },
+          {
+            "id": "cdb2bed6f988f6a3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "typescript-notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "postgresql-notes"
+              "title": "typescript-notes"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -53,7 +68,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "eslin",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -78,7 +93,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 299.5
+    "width": 238.5
   },
   "right": {
     "id": "94421dcfa62127d0",
@@ -140,13 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "postgresql-notes.md",
+                "file": "typescript-notes.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of postgresql-notes"
+              "title": "Outline of typescript-notes"
             }
           }
         ],
@@ -158,6 +173,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -166,35 +182,40 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f5133bb23afb71d4",
+  "active": "cdb2bed6f988f6a3",
   "lastOpenFiles": [
-    "mac-tips.md",
-    "postgresql-notes.md",
     "js-notes.md",
-    "docker-notes.md",
-    "redis-notes.md",
-    "OpenStack-Notes.md",
-    "css-notes.md",
-    "puppet-notes.md",
-    "README.md",
     "linux-notes.md",
-    "sqlite.md",
-    "kotlin-notes.md",
+    "docker-notes.md",
+    "mac-tips.md",
+    "maven-notes.md",
+    "kubernetes-notes.md",
     "vscode-notes.md",
-    "python-notes.md",
-    "mysql-notes.md",
-    "vim-notes.md",
-    "light-table-note.md",
-    "java-notes.md",
-    "swift-notes.md",
+    "css-notes.md",
+    "the-rust-programming-language.md",
+    "辟谷.md",
+    "rust-notes.md",
+    "postgresql-notes.md",
+    "Untitled.base",
+    "睿远二手车高质量线索接口文档.md",
+    "Untitled 2.base",
+    "Untitled 3.base",
+    "Untitled 4.base",
+    "Untitled 1.base",
+    "Untitled.md",
+    "istio.md",
     "iptables-notes.md",
+    "intellij-idea-ce.md",
+    "grpc-notes.md",
+    "Google_Cloud.md",
     "git-notes.md",
     "font-Config.md",
+    "golang-notes.md",
+    "excel-notes.md",
     "English-Notes.md",
-    "emacs-notes.md",
+    "emacs-lisp.md",
+    "python-notes.md",
     "images/Pasted image 20250214100736.png",
-    "the-rust-programming-language.md",
-    "typescript-notes.md",
     "images/Pasted-image-20240509221442.png",
     "images/Pasted image 20240509221442 1.png",
     "images/WX20211128-111446@2x.png",

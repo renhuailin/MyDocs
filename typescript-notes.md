@@ -650,6 +650,103 @@ That’s why in TypeScript 3.5, when assigning to types with discriminant proper
 
 For more details, you can [see the original pull request on GitHub](https://github.com/microsoft/TypeScript/pull/30779).
 
+
+
+##  为this加上类型 Declaring `this` in a Function
+
+
+下面的代码在 `this.loginStatus = LoginStatus.LoggingIn` 这一行一直报warning：
+```
+'this' implicitly has type 'any' because it does not have a type annotation.ts(2683)
+
+auth.ts(20, 19): An outer value of 'this' is shadowed by this container.
+```
+
+```ts
+export const authStore = observable({
+    // State
+    token: wx.getStorageSync('token') || '',
+    userInfo: null,
+    loginStatus: LoginStatus.Unlogin,
+
+    // Actions
+    login: action(async function () {
+        if (this.loginStatus === LoginStatus.LoggingIn) { return; } // 防止重复调用
+        this.loginStatus = LoginStatus.LoggingIn;//在这里这直报warning，说this是any,没有loginStatus这个属性。
+
+        try {
+            const { code } = await wx.login();
+            // 模拟API调用
+            const res = await api.login(code);
+
+            this.token = res.token;
+            this.loginStatus = 'logged_in';
+            wx.setStorageSync('token', res.token);
+
+            // 进一步检查实名
+            await this.checkVerify();
+        } catch (error) {
+            this.loginStatus = 'unlogin';
+            throw error;
+        }
+    }),
+
+    checkVerify: action(async function () {
+        // 检查实名逻辑...
+    })
+});
+```
+
+
+ts知道有这种情况， 所以在ts中，可以在函数中declear this的类型，这是纯ts的语法糖。这解决了编译器报错的问题。
+不过在ts的代码中，我们会经常遇到，所以这个语法糖还是要学习的。
+
+```ts
+// 1. 定义 Store 的接口结构
+interface AuthStore {
+    token: string;
+    userInfo: any;
+    loginStatus: string;
+    login: () => Promise<void>;
+    checkVerify: () => Promise<void>;
+}
+
+export const authStore = observable({
+    // State
+    token: wx.getStorageSync('token') || '',
+    userInfo: null,
+    loginStatus: LoginStatus.Unlogin,
+
+    // Actions
+    login: action(async function (this: AuthStore) {
+        if (this.loginStatus === LoginStatus.LoggingIn) { return; } // 防止重复调用
+        this.loginStatus = LoginStatus.LoggingIn;
+
+        try {
+            const { code } = await wx.login();
+            // 模拟API调用
+            const res = await api.login(code);
+
+            this.token = res.token;
+            this.loginStatus = 'logged_in';
+            wx.setStorageSync('token', res.token);
+
+            // 进一步检查实名
+            await this.checkVerify();
+        } catch (error) {
+            this.loginStatus = 'unlogin';
+            throw error;
+        }
+    }),
+
+    checkVerify: action(async function () {
+        // 检查实名逻辑...
+    })
+});
+```
+
+官方文档： https://www.typescriptlang.org/docs/handbook/2/functions.html#declaring-this-in-a-function
+
 # ts config 
 
 

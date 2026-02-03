@@ -127,3 +127,18 @@ Symlink all of _`formula`_’s installed files into Homebrew’s prefix. This i
 ```
 brew link node@22
 ```
+
+
+
+
+Mac系统键盘映射==主要通过系统自带的“修饰键”设置（用于调整Control, Option, Command等键位，尤其适合Windows键盘）和第三方工具（如[Karabiner](https://www.google.com/search?q=Karabiner&rlz=1C5CHFA_enTW1063TW1063&oq=mac+%E7%B3%BB%E7%BB%9F%E9%94%AE%E7%9B%98+%E6%98%A0%E5%B0%84&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRiPAtIBCTIzNjYxajBqN6gCALACAA&sourceid=chrome&ie=UTF-8&mstk=AUtExfDy3bHBBiQBumOEszxsmdSTACmU1S4mOrI1vLT-NZnrMSn1zp2llAQ4ocamO-ec2XjozTdmxxn3nK8YTm5F6Uc0niDCqQygzLx1C4wU4deQoPiYZOeSqSDFH8GKQf7dafCqx3rFiXbgTrjWHSdv_cCgg4NFYlxioYwCUII4LjQwhyU&csui=3&ved=2ahUKEwiAn4Tb1-mRAxX5rlYBHbpvANkQgK4QegQIARAC)）实现，可以调整功能键行为，将外接键盘键位适配macOS习惯，实现自定义功能和键位转换==。 
+
+**1. 使用系统自带的“修饰键”设置**  
+这是最常用的方法，尤其当使用Windows键盘连接Mac时。 
+
+1. **打开“系统设置”**：点击左上角苹果图标 > **“系统设置”**（或“系统偏好设置”）。
+2. **找到“键盘”**：在侧边栏选择“键盘”。
+3. **进入“修饰键”**：点击右下角的“修饰键”按钮。
+4. **选择键盘**：在弹出菜单中选择你想要配置的外接键盘（若有多个）。
+5. **映射键位**：将**Command**（Windows的Win键）映射为**Option**（Windows的Alt键），将**Option**（Windows的Alt键）映射为**Command**（Windows的Win键），以适应Windows键盘的习惯。
+6. **可将CapsLock改为Control**：你也可以将大写锁定键（CapsLock）映射为Control键。
