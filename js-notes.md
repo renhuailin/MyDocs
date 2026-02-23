@@ -855,6 +855,11 @@ $ npm view webpack versions --json
 | ----------- | --------------- | -------------------- | -------------------- | -------------------- | ---------------- |
 | run package | `npx <package>` | `yarn dlx <package>` | `yarn dlx <package>` | `pnpm dlx <package>` | `bunx <package>` |
 
+**pnpm list**
+
+This command will output all the versions of packages that are installed, as well as their dependencies, in a tree-structure.
+
+
 ###  3.5.1 workspace
 
 在根目录为子项目添加依赖

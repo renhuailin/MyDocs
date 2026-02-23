@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "typescript-notes.md",
+                "file": "postgresql-notes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "typescript-notes"
+              "title": "postgresql-notes"
             }
           }
         ],
@@ -155,13 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "typescript-notes.md",
+                "file": "postgresql-notes.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of typescript-notes"
+              "title": "Outline of postgresql-notes"
             }
           }
         ],
@@ -184,13 +184,16 @@
   },
   "active": "cdb2bed6f988f6a3",
   "lastOpenFiles": [
+    "typescript-notes.md",
+    "python-notes.md",
     "js-notes.md",
+    "java-notes.md",
+    "vscode-notes.md",
     "linux-notes.md",
     "docker-notes.md",
     "mac-tips.md",
     "maven-notes.md",
     "kubernetes-notes.md",
-    "vscode-notes.md",
     "css-notes.md",
     "the-rust-programming-language.md",
     "辟谷.md",
@@ -212,9 +215,6 @@
     "font-Config.md",
     "golang-notes.md",
     "excel-notes.md",
-    "English-Notes.md",
-    "emacs-lisp.md",
-    "python-notes.md",
     "images/Pasted image 20250214100736.png",
     "images/Pasted-image-20240509221442.png",
     "images/Pasted image 20240509221442 1.png",
